@@ -1,0 +1,218 @@
+[
+	{
+		"prompt":"The project has progressed in ___ and starts.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"fits"},
+				{"prompt":"bits"},
+				{"prompt":"wits"}
+			]
+	},
+	{
+		"prompt":"The strike at the bank left clients high ___.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"and shy"},
+				{"prompt":"and dry"},
+				{"prompt":"and sly"}
+			]
+	},
+	{
+		"prompt":"The rank and ___ are against the new rules.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"group of the company"},
+				{"prompt":"line of the company"},
+				{"prompt":"file of the company"}
+			]
+	},
+	{
+		"prompt":"Every ___ cranny of his place is full of ornaments.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"nook and"},
+				{"prompt":"hook and"},
+				{"prompt":"look and"}
+			]
+	},
+	{
+		"prompt":"The contract will be ___ and void until signed.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"nill"},
+				{"prompt":"null"},
+				{"prompt":"nought"}
+			]
+	},
+	{
+		"prompt":"The gadged has suffered a normal amount of ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"marks and tear"},
+				{"prompt":"scratches and tear"},
+				{"prompt":"wear and tear"}
+			]
+	},
+	{
+		"prompt":"They ___ and saved all year to pay for the trip.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"scrimped"},
+				{"prompt":"cramped"},
+				{"prompt":"stored"}
+			]
+	},
+	{
+		"prompt":"Steve won the bet fair and ___.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"honest"},
+				{"prompt":"square"},
+				{"prompt":"true"}
+			]
+	},
+	{
+		"prompt":"I'm alone at home. Now I can have some peace ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"and calm"},
+				{"prompt":"and silent"},
+				{"prompt":"and quiet"}
+			]
+	},
+	{
+		"prompt":"There are all the other bits ___ in a wedding.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"and pieces involved"},
+				{"prompt":"and items involved"},
+				{"prompt":"and chunks involved"}
+			]
+	},
+	{
+		"prompt":"I'm reading a book about the life ___ Churchill.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"and ages of"},
+				{"prompt":"and times of"},
+				{"prompt":"and moments of"}
+			]
+	},
+	{
+		"prompt":"After the war there was a serious breakdown ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"in legislation and order"},
+				{"prompt":"in rule and order"},
+				{"prompt":"in law and order"}
+			]
+	},
+	{
+		"prompt":"I'll go and get some fish and ___.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"chips"},
+				{"prompt":"bits"},
+				{"prompt":"pieces"}
+			]
+	},
+	{
+		"prompt":"I love the hustle and ___ of city life.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"commotion"},
+				{"prompt":"bustle"},
+				{"prompt":"tumult"}
+			]
+	},
+	{
+		"prompt":"Marriage is wonderful, but it also has its trials ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"and woes"},
+				{"prompt":"and adversities"},
+				{"prompt":"and tribulations"}
+			]
+	},
+	{
+		"prompt":"The ups and ___ of life are similar all over the world.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"downs"},
+				{"prompt":"lows"},
+				{"prompt":"blues"}
+			]
+	},
+	{
+		"prompt":"I don't know all the ___ and outs of the case.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"ons"},
+				{"prompt":"ins"},
+				{"prompt":"overs"}
+			]
+	},
+	{
+		"prompt":"The workers have so many ___ we couldn't change anything.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"ifs and whats that"},
+				{"prompt":"ifs and hows that"},
+				{"prompt":"ifs and buts that"}
+			]
+	},
+	{
+		"prompt":"It was, by and ___, an unexceptional presentation.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"large"},
+				{"prompt":"broad"},
+				{"prompt":"full"}
+			]
+	},
+	{
+		"prompt":"He was six feet tall, give or ___.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"get"},
+				{"prompt":"take"},
+				{"prompt":"put"}
+			]
+	},
+	{
+		"prompt":"Regular maintenance is part and ___ of owning a car.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"package"},
+				{"prompt":"bundle"},
+				{"prompt":"parcel"}
+			]
+	},
+	{
+		"prompt":"All kids are back home safe and ___.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"sound"},
+				{"prompt":"intact"},
+				{"prompt":"solid"}
+			]
+	},
+	{
+		"prompt":"The staff meeting was short and ___ today.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"delicious"},
+				{"prompt":"sweet"},
+				{"prompt":"gentle"}
+			]
+	},
+	{
+		"prompt":"The ___ of the tide causes erosion of the coastline.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"back and onward movement"},
+				{"prompt":"back and forward movement"},
+				{"prompt":"back and forth movement"}
+			]
+	}
+]

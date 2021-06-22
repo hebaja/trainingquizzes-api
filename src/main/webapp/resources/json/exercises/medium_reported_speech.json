@@ -1,0 +1,182 @@
+[
+	{
+		"prompt": "She ___ him about the train strike.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "warned"},
+				{"prompt": "complained"},
+				{"prompt": "regretted"}
+			]
+	},
+	{
+		"prompt": "Helen ___ having lost my keys.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "discussed"},
+				{"prompt": "suggested"},
+				{"prompt": "adimitted"}
+			]
+	},
+	{
+		"prompt": "The lawyer ___ that I should contact him.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "offered"},
+				{"prompt": "insisted"},
+				{"prompt": "denied"}
+			]
+	},
+	{
+		"prompt": "My mother ___ to write the letter for me.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "agreed"},
+				{"prompt": "discussed"},
+				{"prompt": "commented"}
+			]
+	},
+	{
+		"prompt": "Carla suggested ___ you.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "that I text"},
+				{"prompt": "I texting"},
+				{"prompt": "me to text"}
+			]
+	},
+	{
+		"prompt": "Several people ___ on what good company she was.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "warned"},
+				{"prompt": "recommended"},
+				{"prompt": "agreed"}
+			]
+	},
+	{
+		"prompt": "Emily ___ for being late",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "confessed"},
+				{"prompt": "accused"},
+				{"prompt": "apologized"}
+			]
+	},
+	{
+		"prompt": "Stella ___ us to meet her at the museum.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "reminded"},
+				{"prompt": "insisted"},
+				{"prompt": "suggested"}
+			]
+	},
+	{
+		"prompt": "Jake ___ giving up his studies.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "regretted"},
+				{"prompt": "blamed"},
+				{"prompt": "congratulated"}
+			]
+	},
+	{
+		"prompt": "They ___ me for losing the match.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "told"},
+				{"prompt": "blamed"},
+				{"prompt": "advise"}
+			]
+	},
+	{
+		"prompt": "She ___ me to start studying Spanish.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "encouraged"},
+				{"prompt": "admitted"},
+				{"prompt": "insisted"}
+			]
+	},
+	{
+		"prompt": "My friends congratulated ___.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "me on my new car"},
+				{"prompt": "on my new car"},
+				{"prompt": "my new car"}
+			]
+	},
+	{
+		"prompt": "My dad denied ___ those horrible curtains?",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "to buy"},
+				{"prompt": "buy"},
+				{"prompt": "buying"}
+			]
+	},
+	{
+		"prompt": "Paul insisted ___ for dinner.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "to paying"},
+				{"prompt": "paying"},
+				{"prompt": "on paying"}
+			]
+	},
+	{
+		"prompt": "My mom ___ her old car.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "offered me"},
+				{"prompt": "offered"},
+				{"prompt": "to offer"}
+			]
+	},
+	{
+		"prompt": "Mary ___ some chairs.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "asked me to pick up"},
+				{"prompt": "asked picking up"},
+				{"prompt": "asked I pick up"}
+			]
+	},
+	{
+		"prompt": "He ___ this song.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "said he liked"},
+				{"prompt": "told he like"},
+				{"prompt": "said liking"}
+			]
+	},
+	{
+		"prompt": "She ___ Italian.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "confessed not to speak"},
+				{"prompt": "confessed she didn't speak"},
+				{"prompt": "confessed she didn't speaking"}
+			]
+	},
+	{
+		"prompt": "She told the boys ___ on the grass.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "not to play"},
+				{"prompt": "don't play"},
+				{"prompt": "not play"}
+			]
+	},
+	{
+		"prompt": "She _____ a job.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "told to find"},
+				{"prompt": "said me to find"},
+				{"prompt": "told me to find"}
+			]
+	}
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "prompt":"Articles and determiners",
+    "fileName":"hard_articles_determiners.json"
+  },
+  {
+    "prompt":"Binomials",
+    "fileName":"hard_binomials.json"
+  },
+  {
+    "prompt":"Collocations",
+    "fileName":"hard_collocations.json"
+  },
+  {
+    "prompt":"Idiomatic expressions",
+    "fileName":"hard_idiomatic_expressions.json"
+  },
+  {
+    "prompt":"Linking words",
+    "fileName":"hard_linking_words.json"
+  },
+  {
+    "prompt":"Phrasal verbs",
+    "fileName":"hard_phrasal_verbs.json"
+  },
+  {
+    "prompt":"Similes",
+    "fileName":"hard_similes.json"
+  },
+  {
+    "prompt":"Word Formation",
+    "fileName":"hard_word_formation.json"
+  }
+]

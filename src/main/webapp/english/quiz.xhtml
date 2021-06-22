@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<ui:composition template="/templates/_template.xhtml">
+	
+		<ui:define name="additional-content">
+			<link type="text/css" rel="stylesheet" href="/resources/css/english.css" media="screen,projection" />
+    	</ui:define>
+	
+		<div id="navbar">
+			<ui:define name="nav-expanded">
+		      	<ui:include src="/templates/_quiz-nav.xhtml" />
+			</ui:define>
+			<ui:define name="nav-collapsed">
+		      	<ui:include src="/templates/_quiz-nav.xhtml" />
+			</ui:define>
+		</div>
+	
+		<ui:define name="content">
+			<div class="container">
+				<h:form id="levelsForm">
+					<h:panelGroup rendered="#{quizBean.levelsRender}">
+						<div class="row justify-content-center">
+							<h:outputText class="text-center fs-2 col-12 mt-1" value="Choose a level"/>
+						</div>
+						<div class="row justify-content-center gap-2 mt-0 mt-sm-2">
+							<h:commandButton class="quiz-button btn col-10 col-md-8 shadow bg-body rounded" value="Easy" action="#{quizBean.easyButton}" disabled="#{quizBean.disableEasyButton}">
+								<f:ajax  render=":subjectsForm @form"/>
+							</h:commandButton>
+							<h:commandButton class="quiz-button btn col-10 col-md-8 shadow bg-body rounded" value="Medium" action="#{quizBean.mediumButton}" disabled="#{quizBean.disableMediumButton}">
+								<f:ajax render=":subjectsForm @form"/>
+							</h:commandButton>
+							<h:commandButton class="quiz-button btn col-10 col-md-8 shadow bg-body rounded" value="Hard" action="#{quizBean.hardButton}" disabled="#{quizBean.disableHardButton}">
+								<f:ajax render=":subjectsForm @form"/>
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+				</h:form>
+				
+				<h:form id="subjectsForm" class="mt-2 mb-5">
+					<h:panelGroup rendered="#{quizBean.subjectsRender}">
+						<div class="row justify-content-center">
+							<h:outputText class="text-center fs-2 col-12" value="Choose a subject"/>
+						</div>
+						<div class="row justify-content-center d-grip mt-0 mt-sm-2 gap-2 animate__animated animate__fadeIn" >				
+							<ui:repeat value="#{quizBean.subjects}" var="subject"  >
+								<h:commandButton class="quiz-button col-10 col-md-8 btn shadow" value="#{subject.prompt}" action="#{quizBean.generateExercise(subject)}">
+									<f:ajax render="@form :exerciseForm :levelsForm"/>
+								</h:commandButton>
+							</ui:repeat>
+						</div>
+					</h:panelGroup>
+				</h:form>
+				
+				<h:form id="exerciseForm">
+					<h:panelGroup rendered="#{quizBean.quizRender}">
+						<div class="row justify-content-center">	
+							<h:outputLabel id="task-prompt" class="col-10 text-center" value="#{quizBean.tasks[quizBean.count].prompt}"/>
+						</div>
+						<div class="mt-2 mt-sm-3">
+							<ui:repeat value="#{quizBean.tasks[quizBean.count].options}" var="option" varStatus="status">
+								<h:panelGroup id="buttonsOptions">
+									<div class="row justify-content-center">																																							
+										<h:commandButton class="quiz-button task-button text-wrap buttonOptions text col-10 btn shadow mb-2 bg-body rounded" value="#{option.prompt}" action="#{quizBean.checkOption(status.index)}" disabled="#{quizBean.disableOptionButtons}">
+											<f:ajax render="@form :nextTaskForm :score" />
+										</h:commandButton>
+									</div>
+								</h:panelGroup>
+							</ui:repeat>
+						</div>
+					</h:panelGroup>
+				</h:form>
+				
+				<h:form id="nextTaskForm" class="mt-2">
+					<h:panelGroup rendered="#{quizBean.nextTaskRender}">
+						<div class="row">
+							<h:outputText class="col text-center fs-4" value="Score: #{quizBean.score}"/>
+						</div>
+						<div class="row row-cols-2 justify-content-center mt-3">
+						
+							<div class="rounded animate__animated #{quizBean.warningCardClass} #{quizBean.warningCardShadow}">
+								<span id="warning-content" class="text-white d-none d-sm-block">#{quizBean.warning} <i class="#{quizBean.warningContentIcon}"></i></span>
+								<span id="warning-content" class="text-white d-block d-sm-none">#{quizBean.warningReduced} <i class="#{quizBean.warningContentIcon}"></i></span>
+							</div>	
+														
+							<h:commandButton id="nextQuestionButton" action="#{quizBean.updateExercise}" rendered="#{quizBean.warning!=null and quizBean.nextQuestionButtonRender}" style="display: none;">
+								<f:ajax render=":exerciseForm @form :endQuizForm" disabled="#{quizBean.saveQuizAjaxDisabled}"/>
+								<button class="col col-4 mx-auto btn btn-success shadow rounded animate__animated animate__fadeIn" type="submit" id="nextTaskForm:nextQuestionButton" 
+								 	name="nextTaskForm:nextQuestionButton">
+								 		<span class="d-none d-sm-block">#{quizBean.buttonNextLabel} <i class="#{quizBean.buttonNextIcon}"></i></span>
+								 		<span class="d-block d-sm-none">#{quizBean.buttonNextLabelReduced} <i class="#{quizBean.buttonNextIcon}"></i></span>
+						 		</button>
+							</h:commandButton>
+							
+							<h:commandButton id="loginNeedButton" action="#{quizBean.loginToSave}" rendered="#{quizBean.loginToSaveRender}" style="display: none">
+								<button class="col col-4 mx-auto btn btn-warning shadow rounded animate__animated animate__pulse" type="submit" 
+									id="nextTaskForm:loginNeedButton" name="nextTaskForm:loginNeedButton">
+									<span class="d-none d-sm-block">Sign in to save <i class="fas fa-sign-in-alt"></i></span>
+									<span class="d-block d-sm-none">Sign in <i class="fas fa-sign-in-alt"></i></span>
+								</button>
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+				</h:form>
+								
+				<h:form id="endQuizForm" class="animate__animated animate__fadeIn">
+					<h:panelGroup rendered="#{quizBean.endRender}">
+						<div class="row justify-content-center mt-3">
+							<h:outputText class="col col-12 text-center fs-2" value="That's the end of the quiz"/>
+							<h:outputText class="col col-12 text-center fs-3 mt-3 mt-sm-4 animate__animated animate__bounceIn" value="Final score: #{quizBean.score}"/>
+							<h:commandButton class="quiz-button col col-8 mx-auto btn mt-4 shadow rounded" value="Try again" action="#{quizBean.restart}">
+								<f:ajax render="@form :exerciseForm :subjectsForm :levelsForm :exerciseForm :nextTaskForm"/>
+							</h:commandButton>
+							<h:commandButton class="quiz-button col col-8 mx-auto btn btn-warning mt-3 shadow rounded" value="Go back to main menu" action="#{quizBean.reset}" />
+						</div>
+					</h:panelGroup>
+				</h:form>
+			</div>
+			
+			<script type="text/javascript" src="/resources/js/jquery-3.6.0.min.js"></script>
+			
+		</ui:define>
+		
+		<ui:define name="footer">
+			<div class="d-none d-sm-block">
+				<ui:include src="/templates/_footer.xhtml" />
+			</div>
+		</ui:define>
+			
+	</ui:composition>
+</html>

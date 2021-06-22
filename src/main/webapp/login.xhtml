@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="/templates/_template.xhtml">
+    	
+    	<ui:define name="additional-content">
+			<meta id="google-client" name="google-signin-client_id" content="984346929011-3vfjq0ra18qbuh16ejrt40mdf8807bgb.apps.googleusercontent.com" />
+			<link type="text/css" rel="stylesheet" href="/resources/css/bootstrap-social.css" media="screen,projection" />
+			<link type="text/css" rel="stylesheet" href="/resources/css/login.css" media="screen,projection" />
+    	</ui:define>
+    	
+    	<div id="navbar">
+			<ui:define name="nav-expanded">
+		      	<ui:include src="/templates/_login-nav.xhtml" />
+			</ui:define>
+			<ui:define name="nav-collapsed">
+		      	<ui:include src="/templates/_login-nav.xhtml" />
+			</ui:define>
+		</div>
+    
+		<ui:define name="content">
+		    <section class="container">
+			    <div class="row justify-content-center mt-3 mb-3 d-grip gap-2">
+    		    	<h:outputText class="col-12 text-center text-danger" value="#{param['logout']}" />
+			    	<h4 class="col-12 text-center">Sign in</h4>
+			    	<a href="/oauth2/authorization/google" data-onsucess="onSignIn" class="col-10 col-sm-10 col-lg-6 btn btn-block btn-social btn-google shadow">
+			    		<span class="fa fa-google"></span>
+			  			Continue with Google
+			    	</a>
+					<a href="/oauth2/authorization/facebook" id="facebook-button" class="col-10 col-sm-10 col-lg-6 btn btn-block btn-social btn-facebook shadow">
+						<span class="fa fa-facebook"></span>
+						Continue with Facebook
+					</a>
+				</div>
+				
+				<div class="row justify-content-center">
+					<div class="col-10 col-sm-10 col-lg-6">
+						<hr class="solid" />
+					</div>
+				</div>
+				
+				<div class="row row-cols-2 justify-content-center mt-2">
+					<h4 class="col-12 text-center mb-1 mb-sm-3">Sign in with your e-mail account</h4>
+			        <form action="/login" method="post" class="col-10 col-sm-10 col-lg-6 mb-2">
+						
+						<div class="row justify-content-center">
+							<h:messages class="text-danger text-center mb-1" layout="table" />
+			        		<h:outputText value="#{param['error']}" class="text-danger text-center"/>
+							<div class="col-12 col-sm-3 col-md-2 mt-1">						
+								<label for="email-input">Username:</label>
+							</div>
+				        	<div class="col-12 col-sm-9 col-md-10 mb-1">
+				        		<div class="input-group">
+					        		<span class="input-group-text" id="email-addon"><i class="fas fa-envelope"></i></span>
+					            	<input id="email-input" name="username" type="email" class="form-control shadow" placeholder="Insert your e-mail" aria-label="E-mail" aria-describedby="email-addon"/>
+				            	</div>
+			            	</div>
+			            	<div class="col-12 col-sm-3 col-md-2 mt-1">						
+								<label for="password-input">Password:</label>
+							</div>
+							<div class="col-12 col-sm-9 col-md-10 mb-1">
+				        		<div class="input-group">
+				        			<span class="input-group-text" id="password-addon"><i class="fas fa-unlock"></i></span>
+			            			<input id="password-input" name="password" type="password" class="form-control shadow" placeholder="Insert your password" aria-label="E-mail" aria-describedby="password-addon"/>
+			            		</div>
+			            	</div>
+		            		<input id="login-button" class="col-12 btn mt-3 mb-2 shadow" type="submit" value="Sign In"/>
+		            	</div>
+			        </form>
+			        
+			    	<div class="col-12 text-center mb-2">
+			    		<a href="/user/register" class="link-primary" style="font-weight: bold; text-decoration: none;">If you don't have an account, create one here.</a>
+			    	</div>
+			   		<div class="col-12 text-center">
+			   			<a href="/user/password" class="link-primary" style="font-weight: bold; text-decoration: none;">If you forgot your password, click here.</a>
+			    	</div>
+	    		</div>
+		    </section>
+		
+		  	<script src="https://apis.google.com/js/platform.js" async="true" defer="defer"></script>
+			
+		</ui:define>
+		
+		<ui:define name="footer">
+			<div class="d-none d-sm-block">
+				<ui:include src="/templates/_footer.xhtml" />
+			</div>
+		</ui:define>
+		
+	</ui:composition>
+
+</html>

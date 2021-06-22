@@ -1,0 +1,137 @@
+[
+	{
+		"prompt": "The dog wen for him.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "The dog barked at him."},
+				{"prompt": "The dog attacked him."},
+				{"prompt": "The dog followed him."}
+			]
+	},
+	{
+		"prompt": "I feel for ou.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "I am fond of you."},
+				{"prompt": "I pity you."},
+				{"prompt": "I sympathise for you."}
+			]
+	},
+	{
+		"prompt": "She got ove her illness.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "She learned from her ilness."},
+				{"prompt": "She died from her ilness."},
+				{"prompt": "She recovered from her illness."}
+			]
+	},
+	{
+		"prompt": "The police ooked into it.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "The police didn't care about it."},
+				{"prompt": "The police ivestigated it."},
+				{"prompt": "The police looked inside it."}
+			]
+	},
+	{
+		"prompt": "She came upwith the solution.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "She refused the solution."},
+				{"prompt": "She thought of the solution."},
+				{"prompt": "She couldn't understand the solution."}
+			]
+	},
+	{
+		"prompt": "It was easyto find out the answer.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "It was easy to forget the answer."},
+				{"prompt": "It was easy to share the answer."},
+				{"prompt": "It was easy to discover the answer."}
+			]
+	},
+	{
+		"prompt": "When are wesetting up the next meeting?",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "When are we recording the next meeting?"},
+				{"prompt": "When are we arranging the next meeting?"},
+				{"prompt": "When are we beginning the next meeting?"}
+			]
+	},
+	{
+		"prompt":"You'll be ale ___ that book out of the library.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"to take"},
+				{"prompt":"to bring"},
+				{"prompt":"to move"}
+			]
+	},
+	{
+		"prompt":"We have ___ahead if we want the party to be a success.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"to go"},
+				{"prompt":"to plan"},
+				{"prompt":"to push"}
+			]
+	},
+	{
+		"prompt":"She didn't ay goodbye before ___ off. She must be upset.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"she switched"},
+				{"prompt":"she cut"},
+				{"prompt":"she rang"}
+			]
+	},
+	{
+		"prompt":"He decided __ it down, although it was a good job offer.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"to turn"},
+				{"prompt":"to pass"},
+				{"prompt":"to take"}
+			]
+	},
+	{
+		"prompt":"When I saw is awful haircut I burst ___ laughing.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"into"},
+				{"prompt":"burst"},
+				{"prompt":"in"}
+			]
+	},
+	{
+		"prompt":"As time ___we do more damage to the environment.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"goes beyond"},
+				{"prompt":"goes forward"},
+				{"prompt":"goes by"}
+			]
+	},
+	{
+		"prompt":"She has decded to take ___ a new hobby.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"up"},
+				{"prompt":"over"},
+				{"prompt":"on"}
+			]
+	},
+	{
+		"pompt":"Could you repeat? I couldn't ___ what you said.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"make up"},
+				{"prompt":"make out"},
+				{"prompt":"make over"}
+			]
+	}
+]

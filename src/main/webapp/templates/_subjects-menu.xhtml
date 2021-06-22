@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+xmlns:p="http://primefaces.org/ui">
+	
+	<p:commandButton id="dynaButton" value="Menu" type="button" icon="pi pi-bars" styleClass="mt-3 ui-button-outlined"/>
+    <p:menu overlay="true" trigger="dynaButton" my="left top" at="left bottom">
+        <p:menuitem value="List my subjects" icon="pi pi-list" url="/english/load_subject"/>
+	    <p:menuitem value="Make a new subject" icon="pi pi-pencil" url="/english/subject"/>
+	</p:menu>
+
+</html>

@@ -1,0 +1,38 @@
+[
+  {
+    "prompt":"Comparative and superlative",
+    "fileName":"easy_comparative_superlative.json"
+  },
+  {
+    "prompt":"First conditional",
+    "fileName":"easy_first_conditional.json"
+  },
+  {
+    "prompt":"Present simple and continuous",
+    "fileName":"easy_present_simple_continuous.json"
+  },
+  {
+    "prompt":"Present simple and perfect",
+    "fileName":"easy_present_simple_perfect.json"
+  },
+  {
+    "prompt":"Reported speech",
+    "fileName":"easy_reported_speech.json"
+  },
+  {
+    "prompt":"Simple past",
+    "fileName":"easy_simple_past.json"
+  },
+  {
+    "prompt":"Simple present",
+    "fileName":"easy_simple_present.json"
+  },
+  {
+    "prompt":"Verb to be",
+    "fileName":"easy_verb_to_be.json"
+  },
+  {
+    "prompt":"Going to",
+    "fileName":"easy_going_to.json"
+  }
+]

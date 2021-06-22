@@ -1,0 +1,218 @@
+[
+	{
+		"prompt": "She hadn't bargained for this.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "She hadn't expected this."},
+				{"prompt": "She hadn't bought this."},
+				{"prompt": "She hadn't profited from this."}
+			]
+	},
+	{
+		"prompt": "It suddenly dawned on her.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "She suddenly turned the lights on."},
+				{"prompt": "She suddenly realised."},
+				{"prompt": "She was suddenly seen."}
+			]
+	},
+	{
+		"prompt": "They talked it over.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "They discussed it."},
+				{"prompt": "They talked a lot."},
+				{"prompt": "They gossiped."}
+			]
+	},
+	{
+		"prompt": "She did up her laces.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "She tied her laces."},
+				{"prompt": "She painted her laces."},
+				{"prompt": "She sewed her laces."}
+			]
+	},
+	{
+		"prompt": "He called on her.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "He telephoned her."},
+				{"prompt": "He visited her."},
+				{"prompt": "He blamed her."}
+			]
+	},
+	{
+		"prompt": "She made for the living room.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "She went towards the living room."},
+				{"prompt": "She paid to build the living room."},
+				{"prompt": "She decorated the living room."}
+			]
+	},
+	{
+		"prompt": "He launched into a long speech.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "He improvised a long speech."},
+				{"prompt": "He got lost in his long speech."},
+				{"prompt": "He began a long speech."}
+			]
+	},
+	{
+		"prompt": "He takes after his mother.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "He has the same profession as his mother."},
+				{"prompt": "He looks like his mother."},
+				{"prompt": "He is like his mother."}
+			]
+	},
+	{
+		"prompt": "He pointed out the mall would be closed.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "He informed the mall would be closed."},
+				{"prompt": "He forgot the mall would be closed."},
+				{"prompt": "He remembered the mall would be closed."}
+			]
+	},
+	{
+		"prompt": "Who's going to take on the new client?",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "Who's going to be responsible for the new client?"},
+				{"prompt": "Who's going to bring the new client?"},
+				{"prompt": "Who's going to talk to the new client?"}
+			]
+	},
+	{
+		"prompt": "He will not back down on his decision.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "He will not change his mind about his decision."},
+				{"prompt": "He will not think about his decision."},
+				{"prompt": "He won't ellaborate his decision."}
+			]
+	},
+	{
+		"prompt": "Book in at the reception.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "Take your book at the reception"},
+				{"prompt": "Pay for the book at the reception"},
+				{"prompt": "Register at the reception"}
+			]
+	},
+	{
+		"prompt":"The team have been ___ at developing the software.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"slogging away"},
+				{"prompt":"slogging around"},
+				{"prompt":"sloggin through"}
+			]
+	},
+	{
+		"prompt":"Britain ___ the rest of Europe on this issue.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"is droping far behind"},
+				{"prompt":"is lagging far behind"},
+				{"prompt":"is straggling far behind"}
+			]
+	},
+	{
+		"prompt":"he comes home ___ fried food from the restaurant.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"reeking in"},
+				{"prompt":"reeking with"},
+				{"prompt":"reeking of"}
+			]
+	},
+	{
+		"prompt":"It took me a while to ___ of spicy food.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"cotton on to the pleasures"},
+				{"prompt":"wool on to the pleasures"},
+				{"prompt":"nylon on to the pleasures"}
+			]
+	},
+	{
+		"prompt":"They tried to goad us ___ attacking the police.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"onto"},
+				{"prompt":"into"},
+				{"prompt":"at"}
+			]
+	},
+	{
+		"prompt":"Both countries are trying to ___ the cease-fire.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"expand out details of"},
+				{"prompt":"pad out details of"},
+				{"prompt":"flesh out details of"}
+			]
+	},
+	{
+		"prompt":"I managed to ___ my exams get good grades.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"muddle through"},
+				{"prompt":"muddle over"},
+				{"prompt":"muddle around"}
+			]
+	},
+	{
+		"prompt":"Growth in the economy may have ___ out.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"fallen"},
+				{"prompt":"bottomed"},
+				{"prompt":"flattened"}
+			]
+	},
+	{
+		"prompt":"The sound of his footsteps gradually died ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"down"},
+				{"prompt":"out"},
+				{"prompt":"away"}
+			]
+	},
+	{
+		"prompt":"Let’s ___ this meeting, it’s time for lunch.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"wind up"},
+				{"prompt":"wind out"},
+				{"prompt":"wind over"}
+			]
+	},
+	{
+		"prompt": "I mistook a piece of rope ___ a snake.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "from"},
+				{"prompt": "for"},
+				{"prompt": "to"}
+			]
+	},
+	{
+		"prompt": "I can't piece together the truth about it.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "I can't discover the truth about it."},
+				{"prompt": "I can't hide the truth about it."},
+				{"prompt": "I can't deny the truth about it."}
+			]
+	}
+]

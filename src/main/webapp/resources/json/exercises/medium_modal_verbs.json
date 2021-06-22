@@ -1,0 +1,182 @@
+[
+	{
+		"prompt": "He ___ play tennis very well.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "can"},
+				{"prompt": "must"},
+				{"prompt": "should"}
+			]
+	},
+	{
+		"prompt": "___ you like another drink?",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "Could"},
+				{"prompt": "Should"},
+				{"prompt": "Would"}
+			]
+	},
+	{
+		"prompt": "If you travel. You ___ take your camera.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "must"},
+				{"prompt": "should"},
+				{"prompt": "ought to"}
+			]
+	},
+	{
+		"prompt": "You ___ pass the exam if you don't study.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "won't"},
+				{"prompt": "wouldn't"},
+				{"prompt": "mustn't"}
+			]
+	},
+	{
+		"prompt": "You ___ talk loudly in the library.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "couldn't"},
+				{"prompt": "mustn't"},
+				{"prompt": "wouldn't"}
+			]
+	},
+	{
+		"prompt": "___ I borrow your pen.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "Must"},
+				{"prompt": "Will"},
+				{"prompt": "Shall"}
+			]
+	},
+	{
+		"prompt": "Excuse me. ___ I answer the phone?",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "Will"},
+				{"prompt": "Would"},
+				{"prompt": "May"}
+			]
+	},
+	{
+		"prompt": "You ___ be over 21 to buy liquor.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "must"},
+				{"prompt": "may"},
+				{"prompt": "should"}
+			]
+	},
+	{
+		"prompt": "It's late. This child ___ be in bed.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "ought to"},
+				{"prompt": "could"},
+				{"prompt": "will"}
+			]
+	},
+	{
+		"prompt": "It's late. My parents ___ be sleeping.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "shall"},
+				{"prompt": "might"},
+				{"prompt": "would"}
+			]
+	},
+	{
+		"prompt": "I wish I ___ run faster.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "could"},
+				{"prompt": "would"},
+				{"prompt": "ought to"}
+			]
+	},
+	{
+		"prompt": "This time tomorrow we ___ be traveling.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "will"},
+				{"prompt": "can't"},
+				{"prompt": "might"}
+			]
+	},
+	{
+		"prompt": "Waiter! ___ I have the menu please?",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "Must"},
+				{"prompt": "Should"},
+				{"prompt": "Could"}
+			]
+	},
+	{
+		"prompt": "You ___ drive so fast here.",
+		"rightOption":"2",
+			"options":[
+				{"prompt": "couldn't"},
+				{"prompt": "wouldn't"},
+				{"prompt": "shouldn't"}
+			]
+	},
+	{
+		"prompt": "Children ___ drink alcohol.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "mustn't"},
+				{"prompt": "wouldn't"},
+				{"prompt": "won't"}
+			]
+	},
+	{
+		"prompt": "I ___ go out tonight. I have to study.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "won't"},
+				{"prompt": "wouldn't"},
+				{"prompt": "couldn't"}
+			]
+	},
+	{
+		"prompt": "Children ___ drink alcohol.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "mustn't"},
+				{"prompt": "wouldn't"},
+				{"prompt": "won't"}
+			]
+	},
+	{
+		"prompt": "Spain ___ be very hot in the summer.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "could"},
+				{"prompt": "can"},
+				{"prompt": "should"}
+			]
+	},
+	{
+		"prompt": "Everybody ___ eat less junk food",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "should"},
+				{"prompt": "can"},
+				{"prompt": "might"}
+			]
+	},
+	{
+		"prompt": "You have a cold. You ___ stay home.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "may"},
+				{"prompt": "could"},
+				{"prompt": "should"}
+			]
+	}
+]

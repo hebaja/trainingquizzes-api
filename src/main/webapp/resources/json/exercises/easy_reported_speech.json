@@ -1,0 +1,119 @@
+[
+	{
+		"prompt":"\"I've left some food in the pot\", said Sue.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"Sue said she had left some food in the pot."},
+				{"prompt":"Sue said she left some food in the pot."},
+				{"prompt":"Sue said she leaves some food in the pot."}
+			]
+	},
+	{
+		"prompt":"\"I'll ask Andrew to give me a lift\", said Anna.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"Anna said she asked Andrew to give her a lift."},
+				{"prompt":"Anna said she would ask Andrew to give her a lift."},
+				{"prompt":"Anna said she asks Andrew to give her a lift."}
+			]
+	},
+	{
+		"prompt":"\"I finish work early today\", said Anna.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"Mary said she finished work early today."},
+				{"prompt":"Mary said she finished work early this day."},
+				{"prompt":"Mary said she finished work early that day."}
+			]
+	},
+	{
+		"prompt":"\"I booked the tickets this morning\", said Claire.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"Claire said she had booked the tickets that morning."},
+				{"prompt":"Claire said she booked the tickets that morning."},
+				{"prompt":"Claire said she did book the tickets that morning."}
+			]
+	},
+	{
+		"prompt":"\"I'll try to be there on time\", said Louisa.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"Louisa said she tries to be there on time."},
+				{"prompt":"Louisa said she would try to be there on time."},
+				{"prompt":"Louisa said she tried to be there on time."}
+			]
+	},
+	{
+		"prompt":"\"The car has broken down\", said Steve.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"Steve said the car has broken down."},
+				{"prompt":"Steve said the car broke down."},
+				{"prompt":"Steve said the car had broken down."}
+			]
+	},
+	{
+		"prompt":"\"I'll be at work till late tonight\", said Gill.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"Gill said she would be at work late that night."},
+				{"prompt":"Gill said she had been at work late that night."},
+				{"prompt":"Gill said she was at work late that night."}
+			]
+	},
+	{
+		"prompt":"\"I don't eat fish\", said Corinne.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"Corinne said she wouldn't eat fish."},
+				{"prompt":"Corinne said she didn't eat fish."},
+				{"prompt":"Corinne said she hadn't eaten fish."}
+			]
+	},
+	{
+		"prompt":"\"I broke the mirror\", said Miguel.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"Miguel said he broke the mirror."},
+				{"prompt":"Miguel said he breaks the mirror."},
+				{"prompt":"Miguel said he had broken the mirror."}
+			]
+	},
+	{
+		"prompt":"\"I've passed my English exam\", said Carl.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"Carl said he had passed his English exam."},
+				{"prompt":"Carl said he would pass his English exam."},
+				{"prompt":"Carl said he will pass his English exam."}
+			]
+	},
+	{
+		"prompt":"\"I am going to the cinema this evening\", said Kim.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"Kim said she had gone to the cinema that evening."},
+				{"prompt":"Kim said she was going to the cinema that evening."},
+				{"prompt":"Kim said she would go to the cinema that evening."}
+			]
+	},
+	{
+		"prompt":"\"I'll pay the bill today\", said Kathy.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"Kathy said she would pay the bill today."},
+				{"prompt":"Kathy said she would pay the bill this day."},
+				{"prompt":"Kathy said she would pay the bill that day."}
+			]
+	},
+	{
+		"prompt":"\"I'll leave tomorrow\", said Hellen.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"Hellen said she would leave the next day."},
+				{"prompt":"Hellen said she would leave that day."},
+				{"prompt":"Hellen said she would leave then."}
+			]
+	}
+]

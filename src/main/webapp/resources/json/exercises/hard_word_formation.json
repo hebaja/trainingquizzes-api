@@ -1,0 +1,164 @@
+[
+	{
+		"prompt":"She looked nervous, ___ her lips.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"moistening"},
+				{"prompt":"moisturing"},
+				{"prompt":"moisturizing"}
+			]
+	},
+	{
+		"prompt":"This new water cooler is to ___ the drinking water.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"purificy"},
+				{"prompt":"purify"},
+				{"prompt":"purity"}
+			]
+	},
+	{
+		"prompt":"The directive has the aim of ___ work practices.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"harmonysize"},
+				{"prompt":"harmonying"},
+				{"prompt":"harmonising"}
+			]
+	},
+	{
+		"prompt":"She was taking drugs, her eye pupils were so ___.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"enlarged"},
+				{"prompt":"inlarged"},
+				{"prompt":"enlarging"}
+			]
+	},
+	{
+		"prompt":"Several world-renowned ___ addressed the conference.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"historicians"},
+				{"prompt":"historians"},
+				{"prompt":"historyans"}
+			]
+	},
+	{
+		"prompt":"The patient had several ___ of the brain.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"unnormalities"},
+				{"prompt":"inormilities"},
+				{"prompt":"abnormalities"}
+			]
+	},
+	{
+		"prompt":"She struggled along with an ___ of clothes.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"armful"},
+				{"prompt":"armfull"},
+				{"prompt":"armfuly"}
+			]
+	},
+	{
+		"prompt":"The computer system requires several ___ checks.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"maintainance"},
+				{"prompt":"maintenance"},
+				{"prompt":"maintanance"}
+			]
+	},
+	{
+		"prompt":"He was longing for the ___ of his father.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"approvity"},
+				{"prompt":"approving"},
+				{"prompt":"approval"}
+			]
+	},
+	{
+		"prompt":"She frowned at Jackson ___.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"apologetically"},
+				{"prompt":"apologetic"},
+				{"prompt":"apologying"}
+			]
+	},
+	{
+		"prompt":"It truly is an epic tale, ___ one of the best.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"arguing"},
+				{"prompt":"arguably"},
+				{"prompt":"arguable"}
+			]
+	},
+	{
+		"prompt":"They are revised by statutory ___ committees.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"assessed"},
+				{"prompt":"assessing"},
+				{"prompt":"assessment"}
+			]
+	},
+	{
+		"prompt":"They weren't expecting for the ___ of the troops.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"withdrawal"},
+				{"prompt":"withdrawn"},
+				{"prompt":"withdrawing"}
+			]
+	},
+	{
+		"prompt":"I'm pushing you to ___ your perspective.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"broadening"},
+				{"prompt":"broaden"},
+				{"prompt":"broadth"}
+			]
+	},
+	{
+		"prompt":"we aim for the ___ of the whole community.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"sustanance"},
+				{"prompt":"sustainance"},
+				{"prompt":"sustenance"}
+			]
+	},
+	{
+		"prompt":"Putting out wildfires is a very  job.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"perilous"},
+				{"prompt":"imperil"},
+				{"prompt":"perily"}
+			]
+	},
+	{
+		"prompt":"I think he behaved ___ towards you.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"disgrace"},
+				{"prompt":"disgracefully"},
+				{"prompt":"disgraceful"}
+			]
+	},
+	{
+		"prompt":"The decision does seem a little ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"heartbreak"},
+				{"prompt":"dishearten"},
+				{"prompt":"heartless"}
+			]
+	}
+]

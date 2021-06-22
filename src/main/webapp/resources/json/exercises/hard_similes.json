@@ -1,0 +1,137 @@
+[
+	{
+		"prompt":"You guys are going to stand out like ___ thumb.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"a sore"},
+				{"prompt":"a swollen"},
+				{"prompt":"bruised"}
+			]
+	},
+	{
+		"prompt":"My joke about the alcoholic went down like a lead ___.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"ball"},
+				{"prompt":"balloon"},
+				{"prompt":"load"}
+			]
+	},
+	{
+		"prompt":"His father always smoked like a ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"candle"},
+				{"prompt":"pipe"},
+				{"prompt":"chimney"}
+			]
+	},
+	{
+		"prompt":"Our teacher at school used to have eyes like ____.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"a hawk"},
+				{"prompt":"an eagle"},
+				{"prompt":"an owl"}
+			]
+	},
+	{
+		"prompt":"The country is safe as ___ for visitors.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"flats"},
+				{"prompt":"houses"},
+				{"prompt":"blocks"}
+			]
+	},
+	{
+		"prompt":"Physically John is as ___ as nails.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"strong"},
+				{"prompt":"solid"},
+				{"prompt":"hard"}
+			]
+	},
+	{
+		"prompt":"The film was as ___ as dishwater and we decided to leave.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"dull"},
+				{"prompt":"grim"},
+				{"prompt":"flat"}
+			]
+	},
+	{
+		"prompt":"We'll need to make sure the car is as ___ as a whistle.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"shiny"},
+				{"prompt":"clean"},
+				{"prompt":"bright"}
+			]
+	},
+	{
+		"prompt":"Today I can't. I'm as busy as ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"a bird"},
+				{"prompt":"an ant"},
+				{"prompt":"a bee"}
+			]
+	},
+	{
+		"prompt":"If you go to the gym everyday. You'll be as strong as ___.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"an ox"},
+				{"prompt":"a fox"},
+				{"prompt":"a horse"}
+			]
+	},
+	{
+		"prompt":"That was a hard class. His explanation was as clear ___.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"as clay"},
+				{"prompt":"as mud"},
+				{"prompt":"as sludge"}
+			]
+	},
+	{
+		"prompt":"For me, watching a soccer match is like watching grass ___.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"go"},
+				{"prompt":"flow"},
+				{"prompt":"grow"}
+			]
+	},
+	{
+		"prompt":"Don't just sit there like a bump on a ___.",
+		"rightOption":"0",
+			"options":[
+				{"prompt":"log"},
+				{"prompt":"fog"},
+				{"prompt":"frog"}
+			]
+	},
+	{
+		"prompt":"She is tall and thin as a ___.",
+		"rightOption":"1",
+			"options":[
+				{"prompt":"fake"},
+				{"prompt":"rake"},
+				{"prompt":"scrape"}
+			]
+	},
+	{
+		"prompt":"She walked in as cool ___, as if nothing had happened.",
+		"rightOption":"2",
+			"options":[
+				{"prompt":"as lettuce"},
+				{"prompt":"as an eggplant"},
+				{"prompt":"as a cucumber"}
+			]
+	}
+]

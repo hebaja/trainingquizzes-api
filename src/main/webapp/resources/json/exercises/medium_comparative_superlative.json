@@ -1,0 +1,182 @@
+[
+	{
+		"prompt": "My brother used to play ___ does now.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "tennis best than him"},
+				{"prompt": "tennis better than he"},
+				{"prompt": "tennis better then him"}
+			]
+	},
+	{
+		"prompt": "These sunglasses ___ than my last pair.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "were a bit more cheap"},
+				{"prompt": "were a bit cheapest"},
+				{"prompt": "were a bit cheaper"}
+			]
+	},
+	{
+		"prompt": "He was one of __ in the world.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "more talented than designers"},
+				{"prompt": "the most talented designers"},
+				{"prompt": "the most talent design"}
+			]
+	},
+	{
+		"prompt": "I liked your hair when it ___ is now.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "wasn't as straight as it"},
+				{"prompt": "wasn't more straight as it"},
+				{"prompt": "wasn't less straighter as it"}
+			]
+	},
+	{
+		"prompt": "This shop is ___ all.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "the more expensive of"},
+				{"prompt": "the least expensive of"},
+				{"prompt": "the most expensiver of"}
+			]
+	},
+	{
+		"prompt": "Suzanne was far ___ her sister.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "elegantlier dressed than"},
+				{"prompt": "the most elegantly dressed than"},
+				{"prompt": "more elegantly dressed than"}
+			]
+	},
+	{
+		"prompt": "Travelling by train ___ travelling by car.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "is a more faster than"},
+				{"prompt": "is the fastest than"},
+				{"prompt": "is a lot quicker than"}
+			]
+	},
+	{
+		"prompt": "Harry dressed ___ didn't have a girlfriend.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "less smartly when he"},
+				{"prompt": "more smarter when he"},
+				{"prompt": "less smartly than he"}
+			]
+	},
+	{
+		"prompt": "That model is ___ I thought.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "not as old as"},
+				{"prompt": "not as older as"},
+				{"prompt": "not as old than"}
+			]
+	},
+	{
+		"prompt": "The more she thought, ___ she became.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "the most concerned"},
+				{"prompt": "the more concerned"},
+				{"prompt": "the more concerned than"}
+			]
+	},
+	{
+		"prompt": "This year's designer clothes ___ they did last year.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "have sold slightly less well than"},
+				{"prompt": "have sold slightly most well than"},
+				{"prompt": "have sold slightly least well than"}
+			]
+	},
+	{
+		"prompt": "She earned ___ last year.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "as much than me"},
+				{"prompt": "as much as me"},
+				{"prompt": "as more as me"}
+			]
+	},
+	{
+		"prompt": "Now I can ___ than I did in the past.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "save a good deal the most"},
+				{"prompt": "save a good deal most"},
+				{"prompt": "save a good deal more"}
+			]
+	},
+	{
+		"prompt": "The more people worry about banks, ___.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "the most they use cash"},
+				{"prompt": "they use cash more"},
+				{"prompt": "the more they use cash"}
+			]
+	},
+	{
+		"prompt": "Making ends meet is getting ___ difficult.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "more and more"},
+				{"prompt": "the most"},
+				{"prompt": "most than"}
+			]
+	},
+	{
+		"prompt": "The harder the game got, the ___ .",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "least interested in it I was"},
+				{"prompt": "less interested in it I was"},
+				{"prompt": "more interesting in it I was"}
+			]
+	},
+	{
+		"prompt": "The course ___ I'd expected.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "as difficult than"},
+				{"prompt": "less difficult as"},
+				{"prompt": "more difficult than"}
+			]
+	},
+	{
+		"prompt": "This exercise ___ the last one.",
+		"rightOption": "1",
+			"options":[
+				{"prompt": "is as hard than"},
+				{"prompt": "is not as hard as"},
+				{"prompt": "is not as harder as"}
+			]
+	},
+	{
+		"prompt": "The rainfall in London ___ in previous decades.",
+		"rightOption": "0",
+			"options":[
+				{"prompt": "has been considerably higher than"},
+				{"prompt": "has been considerably highest"},
+				{"prompt": "has been considerably highest than"}
+			]
+	},
+	{
+		"prompt": "The comedian ___ the audience expected.",
+		"rightOption": "2",
+			"options":[
+				{"prompt": "was more nearly funny"},
+				{"prompt": "wasn't as nearly funny than"},
+				{"prompt": "wasn't nearly as funny as"}
+			]
+	}
+]

@@ -1,0 +1,152 @@
+[
+	{
+		"prompt":"Do you think ___ married?",
+		"rightOption":"0",
+		"options":[
+			{"prompt":"he is"},
+			{"prompt":"is he"},
+			{"prompt":"does he"}
+		]
+	},
+   {
+		"prompt":"Do you know if ___ children?",
+		"rightOption":"1",
+		"options":[
+			{"prompt":"Does the teacher have"},
+			{"prompt":"the teacher has"},
+			{"prompt":"Does the teacher has"}
+		]
+	},
+   {
+		"prompt":"Can you tell me if ___ to the movies?",
+		"rightOption":"1",
+		"options":[
+			{"prompt":"can I go"},
+			{"prompt":"I can go"}
+		]
+	},
+   {
+		"prompt":"Do you know if he likes soccer?",
+		"rightOption":"0",
+		"options":[
+			{"prompt":"The question is correct"},
+			{"prompt":"The question is not correct"}
+		]
+	},
+   {
+		"prompt":"Do you think ___ a bank near here?",
+		"rightOption":"1",
+		"options":[
+			{"prompt":"is there"},
+			{"prompt":"there is"}
+		]
+	},
+   {
+		"prompt":"Could you tell if ___ swim?",
+		"rightOption":"0",
+		"options":[
+			{"prompt":"she can"},
+			{"prompt":"can she"}
+		]
+	},
+   {
+		"prompt":"Do you think is there anything I could do to solve it?",
+		"rightOption":"1",
+		"options":[
+			{"prompt":"The question is correct"},
+			{"prompt":"The question is not correct"}
+		]
+	},
+   {
+		"prompt":"Do you think there are subway stations near here?",
+		"rightOption":"0",
+		"options":[
+			{"prompt":"The question is correct"},
+			{"prompt":"The question is not correct"}
+		]
+	},
+   {
+		"prompt":"What do you think ___ do?",
+		"rightOption":"0",
+		"options":[
+			{"prompt":"I should"},
+			{"prompt":"should I"},
+         {"prompt":"do I should"}
+		]
+	},
+   {
+		"prompt":"What do you think ___ do?",
+		"rightOption":"2",
+		"options":[
+			{"prompt":"could I"},
+			{"prompt":"did I could"},
+         {"prompt":"I could"}
+		]
+	},
+   {
+		"prompt":"Do you think ___ a Halloween party?",
+		"rightOption":"1",
+		"options":[
+			{"prompt":"are we having"},
+			{"prompt":"we are having"},
+         {"prompt":"having are we"}
+		]
+	},
+   {
+		"prompt":"Do you know if ___ at home now?",
+		"rightOption":"0",
+		"options":[
+			{"prompt":"your neighbors are"},
+			{"prompt":"are your neighbors"},
+         {"prompt":"do your neighbors are"}
+		]
+	},
+   {
+		"prompt":"Do you know why ___ crying?",
+		"rightOption":"2",
+		"options":[
+			{"prompt":"is the little baby"},
+			{"prompt":"the little is baby "},
+         {"prompt":"the little baby is"}
+		]
+	},
+   {
+		"prompt":"Do you know how many ___?",
+		"rightOption":"0",
+		"options":[
+			{"prompt":"cars he has"},
+			{"prompt":"cars does he have"},
+         {"prompt":"cars he have"},
+         {"prompt":"cars does he has"}
+		]
+	},
+   {
+		"prompt":"Does he know if ___?",
+		"rightOption":"3",
+		"options":[
+			{"prompt":"she like swimming"},
+			{"prompt":"does she like swimming"},
+         {"prompt":"does she likes swimming"},
+         {"prompt":"she likes swimming"}
+		]
+	},
+   {
+		"prompt":"Does she know if ___ tomorrow?",
+		"rightOption":"0",
+		"options":[
+			{"prompt":"he is comming"},
+			{"prompt":"is he comming"},
+         {"prompt":"comming is he"}
+		]
+	},
+   {
+		"prompt":"Can you tell me what ___?",
+		"rightOption":"2",
+		"options":[
+			{"prompt":"she want"},
+			{"prompt":"does she want"},
+         {"prompt":"she wants"},
+         {"prompt":"does she wants"}
+		]
+	}
+]
