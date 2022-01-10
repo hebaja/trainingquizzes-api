@@ -6,10 +6,10 @@ public class ExercisesQuantity {
 
 	private User user;
 	private LevelType level;
-	private String subject;
+	private Subject subject;
 	private long quantity;
 
-	public ExercisesQuantity(User user, LevelType level, String subject, long quantity) {
+	public ExercisesQuantity(User user, LevelType level, Subject subject, long quantity) {
 		this.user = user;
 		this.level = level;
 		this.subject = subject;
@@ -24,7 +24,7 @@ public class ExercisesQuantity {
 		return level;
 	}
 
-	public String getSubject() {
+	public Subject getSubject() {
 		return subject;
 	}
 

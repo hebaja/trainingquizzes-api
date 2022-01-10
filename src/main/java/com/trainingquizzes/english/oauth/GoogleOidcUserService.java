@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -35,6 +36,9 @@ public class GoogleOidcUserService extends OidcUserService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Value("${spring.security.oauth2.client.registration.google.client-id}")
+	private String googleClientId;
+	
 	private HttpTransport transport;
 	
 	@Override
@@ -56,7 +60,7 @@ public class GoogleOidcUserService extends OidcUserService {
 		final JacksonFactory jacksonFactory = new JacksonFactory();
 		
 		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
-				.setAudience(Collections.singletonList("984346929011-3vfjq0ra18qbuh16ejrt40mdf8807bgb.apps.googleusercontent.com"))
+				.setAudience(Collections.singletonList(googleClientId))
 				.build();
 		
 		try {

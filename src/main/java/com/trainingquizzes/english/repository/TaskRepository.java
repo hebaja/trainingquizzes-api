@@ -12,14 +12,10 @@ import com.trainingquizzes.english.model.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 	
-//	@Query("select t from TaskTest t join SubjectTest s where s.id = :subjectId")
-//	Optional<List<TaskTest>> findAllBySubjectIds(@Param("subjectId") Long subjectId);
-//
 	@Query("select t from Task t where t.subject = :subject")
 	Optional<List<Task>> findAllBySubject(@Param("subject") Subject subject);
 	
-	
-//	@Query("select t from TaskTest t where t.subject_id = id")
-//	Optional<List<Task>> findAllBySubjectId(@Param("id") Long id);
+	@Query("select t from Task t where t.subject.id = :subjectId")
+	Optional<List<Task>> findAllBySubjectId(@Param("subjectId") Long subjectId);
 
 }

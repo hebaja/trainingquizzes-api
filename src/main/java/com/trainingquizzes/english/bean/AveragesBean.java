@@ -38,6 +38,8 @@ public class AveragesBean {
 	@PostConstruct
 	public void generateAverages() {
 		
+		System.out.println("generating averages");
+		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userInfo = authentication.getName();
 		

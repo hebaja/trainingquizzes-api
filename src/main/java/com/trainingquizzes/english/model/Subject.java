@@ -3,6 +3,8 @@ package com.trainingquizzes.english.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,9 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+
+import com.trainingquizzes.english.enums.LevelType;
 
 @Entity
 public class Subject {
@@ -23,23 +28,35 @@ public class Subject {
 	
 	private String title;
     
-//    @ManyToMany(cascade = javax.persistence.CascadeType.REMOVE, fetch = FetchType.EAGER)
-//	@OneToMany(cascade = CascadeType.REMOVE)
-//	@JoinColumn(name = "subject_id")
-//	private List<Task> tasks;
-	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 	
-	@OneToMany(mappedBy = "subject")
+	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
     @Cascade(CascadeType.DELETE)
 	private List<Task> tasks;
 	
+	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
+	@Cascade(CascadeType.DELETE)
+	private List<Exercise> exercises;
+	
+	@Enumerated(EnumType.STRING)
+    private LevelType level;
+	
 	public Subject() {}
 	
-	public Subject(String title, List<Task> tasks) {
+	public Subject(String title, List<Task> tasks, User user, LevelType level) {
 		this.title = title;
 		this.tasks = tasks;
+		this.user = user;
+		this.level = level;
+	}
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getTitle() {
@@ -64,6 +81,27 @@ public class Subject {
 
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
+	}
+
+	public LevelType getLevel() {
+		return level;
+	}
+
+	public void setLevel(LevelType level) {
+		this.level = level;
+	}
+	
+	public List<Exercise> getExercises() {
+		return exercises;
+	}
+
+	public void setExercises(List<Exercise> exercises) {
+		this.exercises = exercises;
+	}
+
+	@Transient
+	public String getLevelCapitalize() {
+		return this.level.toString().substring(0, 1).toUpperCase() + this.level.toString().substring(1).toLowerCase();
 	}
 	
 }

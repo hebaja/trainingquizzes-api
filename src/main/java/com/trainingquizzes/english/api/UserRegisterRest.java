@@ -1,5 +1,7 @@
 package com.trainingquizzes.english.api;
 
+import static com.trainingquizzes.english.util.Constants.EMAIL_SET;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +35,6 @@ import com.trainingquizzes.english.token.PasswordResetToken;
 import com.trainingquizzes.english.token.Token;
 import com.trainingquizzes.english.token.UserRegisterToken;
 
-import static com.trainingquizzes.english.util.Constants.EMAIL_SET;
-import static com.trainingquizzes.english.util.Constants.DEFAULT_DOMAIN;
-
 @RestController
 @RequestMapping("/api/user/register")
 public class UserRegisterRest {
@@ -50,6 +50,9 @@ public class UserRegisterRest {
 	
 	@Autowired
 	private JavaMailSender emailSender;
+	
+	@Value("${spring-english-training-quizzes-default-domain}")
+	private String defaultDomain;
 	
 	@PostMapping
 	public Boolean userRegister(@RequestBody UserForm userForm) {
@@ -75,7 +78,7 @@ public class UserRegisterRest {
 					user.getEmail(), 
 					"Complete user registration", 
 					"To complete user registration, please click here: "
-							+ DEFAULT_DOMAIN
+							+ defaultDomain
 							+ "user/android/confirm-register?token=" 
 							+ userToRegisterToken.getToken() 
 							+ " (This link will expire after 24 hours).");
@@ -110,7 +113,7 @@ public class UserRegisterRest {
 					user.getEmail(), 
 					"Complete password reset", 
 					"To complete the password reset process, please click here: "
-							+ DEFAULT_DOMAIN
+							+ defaultDomain
 							+ "user/android/reset-password?id=android&token=" 
 							+ passwordResetToken.getToken() 
 							+ " (This link will expire after 24 hours)");

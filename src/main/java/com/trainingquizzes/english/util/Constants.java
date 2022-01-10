@@ -1,16 +1,6 @@
 package com.trainingquizzes.english.util;
 
 public class Constants {
-
-//	public static final String DEFAULT_DOMAIN = "https://trainingquizzes.com/";
-//	public static final String JSON_EXERCISES_FILES_PATH = "/opt/tomcat/webapps/ROOT/resources/json/exercises/";
-//	public static final String JSON_SUBJECTS_FILES_PATH = "/opt/tomcat/webapps/ROOT/resources/json/subjects/";
-//	public static final String FIREBASE_CONFIG_PATH = "/home/hebaja/firebase_private_key/englishtrainingquizzes-63b66-firebase-adminsdk-yo5wc-5159e5bafa.json";
-	
-	public static final String DEFAULT_DOMAIN = "http://localhost:8080/";
-	public static final String JSON_EXERCISES_FILES_PATH = "/home/focus/eclipse-workspace/english-deploy-server/src/main/webapp/resources/json/exercises/";
-	public static final String JSON_SUBJECTS_FILES_PATH = "/home/focus/eclipse-workspace/english-deploy-server/src/main/webapp/resources/json/subjects/";
-	public static final String FIREBASE_CONFIG_PATH = "/home/focus/firebase_private_key/englishtrainingquizzes-63b66-firebase-adminsdk-yo5wc-5159e5bafa.json";
 	
 	public static String RIGHT_ANSWER = "Right answer";
 	public static String NEXT_QUESTION = "Next question";

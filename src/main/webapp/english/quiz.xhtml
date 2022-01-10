@@ -45,7 +45,7 @@
 						</div>
 						<div class="row justify-content-center d-grip mt-0 mt-sm-2 gap-2 animate__animated animate__fadeIn" >				
 							<ui:repeat value="#{quizBean.subjects}" var="subject"  >
-								<h:commandButton class="quiz-button col-10 col-md-8 btn shadow" value="#{subject.prompt}" action="#{quizBean.generateExercise(subject)}">
+								<h:commandButton class="quiz-button col-10 col-md-8 btn shadow" value="#{subject.title}" action="#{quizBean.createExercise(subject)}">
 									<f:ajax render="@form :exerciseForm :levelsForm"/>
 								</h:commandButton>
 							</ui:repeat>
@@ -56,13 +56,13 @@
 				<h:form id="exerciseForm">
 					<h:panelGroup rendered="#{quizBean.quizRender}">
 						<div class="row justify-content-center">	
-							<h:outputLabel id="task-prompt" class="col-10 text-center" value="#{quizBean.tasks[quizBean.count].prompt}"/>
+							<h:outputLabel id="task-prompt" class="col-10 text-center" value="#{quizBean.reducedTasks[quizBean.count].prompt}"/>
 						</div>
 						<div class="mt-2 mt-sm-3">
-							<ui:repeat value="#{quizBean.tasks[quizBean.count].options}" var="option" varStatus="status">
+							<ui:repeat value="#{quizBean.reducedTasks[quizBean.count].options}" var="option" varStatus="status">
 								<h:panelGroup id="buttonsOptions">
 									<div class="row justify-content-center">																																							
-										<h:commandButton class="quiz-button task-button text-wrap buttonOptions text col-10 btn shadow mb-2 bg-body rounded" value="#{option.prompt}" action="#{quizBean.checkOption(status.index)}" disabled="#{quizBean.disableOptionButtons}">
+										<h:commandButton class="quiz-button task-button text-wrap buttonOptions text col-10 btn shadow mb-2 bg-body rounded" value="#{option.prompt}" action="#{quizBean.checkOption(option.correct)}" disabled="#{quizBean.disableOptionButtons}">
 											<f:ajax render="@form :nextTaskForm :score" />
 										</h:commandButton>
 									</div>

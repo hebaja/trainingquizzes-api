@@ -10,11 +10,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Task {
@@ -26,15 +29,20 @@ public class Task {
 	@ManyToOne
 	private Subject subject;
 	
-	@ElementCollection(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.DELETE)
-    private List<Tag> tags;
-    
     @ElementCollection(fetch = FetchType.EAGER)
     @Cascade(CascadeType.DELETE)
     private List<TaskOption> options;
     
-    @NotNull
+    @Transient
+    private int rightOption;
+    
+    private boolean shuffleOptions;
+    
+    public long getId() {
+		return id;
+	}
+
+	@NotNull
     public String getPrompt() {
             return prompt;
         }
@@ -51,14 +59,6 @@ public class Task {
 		this.subject = subject;
 	}
 
-	public List<Tag> getTags() {
-		return tags;
-	}
-
-	public void setTags(List<Tag> tags) {
-		this.tags = tags;
-	}
-
 	public List<TaskOption> getOptions() {
         return options;
     }
@@ -66,23 +66,21 @@ public class Task {
     public void setOptions(List<TaskOption> options) {
         this.options = options;
     }
+
+	public boolean isShuffleOptions() {
+		return shuffleOptions;
+	}
+
+	public void setShuffleOptions(boolean shuffleOptions) {
+		this.shuffleOptions = shuffleOptions;
+	}
     
-    @Embeddable
-    public static class Tag {
-    	
-    	private String title;
-    	
-    	public Tag(String title) {
-    		this.title = title;
-    	}
+    public int getRightOption() {
+		return rightOption;
+	}
 
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-    	
-    }
+	public void setRightOption(int rightOption) {
+		this.rightOption = rightOption;
+	}
+	
 }

@@ -2,9 +2,11 @@ package com.trainingquizzes.english.model;
 
 public class SubjectOld implements Comparable<SubjectOld> {
 	
-	private final String prompt;
-	private final String fileName;
+	private String prompt;
+	private String fileName;
 	private int counterOrder;
+	
+	public SubjectOld() {}
 
 	public SubjectOld(String prompt, String fileName, int counterOrder) {
 		this.prompt = prompt;

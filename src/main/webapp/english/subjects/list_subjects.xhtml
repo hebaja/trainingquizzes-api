@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/_template.xhtml">
+		
+		<div id="navbar">
+			<ui:define name="nav-expanded">
+		      	<ui:include src="/templates/_home-nav.xhtml" />
+			</ui:define>
+			<ui:define name="nav-collapsed">
+		      	<ui:include src="/templates/_home-nav.xhtml" />
+			</ui:define>
+		</div>
+		
+		<ui:define name="content">
+			<div class="container">
+				<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+			
+				<ui:include src="/templates/_subjects-menu.xhtml" />
+				<h:form>
+					<h:panelGroup rendered="#{loadSubjectBean.subjectListRender}">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Subject</th>
+									<th scope="col">Level</th>
+									<th scope="col" class="text-center">Number of tasks</th>		
+									<th scope="col" class="text-center">Edit</th>
+									<th scope="col" class="text-center">Remove</th>
+								</tr>
+							</thead>
+							<tbody>
+								<ui:repeat var="subject" value="#{loadSubjectBean.subjects}" varStatus="status">
+									<tr>
+										<th scope="row">#{status.index + 1}</th>
+										<td>#{subject.title}</td>
+										<td>#{subject.levelCapitalize}</td>
+										<td class="text-center">#{subject.tasks.size()}</td>
+										<td class="text-center">
+											<h:commandLink actionListener="#{loadSubjectBean.openSubject(subject)}">
+												<i class="pi pi-pencil"></i>
+											</h:commandLink>
+										</td>
+										<td class="text-center">
+											<p:commandLink action="#{loadSubjectBean.fetchSubjectToBeRemoved(subject)}" onclick="PF('dlg3').show()">
+												<i class="pi pi-trash"></i>
+											</p:commandLink>
+										</td>
+									</tr>
+								</ui:repeat>
+							</tbody>
+						</table>
+						<p:dialog header="Warning" widgetVar="dlg3" minHeight="40" width="350" showEffect="fade">
+				    		<p class="p-m-0">Do you really want to delete this subject? This can't be undone!</p>
+					    		<f:facet name="footer">
+							    	<p:button type="button" value="No" style="width: 6rem;" />
+							        <p:commandButton actionListener="#{loadSubjectBean.removeSubject}" value="Remove" styleClass="ui-button-raised ui-button-danger p-mr-2" 
+					        			style="width: 6rem;" update="@form growl"/>
+					    		</f:facet>
+						</p:dialog>
+					</h:panelGroup>
+						
+					<h:panelGroup rendered="#{loadSubjectBean.subjectFormRender}">
+					
+						<div class="row justify-content-center mb-2">
+							<div class="col-12 mt-2">
+								<div class="input-group mt-1">
+									<span class="input-group-text" id="subject-title"><i class="fas fa-book"></i></span>
+									<p:inputText id="subject-title" value="#{loadSubjectBean.subject.title}" styleClass="form-control shadow">
+										<f:passThroughAttribute name="type" value="text"/>
+										<f:passThroughAttribute name="placeholder" value="Subject title"/>
+										<f:passThroughAttribute name="aria-describedby" value="subject-title"/>
+									</p:inputText>
+									<p:selectOneMenu id="level" value="#{loadSubjectBean.subject.level}">
+					                    <f:selectItem itemLabel="Easy" itemValue="EASY"/>
+					                    <f:selectItem itemLabel="Medium" itemValue="MEDIUM"/>
+					                    <f:selectItem itemLabel="Hard" itemValue="HARD"/>
+				                	</p:selectOneMenu>
+								</div>
+							</div>
+						</div>
+							
+						<ui:repeat var="task" value="#{loadSubjectBean.subject.tasks}" varStatus="status">
+						<p:divider />
+						<div class="row justify-content-center mb-2">
+							<div class="col-10">
+								<div class="input-group mt-1">
+								  	<span class="input-group-text" id="username-addon"><i class="fas fa-question-circle"></i></span>
+									<p:inputText id="username" styleClass="form-control shadow" value="#{task.prompt}"> 
+										<f:passThroughAttribute name="type" value="text"/>
+										<f:passThroughAttribute name="placeholder" value="Question"/>
+										<f:passThroughAttribute name="aria-describedby" value="username-addon"/>
+									</p:inputText>
+									<p:selectBooleanButton value="#{task.shuffleOptions}" onIcon="pi pi-th-large" offIcon="pi pi-list" title="Shuffle options?"  />
+								</div>
+							</div>
+						</div>
+						<h:panelGroup id="options">
+							<div class="row justify-content-center">
+								<div class="col-9">
+									<ui:repeat var="option" value="#{task.options}" varStatus="optionStatus" >
+										<div class="input-group mt-1">
+										  	<span class="input-group-text" id="username-addon"><i class="fas fa-arrow-circle-right"></i></span>
+											<p:inputText id="username" styleClass="form-control shadow" value="#{option.prompt}"> 
+												<f:passThroughAttribute name="type" value="text"/>
+												<f:passThroughAttribute name="placeholder" value="Option #{optionStatus.index + 1}"/>
+												<f:passThroughAttribute name="aria-describedby" value="username-addon"/>
+											</p:inputText>
+											<p:selectBooleanButton value="#{option.correct}" onIcon="pi pi-check-circle" offIcon="pi pi-ban" title="Is this option correct?" />
+										</div>
+									</ui:repeat>
+									<div class="mt-2">
+										<p:commandButton actionListener="#{loadSubjectBean.addOption(status.index)}" update="growl options" icon="pi pi-plus" styleClass="rounded-button shadow" />
+										<p:commandButton actionListener="#{loadSubjectBean.removeOption(status.index)}" update="growl options" icon="pi pi-minus" styleClass="rounded-button ui-button-danger shadow" style="margin-left: .5em;"/>
+									</div>
+								</div>
+							</div>
+						</h:panelGroup>
+					</ui:repeat>
+					<p:divider />
+					<div class="row justify-content-center mt-2">
+						<p:commandButton actionListener="#{loadSubjectBean.addTask}" value="Add task" process="@form" update="@form growl" styleClass="col-3 rounded-button shadow" />
+						<p:commandButton actionListener="#{loadSubjectBean.removeTask}" value="Remove task" process="@form" update="@form growl" styleClass="col-3 ms-1 rounded-button ui-button-danger shadow"/>
+					</div>
+					<div class="row justify-content-center mt-3 mb-3">
+						<p:commandButton actionListener="#{loadSubjectBean.updateSubject}" process="@form" update="growl @form" value="Update subject" styleClass="col-6 mt-1 rounded-button ui-button-success shadow" />
+					</div>
+					</h:panelGroup>
+					
+				</h:form>
+			</div>	
+			
+		</ui:define>
+		
+		<ui:define name="footer">
+			<div class="d-none d-sm-block">
+				<ui:include src="/templates/_footer.xhtml" />
+			</div>
+		</ui:define>
+
+	</ui:composition>
+
+</html>

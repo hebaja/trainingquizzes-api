@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 
@@ -19,8 +20,6 @@ import com.trainingquizzes.english.repository.PasswordResetTokenRepository;
 import com.trainingquizzes.english.repository.UserRepository;
 import com.trainingquizzes.english.token.PasswordResetToken;
 import com.trainingquizzes.english.util.EmailSender;
-
-import static com.trainingquizzes.english.util.Constants.DEFAULT_DOMAIN;
 
 @Controller
 @ViewScoped
@@ -34,6 +33,9 @@ public class PasswordResetBean {
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
+	
+	@Value("${spring-english-training-quizzes-default-domain}")
+	private String defaultDomain;
 	
 	private String email;
 	
@@ -69,7 +71,7 @@ public class PasswordResetBean {
 					existingUser.getEmail(), 
 					"Complete Password Reset", 
 					"To complete the password reset process, please click here: "
-							+ DEFAULT_DOMAIN
+							+ defaultDomain
 							+ "user/reset-password?id=web&token=" 
 							+ passwordResetToken.getToken() 
 							+ " (This link will expire after 24 hours)");
@@ -94,10 +96,10 @@ public class PasswordResetBean {
 	}
 	
 	
-	private PasswordResetToken createPasswordResetToken(User exisitingUser) {
+	private PasswordResetToken createPasswordResetToken(User existingUser) {
 		String token = UUID.randomUUID().toString();
 		PasswordResetToken passwordResetToken = new PasswordResetToken();
-		passwordResetToken.setUser(exisitingUser);
+		passwordResetToken.setUser(existingUser);
 		passwordResetToken.setToken(token);
 		passwordResetToken.setExpiryDate();
 		return passwordResetToken;

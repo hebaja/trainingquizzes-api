@@ -9,10 +9,18 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.trainingquizzes.english.dto.SubjectDto;
 import com.trainingquizzes.english.model.Subject;
 import com.trainingquizzes.english.model.Task;
 import com.trainingquizzes.english.model.User;
@@ -33,8 +41,11 @@ public class LoadSubjectBean {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Value("${spring-english-training-quizzes-firebase-message-topic}")
+	private String firebaseMessageTopic;
 
-	private SubjectBeanUtil subjectBeanUtil = new SubjectBeanUtil();
+	private SubjectBeanUtil subjectBeanUtil;
 	
 	private Subject subject;
 	private Subject subjectToBeRemoved;
@@ -49,7 +60,8 @@ public class LoadSubjectBean {
 	
 	@PostConstruct
 	private void init() {
-		
+		System.out.println("LoadSubjects -> " + firebaseMessageTopic);
+		subjectBeanUtil = new SubjectBeanUtil(firebaseMessageTopic);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userInfo = authentication.getName();
 		
@@ -60,7 +72,6 @@ public class LoadSubjectBean {
 			Optional<List<Subject>> subjectsOptional = subjectRepository.findAllByUser(user);
 			subjects = subjectsOptional.orElse(null);
 		}
-		
 	}
 	
 	public void openSubject(Subject subject) {
@@ -78,6 +89,7 @@ public class LoadSubjectBean {
 		setSubjectListRender(true);
 	}
 	
+	@CacheEvict(value = {"subjectsList", "userWithSubjectsList", "subject"}, allEntries = true)
 	public void updateSubject() {
 		subjectBeanUtil.saveSubject(subjectRepository, taskRepository, subject, subject.getUser(), "Subject successfully updated.");
 	}
@@ -86,10 +98,43 @@ public class LoadSubjectBean {
 		this.subjectToBeRemoved = subjectToBeRemoved;
 	}
 	
+	@CacheEvict(value = {"subjectsList", "userWithSubjectsList"}, allEntries = true)
 	public void removeSubject() {
 		subjectRepository.delete(subjectToBeRemoved);
+		
+		Message message = prepareFirebaseMessage();
+		sendFirebaseMessage(message);
+		
 		Optional<List<Subject>> subjectsOptional = subjectRepository.findAllByUser(user);
 		subjects = subjectsOptional.orElse(null);
+	}
+
+	private void sendFirebaseMessage(Message message) {
+		try {
+			String response = FirebaseMessaging.getInstance().send(message);
+			System.out.println("Message successfully sent: " + response);
+		} catch (FirebaseMessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Message prepareFirebaseMessage() {
+		
+		SubjectDto subjectDto = SubjectDto.convertFromSubject(subjectToBeRemoved);
+		ObjectMapper objectMapper = new ObjectMapper();
+		String subjectDtoJsonString = null;
+		
+		try {
+			subjectDtoJsonString = objectMapper.writeValueAsString(subjectDto);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		Message message = Message.builder()
+				.putData("subject_removed", subjectDtoJsonString)
+				.setTopic("file_checksum")
+				.build();
+		return message;
 	}
 	
 	public void addOption(int index) {

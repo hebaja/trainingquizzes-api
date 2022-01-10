@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,19 @@ public class EmailSignInRest {
 	
 	@PostMapping("{email}")
 	public ResponseEntity<UserDto> emailUser(@RequestBody UserForm userForm, UriComponentsBuilder uriBuilder) {
+		User userSent = userForm.convert();
+		Optional<User> userOptional = userRepository.findByEmail(userSent.getEmail());
+		User userFound = userOptional.orElse(null);
+		
+		if(userFound != null) {
+			URI uri = uriBuilder.path("/user/email/{id}").buildAndExpand(userSent.getId()).toUri();
+			return ResponseEntity.ok(new UserDto(userFound));
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
+	@PostMapping
+	public ResponseEntity<UserDto> emailUserAlternate(@RequestBody UserForm userForm, UriComponentsBuilder uriBuilder) {
 		User userSent = userForm.convert();
 		Optional<User> userOptional = userRepository.findByEmail(userSent.getEmail());
 		User userFound = userOptional.orElse(null);

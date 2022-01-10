@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,9 @@ public class GoogleIdTokenRest {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Value("${spring.security.oauth2.client.registration.google.client-id}")
+	private String googleClientId;
+	
 	@PostMapping("{idToken}")
 	public ApiUserDto googleUser(@PathVariable("idToken") String idTokenString) throws GeneralSecurityException, IOException {
 			
@@ -46,7 +50,7 @@ public class GoogleIdTokenRest {
 		OAuth2UserInfo userInfo = new OAuth2UserInfo();
 			
 		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
-				.setAudience(Collections.singletonList("92591554945-5kg21uubvnae5dv15fcrm6kr35pim6o2.apps.googleusercontent.com"))
+				.setAudience(Collections.singletonList(googleClientId))
 				.build();
 			
 		GoogleIdToken idToken = verifier.verify(idTokenString);

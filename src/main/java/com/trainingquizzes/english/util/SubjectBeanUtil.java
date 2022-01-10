@@ -8,6 +8,16 @@ import java.util.Optional;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.trainingquizzes.english.dto.SubjectDto;
+import com.trainingquizzes.english.dto.UserWithSubjectDto;
+import com.trainingquizzes.english.dto.UserWithSubjectsDto;
 import com.trainingquizzes.english.model.Subject;
 import com.trainingquizzes.english.model.Task;
 import com.trainingquizzes.english.model.TaskOption;
@@ -20,6 +30,12 @@ public class SubjectBeanUtil {
 	private List<Task> tasks = new ArrayList<Task>();
 	private boolean tasksPromptsAreValid = true;
 	private boolean tasksOptionsAreValid = true;
+	
+	private String firebaseMessageTopic;
+	
+	public SubjectBeanUtil(String firebaseMessageTopic) {
+		this.firebaseMessageTopic = firebaseMessageTopic;
+	}
 	
 	public void addTask(Subject subject) {
 		Task task = new Task();
@@ -58,12 +74,47 @@ public class SubjectBeanUtil {
 		
 		if(tasksPromptsAreValid && tasksOptionsAreValid) {
 			subject.setUser(user);
-			subjectRepository.save(subject);
+			Subject subjectSaved = subjectRepository.save(subject);;
 			taskRepository.saveAll(subject.getTasks());
+
+			System.out.println("message_topic " + firebaseMessageTopic);
+			
+			Message message = prepareFirebaseMessage(user, subjectSaved);
+			sendFirebaseMessage(message);
+			
 			addMessage(FacesMessage.SEVERITY_INFO, "English Training Quizzes", successMessage);
 		} else {
 			addMessage(FacesMessage.SEVERITY_ERROR, "English Training Quizzes", "Don't leave empty inputs.");
 		}
+	}
+
+	private void sendFirebaseMessage(Message message) {
+		try {
+			String response = FirebaseMessaging.getInstance().send(message);
+			System.out.println("Message successfully sent: " + response + " with topic " + firebaseMessageTopic);
+		} catch (FirebaseMessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Message prepareFirebaseMessage(User user, Subject subjectSaved) {
+		UserWithSubjectDto userWithSubjectDto = UserWithSubjectDto.convert(user, subjectSaved);;
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		String subjectDtoJsonString = null;
+		try {
+			subjectDtoJsonString = objectMapper.writeValueAsString(userWithSubjectDto);
+		} catch (JsonProcessingException e) {
+			System.out.println("There was a problem trying to parse Subject to json: " + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "English Training Quizzes", "There was a problem when trying to save subject.");
+			e.printStackTrace();
+		}
+		
+		Message message = Message.builder()
+				.putData("user_with_subject", subjectDtoJsonString)
+				.setTopic(firebaseMessageTopic)
+				.build();
+		return message;
 	}
 	
 	public Subject searchSubject(SubjectRepository subjectRepository, long subjectId) {

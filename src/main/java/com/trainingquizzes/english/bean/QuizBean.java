@@ -3,11 +3,11 @@ package com.trainingquizzes.english.bean;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
@@ -18,22 +18,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.trainingquizzes.english.enums.LevelType;
 import com.trainingquizzes.english.model.Exercise;
 import com.trainingquizzes.english.model.ExercisesQuantity;
-import com.trainingquizzes.english.model.SubjectOld;
-import com.trainingquizzes.english.model.TaskOld;
+import com.trainingquizzes.english.model.Subject;
+import com.trainingquizzes.english.model.Task;
 import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.repository.ExerciseRepository;
+import com.trainingquizzes.english.repository.SubjectRepository;
+import com.trainingquizzes.english.repository.TaskRepository;
 import com.trainingquizzes.english.repository.UserRepository;
-import com.trainingquizzes.english.util.JsonReader;
-import com.trainingquizzes.english.util.SubjectsBuilder;
 
 @Controller
 @ViewScoped
@@ -46,13 +40,22 @@ public class QuizBean implements Serializable{
 	
 	@Autowired
 	private ExerciseRepository exerciseRepository;
+	
+	@Autowired
+	private SubjectRepository subjectRepository;
+	
+	@Autowired
+	private TaskRepository taskRepository;
 
-	private List<SubjectOld> subjects;
-	private List<TaskOld> tasks;
-	private SubjectOld subject;
-	private LevelType level;
+	private List<Subject> easySubjects = new ArrayList<Subject>();
+	private List<Subject> mediumSubjects = new ArrayList<Subject>();
+	private List<Subject> hardSubjects = new ArrayList<Subject>();
+	private List<Subject> subjects;
+	private Subject subject;
+	private List<Task> chosenTasks;
+	private List<Task> reducedTasks;
+	
 	private ExercisesQuantity exercisesQuantity;
-	private String fileName;
 	private Integer score = 0;
 	private Integer count = 0;
 	private String warning;
@@ -75,64 +78,60 @@ public class QuizBean implements Serializable{
 	private Boolean saveQuizAjaxDisabled = false;
 	private Boolean loginToSaveRender = false;
 	private Boolean nextQuestionButtonRender = true;
-	private String remoteUser = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();; 
+	private String remoteUser = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+	
+	@PostConstruct
+	private void init() {
+		List<Subject> subjectsFromDatabase = subjectRepository.findAll();
+		subjectsFromDatabase.forEach(subjectFromDataBase -> {
+			if(subjectFromDataBase.getLevel() == LevelType.EASY) {
+				easySubjects.add(subjectFromDataBase);
+			}
+			if(subjectFromDataBase.getLevel() == LevelType.MEDIUM) {
+				mediumSubjects.add(subjectFromDataBase);
+			}
+			if(subjectFromDataBase.getLevel() == LevelType.HARD) {
+				hardSubjects.add(subjectFromDataBase);
+			}  
+		});
+		
+	}
 
 	public void easyButton() throws EjbAccessException, IOException {
-		List<SubjectOld> subjectsList = generateSubjectList("01_easy_subjects.json");
-		Collections.sort(subjectsList);
-		setSubjects(subjectsList);
-		setLevel(LevelType.EASY);
 		setScore(0);
 		setSubjectsRender(true);
 		setDisableEasyButton(true);
 		setDisableMediumButton(false);
 		setDisableHardButton(false);
 		setLoginToSaveRender(false);
+		setSubjects(easySubjects);
 	}
 
 	public void mediumButton() throws IOException {
-		List<SubjectOld> subjectsList = generateSubjectList("02_medium_subjects.json");
-		Collections.sort(subjectsList);
-		setSubjects(subjectsList);
-		setLevel(LevelType.MEDIUM);
 		setScore(0);
 		setSubjectsRender(true);
 		setDisableEasyButton(false);
 		setDisableMediumButton(true);
 		setDisableHardButton(false);
 		setLoginToSaveRender(false);
+		setSubjects(mediumSubjects);
 	}
 	
 	public void hardButton() throws IOException {
-		List<SubjectOld> subjectsList = generateSubjectList("03_hard_subjects.json");
-		Collections.sort(subjectsList);
-		setSubjects(subjectsList);
-		setLevel(LevelType.HARD);
 		setScore(0);
 		setSubjectsRender(true);
 		setDisableEasyButton(false);
 		setDisableMediumButton(false);
 		setDisableHardButton(true);
 		setLoginToSaveRender(false);
+		setSubjects(hardSubjects);
 	}
 	
-	private ArrayList<SubjectOld> generateSubjectList(String file) throws IOException {
-		JsonArray subjectsJsonArray = JsonReader.readSubjectsJsonFromUrl(file);
-		ArrayList<SubjectOld> subjectsList = new ArrayList<SubjectOld>();
-		if (subjectsJsonArray != null) {
-            for (JsonElement jsonElement : subjectsJsonArray) {
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                final SubjectOld subject = new Gson().fromJson(jsonObject, SubjectOld.class);
-                subjectsList.add(subject);
-            }
-        }
-		return subjectsList;
-	}
-	
-	public void generateExercise(SubjectOld subject) throws EjbAccessException, IOException {
-		setSubject(subject);
-		JsonArray jsonExercise = JsonReader.readExerciseJsonFromUrl(subject.getFileName());
-		setTasks(convertJsonArrayToList(jsonExercise));
+	public void createExercise(Subject selectedSubject) {
+		Optional<List<Task>> tasksReceivedOptional = taskRepository.findAllBySubject(selectedSubject);
+		chosenTasks = tasksReceivedOptional.orElse(null);
+		prepareExercise();
+		this.subject = selectedSubject;
 		setButtonNextLabel("Next question");
 		setButtonNextLabelReduced("Next");
 		setLevelsRender(false);
@@ -142,26 +141,9 @@ public class QuizBean implements Serializable{
 		setButtonNextIcon("fas fa-step-forward");
 	}
 	
-	private List<TaskOld> convertJsonArrayToList(JsonArray jsonExercise) {
-        List<TaskOld> fullTasksLists = new ArrayList<TaskOld>();
-        buildList(jsonExercise, fullTasksLists);
-        Collections.shuffle(fullTasksLists);
-        return fullTasksLists.subList(0, 10);
-    }
-
-	private void buildList(JsonArray jsonExercise, List<TaskOld> fullTasksLists) {
-		if (jsonExercise != null) {
-            for (JsonElement jsonElement : jsonExercise) {
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                final TaskOld task = new Gson().fromJson(jsonObject, TaskOld.class);
-                fullTasksLists.add(task);
-            }
-        }
-	}
-	
 	public void updateExercise() {
 		setWarningCardShadow("");
-		if(getCount() < tasks.size()) {
+		if(getCount() < reducedTasks.size()) {
 			setWarning(null);
 			setWarningCardClass(null);
 			setDisableOptionButtons(false);
@@ -180,11 +162,11 @@ public class QuizBean implements Serializable{
 		}
 	}
 	
-	public void checkOption(Integer index) {
+	public void checkOption(boolean isCorrect) {
 		setNextTaskRender(true);
 		setDisableOptionButtons(true);
 		setWarningCardShadow("shadow");
-		if(getTasks().get(getCount()).getRightOption() == index) {
+		if(isCorrect) {
 			setWarning("Right answer");
 			setWarningReduced("Right");
 			setWarningContentIcon("fas fa-check-circle");
@@ -196,7 +178,6 @@ public class QuizBean implements Serializable{
 			setWarningReduced("Wrong");
 			setWarningContentIcon("fas fa-times-circle");
 		}
-		
 		if(getCount() == 9 && remoteUser == null) {
 			setLoginToSaveRender(true);
 			setNextQuestionButtonRender(false);
@@ -204,8 +185,7 @@ public class QuizBean implements Serializable{
 	}
 	
 	public void restart() throws EjbAccessException, IOException {
-		JsonArray jsonExercise = JsonReader.readExerciseJsonFromUrl(subject.getFileName());
-		setTasks(convertJsonArrayToList(jsonExercise));
+		prepareExercise();
 		setEndRender(false);
 		setSubjectsRender(false);
 		setLevelsRender(false);
@@ -219,8 +199,18 @@ public class QuizBean implements Serializable{
 		setCount(0);
 	}
 	
+	private void prepareExercise() {
+		Collections.shuffle(chosenTasks);
+		List<Task> finalTasks = chosenTasks.subList(0, 10);
+		finalTasks.forEach(task -> {
+			if(task.isShuffleOptions()) {
+				Collections.shuffle(task.getOptions());
+			}
+		});
+		setReducedTasks(finalTasks);
+	}
+	
 	private void saveExercise() {
-		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userInfo = authentication.getName();
 		
@@ -228,7 +218,7 @@ public class QuizBean implements Serializable{
 		User user = userOptional.orElse(userRepository.findByUid(userInfo).orElse(null));
 		
 		if(user != null) {
-			Exercise exercise = new Exercise(user, this.subject.getPrompt(), this.level, score);
+			Exercise exercise = new Exercise(user, this.subject, this.subject.getLevel(), score);
 			Optional<ExercisesQuantity> optionalExercisesQuantity = exerciseRepository.getQuantityOfTheSameExercise(user,
 					exercise.getLevel(), exercise.getSubject());
 			
@@ -269,6 +259,22 @@ public class QuizBean implements Serializable{
 		setNextQuestionButtonRender(true);
 	}
 	
+	public List<Subject> getSubjects() {
+		return subjects;
+	}
+
+	public void setSubjects(List<Subject> subjects) {
+		this.subjects = subjects;
+	}
+	
+	public Subject getSubject() {
+		return subject;
+	}
+
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}
+
 	public Boolean getNextQuestionButtonRender() {
 		return nextQuestionButtonRender;
 	}
@@ -317,26 +323,6 @@ public class QuizBean implements Serializable{
 		this.disableHardButton = disableHardButton;
 	}
 
-	public void setSubjects(List<SubjectOld> subjects) {
-		this.subjects = subjects;
-	}
-
-	public LevelType getLevel() {
-		return level;
-	}
-
-	public void setLevel(LevelType level) {
-		this.level = level;
-	}
-
-	public SubjectOld getSubject() {
-		return subject;
-	}
-
-	public void setSubject(SubjectOld subject) {
-		this.subject = subject;
-	}
-
 	public String getWarningCardClass() {
 		return warningCardClass;
 	}
@@ -357,22 +343,6 @@ public class QuizBean implements Serializable{
 		this.count = count;
 	}
 
-	public String getFileName() {
-		return fileName;
-	}
-
-	public List<SubjectOld> getSubjects() {
-		return subjects;
-	}
-
-	public List<TaskOld> getTasks() {
-		return tasks;
-	}
-	
-	public void setTasks(List<TaskOld> tasks) {
-		this.tasks = tasks;
-	}
-
 	public String getWarning() {
 		return warning;
 	}
@@ -388,7 +358,7 @@ public class QuizBean implements Serializable{
 	public void setButtonNextLabel(String buttonNextLabel) {
 		this.buttonNextLabel = buttonNextLabel;
 	}
-
+	
 	public String getButtonNextLabel() {
 		return buttonNextLabel;
 	}
@@ -480,5 +450,13 @@ public class QuizBean implements Serializable{
 	public void setButtonNextLabelReduced(String buttonNextLabelReduced) {
 		this.buttonNextLabelReduced = buttonNextLabelReduced;
 	}
-	
+
+	public List<Task> getReducedTasks() {
+		return reducedTasks;
+	}
+
+	public void setReducedTasks(List<Task> tasksFetched) {
+		this.reducedTasks = tasksFetched;
+	}
+
 }

@@ -5,17 +5,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("english")
+@RequestMapping("english/subjects")
 public class SubjectController {
 	
-	@GetMapping("subject")
+	@GetMapping("register_subject")
 	public String subject() {
-		return "/english/subject.xhtml";
+		return "/english/subjects/register_subject.xhtml";
 	}
 
-	@GetMapping("load_subject")
+	@GetMapping("list_subjects")
 	public String loadSubject() {
-		return "/english/load_subject.xhtml";
+		return "/english/subjects/list_subjects.xhtml";
 	}
 	
 }

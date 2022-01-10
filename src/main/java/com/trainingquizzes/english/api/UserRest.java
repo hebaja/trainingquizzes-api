@@ -6,6 +6,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.trainingquizzes.english.dto.UserDto;
+import com.trainingquizzes.english.dto.UserWithSubjectsDto;
 import com.trainingquizzes.english.form.UserForm;
 import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.repository.UserRepository;
@@ -27,11 +30,17 @@ public class UserRest {
 	@Autowired
 	private UserRepository repository;
 	
+	@Value("${spring-english-training-quizzes-email-admin}")
+	private String emailAdmin;
+	
 	@GetMapping("{uid}")
-	public UserDto user(@PathVariable("uid") String uid) {
-		Optional<User> userOptional = repository.findByUid(uid);
-		User user = userOptional.get();
-		return new UserDto(user);
+	public ResponseEntity<UserDto> user(@PathVariable("uid") String uid) {
+		User user = repository.findByUid(uid).orElse(null);;
+		if(user != null) {
+			return ResponseEntity.ok(new UserDto(user));
+		}
+		return ResponseEntity.notFound().build();
+		
 	}
 	
 	@RequestMapping("email/{email}")
@@ -46,5 +55,12 @@ public class UserRest {
 		repository.save(user);
 		URI uri = uriBuilder.path("/user/{uid}").buildAndExpand(user.getUid()).toUri();
 		return ResponseEntity.created(uri).body(new UserDto(user));
+	}
+	
+	@GetMapping("subjects")
+	@Cacheable(value = "userWithSubjectsList")
+	public UserWithSubjectsDto findSubjects() {
+		Optional<User> userOptional = repository.findByEmail(emailAdmin);
+		return UserWithSubjectsDto.convert(userOptional.orElse(null));
 	}
 }

@@ -1,8 +1,5 @@
 package com.trainingquizzes.english.bean;
 
-import static com.trainingquizzes.english.util.Constants.EMAIL_SET;
-import static com.trainingquizzes.english.util.Constants.DEFAULT_DOMAIN;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +13,7 @@ import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 
@@ -27,7 +24,6 @@ import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.model.UserRole;
 import com.trainingquizzes.english.repository.UserRegisterTokenRepository;
 import com.trainingquizzes.english.repository.UserRepository;
-import com.trainingquizzes.english.token.Token;
 import com.trainingquizzes.english.token.UserRegisterToken;
 import com.trainingquizzes.english.util.EmailSender;
 
@@ -45,6 +41,9 @@ public class UserRegisterBean {
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
+	
+	@Value("${spring-english-training-quizzes-default-domain}")
+	private String defaultDomain;
 	
 	private User user = new User();
 	
@@ -89,7 +88,7 @@ public class UserRegisterBean {
 				user.getEmail(), 
 				"Complete user registration", 
 				"To complete user registration, please click here: "
-						+ DEFAULT_DOMAIN
+						+ defaultDomain
 						+ "user/confirm-register?token=" 
 						+ userToRegisterToken.getToken() 
 						+ " (This link will expire after 24 hours).");

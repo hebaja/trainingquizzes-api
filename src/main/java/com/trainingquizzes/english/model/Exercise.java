@@ -20,14 +20,15 @@ public class Exercise {
 	@ManyToOne
     private User user;
 
-    private String subject;
+	@ManyToOne
+    private Subject subject;
     
     @Enumerated(EnumType.STRING)
     private LevelType level;
 
     private double score;
 
-    public Exercise(User user, String subject, LevelType level, double score) {
+    public Exercise(User user, Subject subject, LevelType level, double score) {
         this.user = user;
         this.subject = subject;
         this.level = level;
@@ -45,7 +46,7 @@ public class Exercise {
         return user;
     }
 
-    public String getSubject() {
+    public Subject getSubject() {
         return subject;
     }
 

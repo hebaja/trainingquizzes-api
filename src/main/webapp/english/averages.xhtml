@@ -33,7 +33,7 @@
 					        <h:dataTable var="average" class="mx-auto table table-sm" value="#{averagesBean.averages}">
 					            <h:column class="col-5" headerText="Subject">
 					            	<f:facet name="header"><span class="fs-5">Subject</span></f:facet>
-					                <h:outputText value="#{average.subject}"/>
+					                <h:outputText value="#{average.subject.title}"/>
 					            </h:column>
 					            <h:column class="col-3" headerText="Level">
 					            	<f:facet name="header"><span class="fs-5">Level</span></f:facet>
@@ -51,7 +51,7 @@
 				        	<ui:repeat var="average" value="#{averagesBean.averages}">
 					        	<div class="card mb-1 bg-light border-secondary shadow" style="height: 6.8em;">
 					        		<div class="card-header">
-									    #{average.subject}
+									    #{average.subject.title}
 									</div>
 									<div class="card-body">
 									<h6 class="card-subtitle mb-1 text-muted">Level: #{average.levelCapitalize}</h6>

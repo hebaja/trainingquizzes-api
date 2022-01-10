@@ -8,21 +8,29 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 
-import static com.trainingquizzes.english.util.Constants.FIREBASE_CONFIG_PATH;
-
 public class FirebaseConfig {
 	
+	private String path;
+	
+	@Value("${spring-english-training-quizzes-firebase-message-topic}")
+	private String firebaseMessageTopic;
+	
+	
+	public FirebaseConfig(String path) {
+		this.path = path;
+	}
+
 	public void configure() throws IOException {
-		FileInputStream credentials = new FileInputStream(FIREBASE_CONFIG_PATH);
+		FileInputStream credentials = new FileInputStream(path);
 		GoogleCredentials googleCredentials = GoogleCredentials.fromStream(credentials);
 		FirebaseOptions options = FirebaseOptions
 				.builder()
@@ -60,10 +68,10 @@ public class FirebaseConfig {
 		
 		Message message = Message.builder()
 				.putData("files", finalMessage)
-				.setTopic("file_checksum")
+				.setTopic(firebaseMessageTopic)
 				.build();
 		
 		String response = FirebaseMessaging.getInstance().send(message);
-		System.out.println("Successfully sent message " + response);
+		System.out.println("Successfully sent message " + response + " with topic " + firebaseMessageTopic);
 	}
 }

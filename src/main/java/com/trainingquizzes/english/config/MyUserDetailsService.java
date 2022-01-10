@@ -16,7 +16,7 @@ import com.trainingquizzes.english.repository.UserRepository;
 public class MyUserDetailsService implements UserDetailsService{
 	
 	@Autowired
-	public UserRepository repository;
+	private UserRepository repository;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

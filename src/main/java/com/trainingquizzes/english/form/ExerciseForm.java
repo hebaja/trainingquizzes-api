@@ -2,12 +2,13 @@ package com.trainingquizzes.english.form;
 
 import com.trainingquizzes.english.enums.LevelType;
 import com.trainingquizzes.english.model.Exercise;
+import com.trainingquizzes.english.model.Subject;
 import com.trainingquizzes.english.model.User;
 
 public class ExerciseForm {
 	 
 	private String userUid;
-	private String subject;
+	private long subjectId;
 	private LevelType level;
 	private double score;
 	
@@ -19,12 +20,12 @@ public class ExerciseForm {
 		this.userUid = userUid;
 	}
 	
-	public String getSubject() {
-		return subject;
+	public long getSubjectId() {
+		return subjectId;
 	}
 	
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setSubject(long subjectId) {
+		this.subjectId = subjectId;
 	}
 	
 	public LevelType getLevel() {
@@ -43,7 +44,7 @@ public class ExerciseForm {
 		this.score = score;
 	}
 
-	public Exercise convert(User currentUser) {
+	public Exercise convert(User currentUser, Subject subject) {
 		return new Exercise(currentUser, subject, level, score);
 	}
 

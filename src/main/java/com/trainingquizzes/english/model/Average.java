@@ -5,14 +5,14 @@ import com.trainingquizzes.english.enums.LevelType;
 public class Average {
 	
 	private String name;
-	private String subject;
+	private Subject subject;
 	private LevelType level;
 	private double average;
 	private double averageForMeter;
 	
 	private String bootstrapColor;
 	
-	public Average(String name, String subject, LevelType level, double average) {
+	public Average(String name, Subject subject, LevelType level, double average) {
 		this.name = name;
 		this.subject = subject;
 		this.level = level;
@@ -23,7 +23,7 @@ public class Average {
 		return name;
 	}
 
-	public String getSubject() {
+	public Subject getSubject() {
 		return subject;
 	}
 

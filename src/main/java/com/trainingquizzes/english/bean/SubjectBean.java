@@ -11,6 +11,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -37,15 +39,21 @@ public class SubjectBean {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Value("${spring-english-training-quizzes-firebase-message-topic}")
+	private String firebaseMessageTopic;
+	
 	private Subject subject = new Subject();
 	private List<Task> tasks = new ArrayList<Task>();
-	private SubjectBeanUtil subjectBeanUtil = new SubjectBeanUtil();
+	private SubjectBeanUtil subjectBeanUtil = new SubjectBeanUtil(firebaseMessageTopic);
 	
 	@PostConstruct
 	private void init() {
+		System.out.println("Subject bean -> " + firebaseMessageTopic);
+		subjectBeanUtil = new SubjectBeanUtil(firebaseMessageTopic);
 		addTask();
 	}
 	
+	@CacheEvict(value = {"subjectsList", "userWithSubjectsList"}, allEntries = true)
 	public void saveSubject() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userInfo = authentication.getName();
