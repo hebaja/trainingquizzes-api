@@ -32,7 +32,7 @@ public class Subject {
 	private User user;
 	
 	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
-    @Cascade(CascadeType.DELETE)
+    @Cascade(CascadeType.ALL)
 	private List<Task> tasks;
 	
 	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)

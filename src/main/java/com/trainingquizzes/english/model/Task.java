@@ -30,7 +30,7 @@ public class Task {
 	private Subject subject;
 	
     @ElementCollection(fetch = FetchType.EAGER)
-    @Cascade(CascadeType.DELETE)
+    @Cascade(CascadeType.ALL)
     private List<TaskOption> options;
     
     @Transient

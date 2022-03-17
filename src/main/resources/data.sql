@@ -1,7 +1,9 @@
 INSERT INTO users(email, enabled, password, uid, username) VALUES('hebaja@hebaja.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '188445677544887521', 'administrator');
 INSERT INTO users(email, enabled, password, uid, username) VALUES('henrique@hebaja.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '845751357545687899', 'user');
+INSERT INTO users(email, enabled, password, uid, username) VALUES('feanor_esc@hotmail.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '787454512169654589', 'feanor');
 INSERT INTO user_roles(user_id, role) values(1, 'ROLE_ADMIN');
 INSERT INTO user_roles(user_id, role) values(2, 'ROLE_USER');
+INSERT INTO user_roles(user_id, role) values(3, 'ROLE_USER');
 
 INSERT INTO subject(title, user_id, level) VALUES('Comparative and superlative', 1, 'EASY');
 INSERT INTO subject(title, user_id, level) VALUES('Modals', 1, 'MEDIUM');
@@ -85,7 +87,7 @@ INSERT INTO task (prompt,subject_id,shuffle_options) VALUES
 	('Which of these statements about adverbs is false?',4, true),
 	('Which of these adverbs is an adverb of time?',4, true);
 
-INSERT INTO task_options (task_id,is_correct,prompt) VALUES
+INSERT INTO task_options (task_id,correct,prompt) VALUES
 	 (1,1,'quieter'),
 	 (1,0,'more quiet'),
 	 (1,0,'more quiet'),
@@ -147,7 +149,7 @@ INSERT INTO task_options (task_id,is_correct,prompt) VALUES
 	 (20,1,'furthest'),
 	 (20,0,'fariest');
 
-INSERT INTO task_options (task_id,is_correct,prompt) VALUES
+INSERT INTO task_options (task_id,correct,prompt) VALUES
 	 (21,1,'can'),
 	 (21,0,'must'),
 	 (21,0,'should'),
@@ -209,7 +211,7 @@ INSERT INTO task_options (task_id,is_correct,prompt) VALUES
 	 (40,0,'could'),
 	 (40,1,'should');
 
-INSERT INTO task_options (task_id,is_correct,prompt) VALUES
+INSERT INTO task_options (task_id,correct,prompt) VALUES
 	 (41,1,'least she could'),
 	 (41,0,'last she could'),
 	 (41,0,'leess she could'),
@@ -265,7 +267,7 @@ INSERT INTO task_options (task_id,is_correct,prompt) VALUES
 	 (58,0,'each'),
 	 (58,1,'every');
 	 
-INSERT INTO task_options (task_id,prompt,is_correct) VALUES
+INSERT INTO task_options (task_id,prompt,correct) VALUES
 	 (59,'adjectives and other adverbs.',1),
 	 (59,'pronouns and other nouns.',0),
 	 (60,'true',0),
@@ -318,7 +320,7 @@ INSERT INTO exercise (`level`,score,user_id,subject_id) VALUES
 	 ('EASY',2.0,2,1),
 	 ('MEDIUM',6.0,2,2),
 	 ('MEDIUM',3.0,2,2),
-	 ('HARD',3.0,2,3);
-	 
+	 ('HARD',3.0,2,3),
+	 ('MEDIUM',9.0,2,4);
 	 
 	 

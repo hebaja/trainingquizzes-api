@@ -9,13 +9,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TaskOption {
 
     private String prompt;
-    private boolean isCorrect;
+    private boolean correct;
     
     public TaskOption() {}
 
-    public TaskOption(String prompt, boolean isCorrect) {
+    public TaskOption(String prompt, boolean correct) {
         this.prompt = prompt;
-        this.isCorrect = isCorrect;
+        this.setCorrect(correct);
     }
 
     public String getPrompt() { return prompt; }
@@ -24,13 +24,13 @@ public class TaskOption {
         this.prompt = option0;
     }
 
-    @JsonProperty("isCorrect")
 	public boolean isCorrect() {
-		return isCorrect;
+		return correct;
 	}
 
-	public void setCorrect(boolean isCorrect) {
-		this.isCorrect = isCorrect;
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
 	}
-    
+
+	    
 }

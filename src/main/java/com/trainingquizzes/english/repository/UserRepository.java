@@ -20,6 +20,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	boolean existsByEmail(String email);
 	
+	@Query("select new com.trainingquizzes.english.model.Average(e.user.id, e.subject, e.level, round(avg(e.score), 1))"
+			+ "from Exercise e where e.user.id = :id group by e.user, e.level, e.subject")
+	List<Average> getAveragesById(@Param("id")Long id);
+	
 	@Query("select new com.trainingquizzes.english.model.Average(e.user.username, e.subject, e.level, round(avg(e.score), 1))"
 			+ "from Exercise e where e.user.username = :username group by e.user, e.level, e.subject")
 	List<Average> getAveragesByUsername(@Param("username")String username);

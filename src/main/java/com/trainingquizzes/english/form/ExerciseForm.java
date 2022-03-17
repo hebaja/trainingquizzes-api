@@ -6,18 +6,18 @@ import com.trainingquizzes.english.model.Subject;
 import com.trainingquizzes.english.model.User;
 
 public class ExerciseForm {
-	 
-	private String userUid;
+
+	private Long userId;
 	private long subjectId;
 	private LevelType level;
 	private double score;
 	
-	public String getUserUid() {
-		return userUid;
+	public Long getUserId() {
+		return userId;
 	}
 	
-	public void setUserUid(String userUid) {
-		this.userUid = userUid;
+	public void setUserId(Long userUid) {
+		this.userId = userUid;
 	}
 	
 	public long getSubjectId() {

@@ -40,19 +40,13 @@ public class ExerciseRest {
 	
 	private ExercisesQuantity exercisesQuantity;
 	
-	// RETURNING INFINITE RECURSION
-	@GetMapping("user/{username}")
-	List<Exercise> getExercises(@PathVariable("username") String username) {
-		return exerciseRepository.findAllByUser(username);
-	}
-	
 	@PostMapping
 	public ResponseEntity<?> save(@Valid @RequestBody List<ExerciseForm> exerciseFormList, UriComponentsBuilder uriBuilder) {
 		
-		String userUid = exerciseFormList.get(0).getUserUid();
+		Long userId = exerciseFormList.get(0).getUserId();
 		
-		if(userUid != null) {
-			User user = userRepository.findByUid(userUid).orElse(null);
+		if(userId!= null) {
+			User user = userRepository.findById(userId).orElse(null);
 
 			if(user != null) {
 				exerciseFormList.forEach(exerciseForm -> {

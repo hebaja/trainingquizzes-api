@@ -1,6 +1,7 @@
 package com.trainingquizzes.english.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -12,10 +13,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.trainingquizzes.english.oauth.FacebookOAuth2UserService;
-import com.trainingquizzes.english.oauth.GoogleOidcUserService;
+import com.trainingquizzes.english.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -28,51 +32,32 @@ public class WebSecurityConfigProd extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private GoogleOidcUserService googleOidcUserService;
 	
 	@Autowired
-	private FacebookOAuth2UserService facebookOAuth2Service;
+	private TokenService tokenService;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Value("${spring-english-training-quizzes-default-domain}")
+	private String defaultDomain;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		http
-			.requiresChannel(channel -> 
-					channel.anyRequest().requiresSecure())
-			.csrf().disable()
-			.authorizeRequests()
-				.antMatchers("/user/android/delete").authenticated()
-				.antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-				.antMatchers("/", "/home", "/home.xhtml" , "/policy.xhtml", "/policy", "/user/**", "/user/android/confirm-register.xhtml", 
-						"/english/quiz", "/english/quiz.xhtml", "/api/**", "/javax.faces.resource/**", "/properties")
-				.permitAll()
-				.antMatchers("/admin/**").hasRole("ADMIN")
-				.antMatchers("/english/subjects/**").hasAnyRole("ADMIN", "TEACHER")
-				.anyRequest().authenticated()
-			.and()		
-			.formLogin()
-				.loginPage("/login")
-				.defaultSuccessUrl("/english/quiz")
-				.failureUrl("/login?error=Wrong+username+or+password")
-				.permitAll()
-
-			.and()
-				.oauth2Login(oauth2 -> oauth2
-						.loginPage("/login")
-						.defaultSuccessUrl("/english/quiz")
-						.redirectionEndpoint(redirection -> redirection
-			                .baseUri("/oauth2/callback/*")
-			            )
-						.userInfoEndpoint(userInfo -> userInfo
-							.oidcUserService(googleOidcUserService)
-							.userService(facebookOAuth2Service)
-						)
-					)
-				.logout()
-				.logoutSuccessUrl("/login?logout=You+have+been+signed+out")
-				.permitAll();
+		http.authorizeRequests()
+		.antMatchers(HttpMethod.GET, "/averages").authenticated()
+		.antMatchers(HttpMethod.POST, "/api/averages", "/api/delete-user").authenticated()
+		.antMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
+		.antMatchers(HttpMethod.GET, "/api/subjects").hasRole("ADMIN")
+		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
+		.antMatchers(HttpMethod.POST, "/auth/**", "/api/user-register/**", "/api/reset-password/**").permitAll()
+		.anyRequest().permitAll()
+		.and().csrf().disable().headers().frameOptions().disable()
+		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and().addFilterBefore(new AuthenticatioViaTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class)
+		.oauth2Login(oauth2 -> oauth2
+		.redirectionEndpoint(redirection -> redirection
+            .baseUri("/oauth2/callback/*")));
 	}
 	
 	@Override
@@ -91,6 +76,22 @@ public class WebSecurityConfigProd extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/resources/json/**", "/resources/css/**", "/resources/images/**", "/resources/js/**", "/files/json/**");
+	}
+	
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/api/english/**").allowedOrigins(defaultDomain).allowedMethods("GET", "POST");
+				registry.addMapping("/api/auth/**").allowedOrigins(defaultDomain).allowedMethods("POST");
+				registry.addMapping("/api/averages").allowedOrigins(defaultDomain).allowedMethods("POST");
+				registry.addMapping("/api/reset-password/**").allowedOrigins(defaultDomain).allowedMethods("POST");
+				registry.addMapping("/api/subjects/**").allowedOrigins(defaultDomain).allowedMethods("GET", "DELETE", "PUT");
+				registry.addMapping("/api/delete-user").allowedOrigins(defaultDomain).allowedMethods("POST");
+				registry.addMapping("/api/user-register/**").allowedOrigins(defaultDomain).allowedMethods("POST");
+			}
+		};
 	}
 	
 }

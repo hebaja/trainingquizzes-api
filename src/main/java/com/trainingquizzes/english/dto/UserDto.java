@@ -11,14 +11,12 @@ public class UserDto {
 	private String uid;
 	private String username;
 	private String email;
-	private String password;
 	
 	public UserDto(User user) {
 		this.id = user.getId();
 		this.uid = user.getUid();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
-		this.password = user.getPassword();
 	}
 	
 	public Long getId() {
@@ -33,10 +31,6 @@ public class UserDto {
 	public String getEmail() {
 		return email;
 	}
-	public String getPassword() {
-		return password;
-	}
-	
 
 	public static List<UserDto> convertList(List<User> users) {
 		return users.stream().map(UserDto::new).collect(Collectors.toList());

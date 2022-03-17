@@ -46,6 +46,10 @@ public class SubjectWithTasksDto {
 	public List<TaskDto> getTasksDto() {
 		return tasksDto;
 	}
+	
+	public static List<SubjectWithTasksDto> convertList(List<Subject> subjects) {
+		return subjects.stream().map(SubjectWithTasksDto::new).collect(Collectors.toList());
+	}
 
 	public static SubjectWithTasksDto convertFromSubject(Subject subject) {
 		return new SubjectWithTasksDto(subject);

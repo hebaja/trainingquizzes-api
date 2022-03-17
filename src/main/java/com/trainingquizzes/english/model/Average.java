@@ -4,6 +4,7 @@ import com.trainingquizzes.english.enums.LevelType;
 
 public class Average {
 	
+	private Long userId;
 	private String name;
 	private Subject subject;
 	private LevelType level;
@@ -14,6 +15,13 @@ public class Average {
 	
 	public Average(String name, Subject subject, LevelType level, double average) {
 		this.name = name;
+		this.subject = subject;
+		this.level = level;
+		this.average = average;
+	}
+	
+	public Average(Long userId, Subject subject, LevelType level, double average) {
+		this.userId = userId;
 		this.subject = subject;
 		this.level = level;
 		this.average = average;
@@ -50,6 +58,14 @@ public class Average {
 
 	public String getBootstrapColor() {
 		return bootstrapColor;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 	
 }

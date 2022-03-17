@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.trainingquizzes.english.dto.UserDto;
+import com.trainingquizzes.english.dto.UserDtoNoPassword;
 import com.trainingquizzes.english.dto.UserWithSubjectsDto;
 import com.trainingquizzes.english.form.UserForm;
 import com.trainingquizzes.english.model.User;
@@ -33,14 +35,24 @@ public class UserRest {
 	@Value("${spring-english-training-quizzes-email-admin}")
 	private String emailAdmin;
 	
-	@GetMapping("{uid}")
-	public ResponseEntity<UserDto> user(@PathVariable("uid") String uid) {
+	@GetMapping("by-email{email}")
+	public ResponseEntity<UserDtoNoPassword> byEmail(@RequestParam("email") String email) {
+		User user = repository.findByEmail(email).orElse(null);
+		if(user != null) {
+			return ResponseEntity.ok(new UserDtoNoPassword(user));
+		}
+		return ResponseEntity.badRequest().build();
+				
+	}
+	
+	@GetMapping("uid{uid}")
+	public ResponseEntity<UserDto> user(@RequestParam("uid") String uid) {
+		
 		User user = repository.findByUid(uid).orElse(null);;
 		if(user != null) {
 			return ResponseEntity.ok(new UserDto(user));
 		}
 		return ResponseEntity.notFound().build();
-		
 	}
 	
 	@RequestMapping("email/{email}")

@@ -55,5 +55,10 @@ public class Exercise {
     }
 
     public double getScore() { return score; }
+    
+    @Override
+    public String toString() {
+    	return "[id: " + getId() + ", username: " + getUser().getUsername() + ", subject: " + getSubject().getTitle() + ", score: " + getScore() + "]";
+    }
 
 }

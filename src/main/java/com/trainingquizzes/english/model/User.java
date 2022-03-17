@@ -24,6 +24,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @SuppressWarnings("serial")
 @Entity
 @Table(name="users")
@@ -36,6 +39,8 @@ public class User implements UserDetails {
 	
 	@Column(unique = true)
 	private String email;
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	
     private Boolean enabled;
@@ -166,7 +171,6 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		roles.forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority.getRole().toString())));
-		
         return authorities;
 	}
 

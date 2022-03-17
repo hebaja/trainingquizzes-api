@@ -11,11 +11,15 @@ public class AverageDto {
 	private String subjectTitle;
 	private LevelType level;
 	private double average;
+	private double averageForMeter;
+	private String levelCapitalize;
 	
 	public AverageDto(Average average) {
 		this.subjectTitle = average.getSubject().getTitle();
 		this.level = average.getLevel();
 		this.average = average.getAverage();
+		this.averageForMeter = average.getAverageForMeter();
+		this.levelCapitalize = average.getLevelCapitalize();
 	}
 	
 	public String getSubjectTitle() {
@@ -32,6 +36,14 @@ public class AverageDto {
 	
 	public static List<AverageDto> convertList(List<Average> averages) {
 		return averages.stream().map(AverageDto::new).collect(Collectors.toList());
+	}
+
+	public double getAverageForMeter() {
+		return averageForMeter;
+	}
+
+	public String getLevelCapitalize() {
+		return levelCapitalize;
 	}
 
 	

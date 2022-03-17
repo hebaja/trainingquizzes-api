@@ -22,15 +22,9 @@ public class MyUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<User> userOptional = repository.findByEmail(email);
 		
-		User user = userOptional.get();
-		
-		if(user == null) {
-			throw new UsernameNotFoundException("Not found");
+		if(userOptional.isPresent()) {
+			return userOptional.get();
 		}
-		MyUserPrincipal userPrincipal = new MyUserPrincipal(user);
-		return userPrincipal;
+		throw new UsernameNotFoundException("User not found");
 	}
-	
-	
-
 }

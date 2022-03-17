@@ -12,7 +12,7 @@ import com.trainingquizzes.english.token.PasswordResetToken;
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long>{
 	
 	@Query("select t from PasswordResetToken t where t.token = :token")
-	PasswordResetToken findByToken(@Param("token") String token);
+	Optional<PasswordResetToken> findByToken(@Param("token") String token);
 	
 	@Query("select t from PasswordResetToken t where t.user.id = :id")
 	Optional<PasswordResetToken> findByUserId(Long id);

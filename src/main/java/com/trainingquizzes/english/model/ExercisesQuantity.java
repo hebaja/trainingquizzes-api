@@ -31,4 +31,9 @@ public class ExercisesQuantity {
 	public User getUser() {
 		return user;
 	}
+	
+	@Override
+	public String toString() {
+		return "[quantity: " + getQuantity() + ", level: " + getLevel() + ", subject: " + getSubject().getTitle() + ", username: " + getUser().getUsername() + "]";
+	}
 }
