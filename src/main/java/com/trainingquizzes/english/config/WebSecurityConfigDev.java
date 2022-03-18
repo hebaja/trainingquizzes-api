@@ -79,20 +79,20 @@ public class WebSecurityConfigDev extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/resources/json/**", "/resources/css/**", "/resources/images/**", "/resources/js/**", "/files/json/**");
 	}
 	
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/api/english/**").allowedOrigins(defaultDomain).allowedMethods("GET", "POST");
-				registry.addMapping("/api/auth/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-				registry.addMapping("/api/averages").allowedOrigins(defaultDomain).allowedMethods("POST");
-				registry.addMapping("/api/reset-password/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-				registry.addMapping("/api/subjects/**").allowedOrigins(defaultDomain).allowedMethods("GET", "DELETE", "PUT");
-				registry.addMapping("/api/delete-user").allowedOrigins(defaultDomain).allowedMethods("POST");
-				registry.addMapping("/api/user-register/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-			}
-		};
-	}
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/api/english/**").allowedOrigins(defaultDomain).allowedMethods("GET", "POST");
+//				registry.addMapping("/api/auth/**").allowedOrigins(defaultDomain).allowedMethods("POST");
+//				registry.addMapping("/api/averages").allowedOrigins(defaultDomain).allowedMethods("POST");
+//				registry.addMapping("/api/reset-password/**").allowedOrigins(defaultDomain).allowedMethods("POST");
+//				registry.addMapping("/api/subjects/**").allowedOrigins(defaultDomain).allowedMethods("GET", "DELETE", "PUT");
+//				registry.addMapping("/api/delete-user").allowedOrigins(defaultDomain).allowedMethods("POST");
+//				registry.addMapping("/api/user-register/**").allowedOrigins(defaultDomain).allowedMethods("POST");
+//			}
+//		};
+//	}
 	
 }
