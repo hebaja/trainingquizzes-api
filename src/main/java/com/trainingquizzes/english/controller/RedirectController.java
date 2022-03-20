@@ -11,8 +11,13 @@ import org.springframework.web.servlet.view.RedirectView;
 public class RedirectController {
 	
 	@GetMapping
-	public RedirectView redirect() {
+	public RedirectView redirectRoot() {
 		return new RedirectView("https://trainingquizzes.herokuapp.com/");
+	}
+	
+	@GetMapping("about")
+	public RedirectView redirectAbout() {
+		return new RedirectView("https://trainingquizzes.herokuapp.com/#/about");
 	}
 
 }
