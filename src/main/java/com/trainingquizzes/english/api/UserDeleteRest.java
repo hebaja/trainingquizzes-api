@@ -19,6 +19,7 @@ import com.trainingquizzes.english.token.PasswordResetToken;
 import com.trainingquizzes.english.token.UserRegisterToken;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/delete-user")
 public class UserDeleteRest {
 	

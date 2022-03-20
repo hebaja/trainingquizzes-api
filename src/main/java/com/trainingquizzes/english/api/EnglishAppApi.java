@@ -27,6 +27,7 @@ import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.service.EnglishAppService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/english")
 public class EnglishAppApi {
 	

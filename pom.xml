@@ -61,6 +61,19 @@
 				</dependency>
 			</dependencies>
 		</profile>
+		<profile>
+			<id>local</id>
+			<properties>
+				<spring.profiles.active>local</spring.profiles.active>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
 	</profiles>
 
 	<dependencies>
@@ -155,6 +168,12 @@
 			<artifactId>system-lambda</artifactId>
 			<version>1.2.0</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>de.dentrassi.crypto</groupId>
+			<artifactId>pem-keystore</artifactId>
+			<version>2.2.0</version> <!-- check for most recent version -->
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -176,6 +195,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+        		<groupId>com.heroku.sdk</groupId>
+        		<artifactId>heroku-maven-plugin</artifactId>
+        		<version>3.0.3</version>
+      		</plugin>
 		</plugins>
 	</build>
 </project>

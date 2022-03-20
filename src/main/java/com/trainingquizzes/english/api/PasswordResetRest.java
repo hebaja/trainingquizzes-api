@@ -31,6 +31,7 @@ import com.trainingquizzes.english.token.Token;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/reset-password")
 public class PasswordResetRest {
 	

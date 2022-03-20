@@ -1,14 +1,16 @@
 package com.trainingquizzes.english;
 
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.Security;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import de.dentrassi.crypto.pem.PemKeyStoreProvider;
 
 @SpringBootApplication
 @EnableCaching
@@ -19,6 +21,13 @@ public class TrainingQuizzesApplication extends SpringBootServletInitializer {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(TrainingQuizzesApplication.class, args);
+		
+		Security.addProvider(new PemKeyStoreProvider());
+		try {
+			KeyStore keystore = KeyStore.getInstance("PEM");
+		} catch (KeyStoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

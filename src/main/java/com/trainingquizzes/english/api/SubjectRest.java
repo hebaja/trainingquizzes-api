@@ -44,6 +44,7 @@ import com.trainingquizzes.english.repository.TaskRepository;
 import com.trainingquizzes.english.repository.UserRepository;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/subjects")
 public class SubjectRest {
 

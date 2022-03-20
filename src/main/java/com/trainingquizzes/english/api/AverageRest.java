@@ -15,6 +15,7 @@ import com.trainingquizzes.english.model.Average;
 import com.trainingquizzes.english.service.AverageAppService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/averages")
 public class AverageRest {
 

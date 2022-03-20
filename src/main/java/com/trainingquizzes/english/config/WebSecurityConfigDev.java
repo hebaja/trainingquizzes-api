@@ -60,6 +60,7 @@ public class WebSecurityConfigDev extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET, "/api/subjects").hasRole("ADMIN")
 		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
 		.antMatchers(HttpMethod.POST, "/auth/**", "/api/user-register/**", "/api/reset-password/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/redirect").permitAll()
 		.anyRequest().permitAll()
 		.and().csrf().disable().headers().frameOptions().disable()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

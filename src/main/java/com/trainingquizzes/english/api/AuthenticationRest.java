@@ -45,6 +45,7 @@ import com.trainingquizzes.english.repository.UserRepository;
 import com.trainingquizzes.english.util.GoogleAuthenticationUtil;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/auth")
 public class AuthenticationRest {
 	

@@ -47,6 +47,7 @@ import com.trainingquizzes.english.token.Token;
 import com.trainingquizzes.english.token.UserRegisterToken;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/user-register")
 public class UserRegisterRest {
 	
