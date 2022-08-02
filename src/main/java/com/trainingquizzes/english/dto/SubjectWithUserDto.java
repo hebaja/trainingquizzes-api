@@ -1,8 +1,5 @@
 package com.trainingquizzes.english.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.trainingquizzes.english.model.User;
 
 public class SubjectWithUserDto {

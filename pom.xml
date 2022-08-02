@@ -116,7 +116,6 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -134,15 +133,11 @@
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
-		
-		
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-text</artifactId>
 		    <version>1.9</version>
 		</dependency>
-
-		
 		<dependency>
 			<groupId>at.favre.lib</groupId>
 			<artifactId>bcrypt</artifactId>
@@ -168,13 +163,11 @@
 			<artifactId>system-lambda</artifactId>
 			<version>1.2.0</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>de.dentrassi.crypto</groupId>
 			<artifactId>pem-keystore</artifactId>
-			<version>2.2.0</version> <!-- check for most recent version -->
+			<version>2.2.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

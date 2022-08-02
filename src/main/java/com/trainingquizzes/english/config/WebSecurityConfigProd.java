@@ -8,24 +8,19 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.trainingquizzes.english.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity
 @Profile({"prod", "local"})
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfigProd extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -43,9 +38,6 @@ public class WebSecurityConfigProd extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
 	@Value("${spring-english-training-quizzes-default-domain}")
 	private String defaultDomain;
 
@@ -54,11 +46,11 @@ public class WebSecurityConfigProd extends WebSecurityConfigurerAdapter {
 		http
 		.csrf().disable().authorizeRequests()
 		.antMatchers(HttpMethod.GET, "/averages").authenticated()
+		.antMatchers(HttpMethod.GET, "/redirect").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/averages", "/api/delete-user").authenticated()
-		.antMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
-		.antMatchers(HttpMethod.GET, "/api/subjects").hasRole("ADMIN")
-		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
 		.antMatchers(HttpMethod.POST, "/auth/**", "/api/user-register/**", "/api/reset-password/**").permitAll()
+		.antMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
+		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
 		.anyRequest().permitAll()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and().addFilterBefore(new AuthenticatioViaTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class)

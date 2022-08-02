@@ -1,6 +1,8 @@
 package com.trainingquizzes.english.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -28,19 +28,25 @@ public class Subject {
 	
 	private String title;
     
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	private User user;
 	
-	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
+	@OneToMany
+//	@Cascade(CascadeType.ALL)
+	private Set<Quest> quest;
+	
+	@OneToMany(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
 	private List<Task> tasks;
 	
-	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
-	@Cascade(CascadeType.DELETE)
+	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY, cascade = javax.persistence.CascadeType.REMOVE)
+//	@Cascade(CascadeType.ALL)
 	private List<Exercise> exercises;
 	
 	@Enumerated(EnumType.STRING)
     private LevelType level;
+	
+	private LocalDateTime creationDate = LocalDateTime.now();
 	
 	public Subject() {}
 	
@@ -102,6 +108,10 @@ public class Subject {
 	@Transient
 	public String getLevelCapitalize() {
 		return this.level.toString().substring(0, 1).toUpperCase() + this.level.toString().substring(1).toLowerCase();
+	}
+
+	public LocalDateTime getCreationDate() {
+		return creationDate;
 	}
 	
 }

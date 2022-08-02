@@ -7,6 +7,7 @@ public class Average {
 	private Long userId;
 	private String name;
 	private Subject subject;
+	private User user;
 	private LevelType level;
 	private double average;
 	private double averageForMeter;
@@ -16,6 +17,7 @@ public class Average {
 	public Average(String name, Subject subject, LevelType level, double average) {
 		this.name = name;
 		this.subject = subject;
+		this.user = subject.getUser();
 		this.level = level;
 		this.average = average;
 	}
@@ -23,6 +25,7 @@ public class Average {
 	public Average(Long userId, Subject subject, LevelType level, double average) {
 		this.userId = userId;
 		this.subject = subject;
+		this.user = subject.getUser();
 		this.level = level;
 		this.average = average;
 	}
@@ -66,6 +69,10 @@ public class Average {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public User getUser() {
+		return user;
 	}
 	
 }

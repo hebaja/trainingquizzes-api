@@ -44,8 +44,8 @@ public class ExerciseForm {
 		this.score = score;
 	}
 
-	public Exercise convert(User currentUser, Subject subject) {
-		return new Exercise(currentUser, subject, level, score);
+	public Exercise convert(User user, Subject subject) {
+		return new Exercise(user, subject, level, score);
 	}
 
 }

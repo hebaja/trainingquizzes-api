@@ -2,8 +2,11 @@ package com.trainingquizzes.english.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -12,24 +15,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.trainingquizzes.english.enums.Roles;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="users")
 public class User implements UserDetails {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,27 +37,27 @@ public class User implements UserDetails {
 	
 	@Column(unique = true)
 	private String email;
-	
-	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
-	
-    private Boolean enabled;
+	private Boolean enabled;
+	private String pictureUrl;
     
     @ElementCollection(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.DELETE)
     private List<Account> accounts;
     
     @ElementCollection(fetch = FetchType.EAGER)
-    @Cascade(CascadeType.DELETE)
 	private List<Authority> roles;
 	
-	@OneToMany(mappedBy = "user")
-    @Cascade(CascadeType.DELETE)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Exercise> exercises;
 	
-	@OneToMany(mappedBy = "user")
-    @Cascade(CascadeType.DELETE)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private List<Subject> subjects;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	private List<Quest> quests;
+	
+	@ElementCollection
+	private Set<Long> subscribedQuestsIds = new HashSet<>();
 	
 	public User(String uid, String password, String username, String email) {
 		this.uid = uid;
@@ -89,6 +87,19 @@ public class User implements UserDetails {
 		this.enabled = enabled;
 		this.roles = roles;
 		this.accounts = accounts;
+	}
+	
+	public User(String username, @Email @NotBlank String email, String password, boolean enabled, List<Authority> roles, List<Account> accounts, Roles role) {
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.enabled = enabled;
+		this.roles = roles;
+		this.accounts = accounts;
+	}
+	
+	public void addSubscribedQuestsId(Long questId) {
+		this.subscribedQuestsIds.add(questId);
 	}
 
 	public Long getId() {
@@ -171,6 +182,7 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		roles.forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority.getRole().toString())));
+		
         return authorities;
 	}
 
@@ -193,7 +205,29 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-	
-	
+
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
+	}
+
+	public List<Quest> getQuests() {
+		return quests;
+	}
+
+	public void setQuests(List<Quest> quests) {
+		this.quests = quests;
+	}
+
+	public Set<Long> getSubscribedQuestsIds() {
+		return subscribedQuestsIds;
+	}
+
+	public void setSubscribedQuestsIds(Set<Long> subscribedQuestsIds) {
+		this.subscribedQuestsIds = subscribedQuestsIds;
+	}
 
 }

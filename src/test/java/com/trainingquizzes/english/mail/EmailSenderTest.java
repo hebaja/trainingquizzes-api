@@ -27,7 +27,8 @@ public class EmailSenderTest {
 	
 	@BeforeEach
 	void init() {
-		MockitoAnnotations.initMocks(this);
+//		MockitoAnnotations.initMocks(this);
+		MockitoAnnotations.openMocks(this);
 	}
 	
 	@Test
@@ -37,7 +38,7 @@ public class EmailSenderTest {
 		String token = UUID.randomUUID().toString();
 		
 		List<UserRole> roles = new ArrayList<>();
-		roles.add(new UserRole(Roles.ROLE_USER));
+		roles.add(new UserRole(Roles.ROLE_TEACHER));
 		
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(new Account(AccountType.EMAIL));

@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.repository.UserRepository;
@@ -32,10 +30,6 @@ public class AuthenticatioViaTokenFilter extends OncePerRequestFilter {
 	private TokenService tokenService;
 	
 	private UserRepository repository;
-	
-	@Value("${spring-english-training-quizzes-facebook-access-token}")
-	private String facebookAccessToken;
-	
 
 	public AuthenticatioViaTokenFilter(TokenService tokenService, UserRepository repository) {
 		this.tokenService = tokenService;
@@ -54,42 +48,42 @@ public class AuthenticatioViaTokenFilter extends OncePerRequestFilter {
 			GoogleIdTokenVerifier verifier = GoogleAuthenticationUtil.retrieveIdTokenVerifier();
 			try {
 				GoogleIdToken googleIdToken = verifier.verify(token);
-				authenticateGoogleClient(googleIdToken.getPayload());
+				authenticateGoogleClient(googleIdToken.getPayload().getEmail());
 				
 			} catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
 				
 				RestTemplate restTemplate = new RestTemplate();
-		        String facebook = null;
-		        
+		        		       
 		        HttpHeaders headers = new HttpHeaders();
 		        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-				
+		        
 				UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString("https://graph.facebook.com/debug_token")
-		                .queryParam("input_token", token).queryParam("access_token", facebookAccessToken);
+		                .queryParam("input_token", token).queryParam("access_token", System.getenv("ENGLISH_TRAINING_QUIZZES_FACEBOOK_ACCESS_TOKEN"));
 				
-				facebook = restTemplate.getForObject(uriBuilder.toUriString(), String.class);
-				
-				String facebookUnescaped = StringEscapeUtils.unescapeJava(facebook.toString());
-				
-				System.out.println(facebookUnescaped);
+				String facebookUnescaped = StringEscapeUtils.unescapeJava(restTemplate.getForObject(uriBuilder.toUriString(), String.class));
 				
 				JSONObject obj = new JSONObject(facebookUnescaped);
 				String userId = obj.getJSONObject("data").getString("user_id");
-				authenticateFacebookCliente(userId);
+				
+				authenticateFacebookClient(userId);
 			}
 		}
 		
 		filterChain.doFilter(request, response);
 	}
 
-	private void authenticateFacebookCliente(String userId) {
+	private void authenticateFacebookClient(String userId) {
 		User user = repository.findByUid(userId).orElse(null);
-		authenticate(user);
+		if(user != null) {
+			authenticate(user);
+		}
 	}
 
-	private void authenticateGoogleClient(Payload payload) {
-		User user = repository.findByUid(payload.getSubject()).orElse(null);
-		authenticate(user);
+	private void authenticateGoogleClient(String email) {
+		User user = repository.findByEmail(email).orElse(null);
+		if(user != null) {
+			authenticate(user);
+		}
 	}
 
 	private void authenticateClient(String token) {

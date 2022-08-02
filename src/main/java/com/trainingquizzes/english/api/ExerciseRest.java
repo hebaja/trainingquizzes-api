@@ -1,5 +1,6 @@
 package com.trainingquizzes.english.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,16 +9,16 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.trainingquizzes.english.dto.ExerciseDto;
 import com.trainingquizzes.english.enums.LevelType;
 import com.trainingquizzes.english.form.ExerciseForm;
+import com.trainingquizzes.english.form.ResultForm;
 import com.trainingquizzes.english.model.Exercise;
 import com.trainingquizzes.english.model.ExercisesQuantity;
 import com.trainingquizzes.english.model.Subject;
@@ -42,12 +43,44 @@ public class ExerciseRest {
 	
 	private ExercisesQuantity exercisesQuantity;
 	
+	@PostMapping("save")
+	public ResponseEntity<ExerciseDto> saveResult(@RequestBody ResultForm form) {
+		if(form != null) {
+			Optional<User> userOptional = userRepository.findById(form.getUserId());
+			Optional<Subject> subjectOptional = subjectRepository.findById(form.getSubjectId());
+			if(userOptional.isPresent() && subjectOptional.isPresent()) {
+				Exercise exercise = buildAndSaveExercises(userOptional.get(), subjectOptional.get(), form.getScore());
+				
+				return ResponseEntity.ok(ExerciseDto.convert(exercise));
+			} 
+		}
+		
+		return ResponseEntity.badRequest().build();
+	}
+	
+	@PostMapping("save-results")
+	public ResponseEntity<List<ExerciseDto>> saveListResult(@RequestBody List<ExerciseForm> form) {
+		if(form != null) {
+			User user = userRepository.findById(form.get(0).getUserId()).orElse(null);
+			if(user != null) {
+				List<Exercise> savedExercises = new ArrayList<Exercise>();
+				form.forEach(exerciseForm -> {
+					Subject subject = subjectRepository.findById(exerciseForm.getSubjectId()).orElse(null);
+					Exercise exercise = buildAndSaveExercises(user, subject, exerciseForm.getScore());
+					savedExercises.add(exercise);
+				});
+				
+				return ResponseEntity.ok(ExerciseDto.convertList(savedExercises));
+			}
+		}
+		
+		return ResponseEntity.badRequest().build();
+	}
+	
 	@PostMapping
 	public ResponseEntity<?> save(@Valid @RequestBody List<ExerciseForm> exerciseFormList, UriComponentsBuilder uriBuilder) {
-		
 		Long userId = exerciseFormList.get(0).getUserId();
-		
-		if(userId!= null) {
+		if(userId != null) {
 			User user = userRepository.findById(userId).orElse(null);
 
 			if(user != null) {
@@ -77,13 +110,32 @@ public class ExerciseRest {
 				});
 				return ResponseEntity.ok().build();
 			} else {
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User was not found");
 				return ResponseEntity.notFound().build();
 			}
 		} else {
-//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User uid was not found");
 			return ResponseEntity.notFound().build();
 		}
 
 	}
+	
+	private Exercise buildAndSaveExercises(User user, Subject subject, double score) {
+		Exercise exercise = new Exercise(user, subject, subject.getLevel(), score);
+		ExercisesQuantity exercisesQuantity = exerciseRepository.getQuantityOfTheSameExercise(user, exercise.getLevel(), exercise.getSubject()).orElse(null);
+		if (exercisesQuantity == null) {
+			exercisesQuantity = new ExercisesQuantity(user, exercise.getLevel(), exercise.getSubject(), 0);
+		}
+		removeOlderExercise(exercisesQuantity, user, exercise);
+		
+		return exerciseRepository.save(exercise);
+	}
+	
+	private void removeOlderExercise(ExercisesQuantity exercisesQuantity, User user, Exercise exercise) {
+		if(exercisesQuantity.getQuantity() >= 10) {
+			List<Exercise> exerciseList = exerciseRepository.getExercisesByUserLevelAndSubject(user,exercise.getLevel(), exercise.getSubject());
+			Exercise exerciseToBeDeleted = exerciseList.get(0);
+			exerciseRepository.delete(exerciseToBeDeleted);
+		}
+	}
+	
+	
 }

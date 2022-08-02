@@ -21,7 +21,7 @@ class UserRestTest {
 	
 	@Test
 	void shouldReturn200WhenUserInformationIsRequestedByUid() throws Exception {
-		URI uri = new URI("/api/user/845751357545687899");
+		URI uri = new URI("/api/user/uid?uid=845751357545687899");
 		mockMvc
 		.perform(MockMvcRequestBuilders
 				.get(uri))
@@ -68,16 +68,4 @@ class UserRestTest {
 				.content()
 				.string("false"));
 	}
-	
-	@Test
-	void shouldReturn200WhenUserWithSubjectsIsRequested() throws Exception {
-		URI uri = new URI("/api/user/subjects");
-		mockMvc
-		.perform(MockMvcRequestBuilders
-				.get(uri))
-		.andExpect(MockMvcResultMatchers
-				.status()
-				.is(200));
-	}
-
 }

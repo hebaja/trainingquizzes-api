@@ -1,6 +1,8 @@
 package com.trainingquizzes.english.rules;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,15 +43,18 @@ public class ExerciseRulesTest {
 	
 	@BeforeAll
 	void init() {
-		this.user = userRepository.findByUsername("user").orElse(null);
+		this.user = userRepository.findById(4L).orElse(null);
 		this.subject = subjectRepository.findById(1L).orElse(null);
 		this.exercisesToSave = Arrays.asList(new Exercise(user, subject, subject.getLevel(), 7.0), new Exercise(user, subject, subject.getLevel(), 6.0));
 	}
 	
 	@Test
 	void shouldReturnCorrectQuantityOfExecisesInDatabase() {
+		assertNotNull(user);
+		assertNotNull(subject);
 		ExercisesQuantity exerciseQuantity = exerciseRepository.getQuantityOfTheSameExercise(user, subject.getLevel(), subject).orElse(null);
-		assertEquals(exerciseQuantity.getQuantity(), 9L);
+		assertNotNull(exerciseQuantity);
+		assertEquals(9L, exerciseQuantity.getQuantity());
 	}
 	
 	@Test

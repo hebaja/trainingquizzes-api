@@ -3,6 +3,7 @@ package com.trainingquizzes.english.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +24,12 @@ public class AverageRest {
 	private AverageAppService service;
 	
 	@PostMapping
-	public List<AverageDto> averages(@RequestBody AverageRequestForm form) {
-		List<Average> averages = service.findAveragesById(form.getId());
-		return AverageDto.convertList(averages);
+	public ResponseEntity<List<AverageDto>> averages(@RequestBody AverageRequestForm form) {
+		if(form != null) {
+			List<Average> averages = service.findAveragesById(form.getId());
+			return ResponseEntity.ok(AverageDto.convertList(averages));
+		}
+		
+		return ResponseEntity.badRequest().build();
 	}
 }

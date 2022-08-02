@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import com.trainingquizzes.english.enums.LevelType;
 import com.trainingquizzes.english.model.Exercise;
-import com.trainingquizzes.english.model.Task;
 
 public class ExerciseDto {
 

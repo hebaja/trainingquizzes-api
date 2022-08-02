@@ -1,11 +1,8 @@
 package com.trainingquizzes.english.dto;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.security.core.GrantedAuthority;
 
 import com.trainingquizzes.english.model.User;
 
@@ -17,6 +14,7 @@ public class UserDtoNoPassword {
 	private String email;
 //	private Collection<? extends GrantedAuthority> roles;
 	private List<String> roles = new ArrayList<String>();
+	private String pictureUrl;
 
 	public UserDtoNoPassword(User user) {
 		this.id = user.getId();
@@ -25,6 +23,7 @@ public class UserDtoNoPassword {
 		this.email = user.getEmail();
 		List<RolesDto> list = RolesDto.convertToList(user.getAuthorities());
 		list.forEach(role -> this.roles.add(role.getRole()));
+		this.pictureUrl = user.getPictureUrl();
 	}
 
 	public Long getId() {
@@ -53,5 +52,13 @@ public class UserDtoNoPassword {
 
 	public List<String> getRoles() {
 		return roles;
+	}
+
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
 	}
 }

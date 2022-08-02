@@ -16,7 +16,7 @@ import com.trainingquizzes.english.model.User;
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
 	
 	@Query("select e from Exercise e join e.user u where u.username = :username")
-	List<Exercise> findAllByUser(@Param("username")String username);
+	List<Exercise> findAllByStudent(@Param("username")String username);
 	
 	@Query("select e from Exercise e where e.level = :level and e.subject = :subject and e.user = :user")
 	List<Exercise> getExercisesByUserLevelAndSubject(@Param("user") User user, @Param("level") LevelType level, @Param("subject") Subject subject);

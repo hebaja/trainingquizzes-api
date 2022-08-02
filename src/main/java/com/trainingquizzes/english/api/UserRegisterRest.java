@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -18,31 +17,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trainingquizzes.english.dto.NewUserRequest;
 import com.trainingquizzes.english.dto.UserDto;
 import com.trainingquizzes.english.dto.UserDtoNoPassword;
 import com.trainingquizzes.english.enums.AccountType;
 import com.trainingquizzes.english.enums.Roles;
-import com.trainingquizzes.english.form.PasswordResetForm;
 import com.trainingquizzes.english.form.TokenForm;
 import com.trainingquizzes.english.form.UserForm;
 import com.trainingquizzes.english.model.Account;
 import com.trainingquizzes.english.model.Authority;
 import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.model.UserRole;
-import com.trainingquizzes.english.repository.PasswordResetTokenRepository;
 import com.trainingquizzes.english.repository.UserRegisterTokenRepository;
 import com.trainingquizzes.english.repository.UserRepository;
-import com.trainingquizzes.english.token.PasswordResetToken;
 import com.trainingquizzes.english.token.Token;
 import com.trainingquizzes.english.token.UserRegisterToken;
 
@@ -64,14 +55,14 @@ public class UserRegisterRest {
 	private String defaultDomain;
 	
 	@PostMapping
-	public ResponseEntity<UserDto> userRegister(@RequestBody UserForm userForm) {
+	public ResponseEntity<String> userRegister(@RequestBody UserForm userForm) {
 		if (userForm != null) {
 			if(!userRepository.existsByEmail(userForm.getEmail())) {
 				String token = UUID.randomUUID().toString();
 				User user = buildUser(userForm);
 				UserRegisterToken userToRegisterToken = buildToken(token, user);
 				buildEmail(user, userToRegisterToken, "#/signin?register_token=");
-				return ResponseEntity.ok(new UserDto(user));
+				return ResponseEntity.ok(user.getEmail());
 			} else {
 				return ResponseEntity.status(HttpStatus.CONFLICT).build();
 			}
@@ -109,13 +100,11 @@ public class UserRegisterRest {
 					User savedUser = saveUser(userRegisterToken, newUser);
 					return ResponseEntity.ok(new UserDtoNoPassword(savedUser));
 				} catch (Exception e) {
-					System.out.println("printing stack");
 					e.printStackTrace();
 					return ResponseEntity.badRequest().build();
 				}
 			} 
 		}
-		System.out.println("problem");
 		return ResponseEntity.badRequest().build();
 	}
 	
@@ -123,22 +112,25 @@ public class UserRegisterRest {
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(new Account(AccountType.EMAIL));
 		
-		Authority authority = new Authority(Roles.ROLE_USER);
+		Authority authority = new Authority(Roles.ROLE_TEACHER);
 		List<Authority> roles = Arrays.asList(authority);
 		
 		String uid = RandomStringUtils.random(18, "0123456789");
 		
-		User newUser = new User(userRegisterToken.getUsername(), userRegisterToken.getEmail(),
-				userRegisterToken.getPasword(), true, roles, accounts);
+		User teacher = new User(
+				userRegisterToken.getUsername(), 
+				userRegisterToken.getEmail(),
+				userRegisterToken.getPasword(), 
+				true, roles, accounts);
 		
-		newUser.setUid(uid);
-		return newUser;
+		teacher.setUid(uid);
+		return teacher;
 	}
 	
-	private User saveUser(UserRegisterToken userRegisterToken, User newUser) {
-		User user = userRepository.save(newUser);
+	private User saveUser(UserRegisterToken userRegisterToken, User user) {
+		User savedTeacher = userRepository.save(user);
 		registerTokenRepository.delete(userRegisterToken);
-		return user;
+		return savedTeacher;
 	}
 	
 	private void buildEmail(User user, UserRegisterToken userToRegisterToken, String url) {
@@ -162,7 +154,7 @@ public class UserRegisterRest {
 	private User buildUser(UserForm userForm) {
 		User user = userForm.convert();
 		List<UserRole> roles = new ArrayList<>();
-		roles.add(new UserRole(Roles.ROLE_USER));
+		userForm.getRoles().forEach(role -> roles.add(new UserRole(role)));
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(new Account(AccountType.EMAIL));
 		user.setAccounts(accounts);

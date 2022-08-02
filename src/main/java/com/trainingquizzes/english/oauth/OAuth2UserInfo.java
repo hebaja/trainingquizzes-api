@@ -1,12 +1,17 @@
 package com.trainingquizzes.english.oauth;
 
+import java.util.List;
+
+import com.trainingquizzes.english.enums.Roles;
+
 public class OAuth2UserInfo {
 
 	private String email;
 	private String id;
-	private String imageUrl;
+	private String pictureUrl;
 	private String first_name;
 	private String last_name;
+	private List<Roles> roles;
 
 	public String getEmail() {
 		return email;
@@ -24,12 +29,12 @@ public class OAuth2UserInfo {
 		this.id = id;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+	public String getPictureUrl() {
+		return pictureUrl;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setPictureUrl(String imageUrl) {
+		this.pictureUrl = imageUrl;
 	}
 
 	public String getFirst_name() {
@@ -46,6 +51,14 @@ public class OAuth2UserInfo {
 
 	public void setLast_name(String last_name) {
 		this.last_name = last_name;
+	}
+
+	public List<Roles> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Roles> roles) {
+		this.roles = roles;
 	}
 
 }

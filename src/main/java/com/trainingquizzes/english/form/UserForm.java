@@ -1,5 +1,8 @@
 package com.trainingquizzes.english.form;
 
+import java.util.List;
+
+import com.trainingquizzes.english.enums.Roles;
 import com.trainingquizzes.english.model.User;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -10,6 +13,7 @@ public class UserForm {
 	private String username;
 	private String email;
 	private String password;
+	private List<Roles> roles;
 
 	public Long getId() {
 		return id;
@@ -40,14 +44,22 @@ public class UserForm {
 	}
 	
 	public User convert() {
-		User user = new User();
+		User teacher = new User();
 		
 		String passwordHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
 		
-		user.setUsername(username);
-		user.setEmail(email);
-		user.setPassword(passwordHashString);
+		teacher.setUsername(username);
+		teacher.setEmail(email);
+		teacher.setPassword(passwordHashString);
 		
-		return user;
+		return teacher;
+	}
+
+	public List<Roles> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Roles> roles) {
+		this.roles = roles;
 	}
 }

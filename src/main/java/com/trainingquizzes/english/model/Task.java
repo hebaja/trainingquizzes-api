@@ -3,21 +3,16 @@ package com.trainingquizzes.english.model;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Task {
@@ -29,7 +24,7 @@ public class Task {
 	@ManyToOne
 	private Subject subject;
 	
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @Cascade(CascadeType.ALL)
     private List<TaskOption> options;
     

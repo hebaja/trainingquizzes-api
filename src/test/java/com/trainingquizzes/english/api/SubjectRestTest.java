@@ -21,7 +21,7 @@ class SubjectRestTest {
 	
 	@Test
 	void shouldReturn200WhenRequestingSubjectsList() throws Exception {
-		URI uri = new URI("/api/subject/all");
+		URI uri = new URI("/api/subject");
 		mockMvc
 		.perform(MockMvcRequestBuilders
 				.get(uri))

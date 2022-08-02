@@ -22,22 +22,13 @@ class ExerciseRestTest {
 	
 	@Test
 	void shouldReturn200WhenSavingExercisesListOfAnExistingUser() throws Exception {
-		URI uri = new URI("/api/exercise");
+		URI uri = new URI("/api/exercise/save");
 		
-		String json = "[\n"
-				+ "    {\n"
-				+ "        \"userUid\":\"845751357545687899\",\n"
+		String json = "{\n"
+				+ "        \"userId\":\"4\",\n"
 				+ "        \"subjectId\":\"1\",\n"
-				+ "        \"level\":\"EASY\",\n"
 				+ "        \"score\":\"8\"\n"
-				+ "    },\n"
-				+ "    {\n"
-				+ "        \"userUid\":\"845751357545687899\",\n"
-				+ "        \"subjectId\":\"2\",\n"
-				+ "        \"level\":\"MEDIUM\",\n"
-				+ "        \"score\":\"7\"\n"
-				+ "    }\n"
-				+ "]";
+				+ "    }\n";
 		mockMvc
 		.perform(MockMvcRequestBuilders
 				.post(uri)

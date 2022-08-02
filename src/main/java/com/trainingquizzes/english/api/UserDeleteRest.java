@@ -5,12 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trainingquizzes.english.form.UserForm;
 import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.repository.PasswordResetTokenRepository;
 import com.trainingquizzes.english.repository.UserRegisterTokenRepository;
@@ -21,10 +20,11 @@ import com.trainingquizzes.english.token.UserRegisterToken;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/delete-user")
+// PROBABLY NOT GOING TO USE THIS CLASS ANYMORE
 public class UserDeleteRest {
 	
 	@Autowired
-	private UserRepository repository;
+	private UserRepository userRepository;
 	
 	@Autowired
 	private PasswordResetTokenRepository passwordTokenRepository;
@@ -32,46 +32,27 @@ public class UserDeleteRest {
 	@Autowired
 	private UserRegisterTokenRepository userRegisterTokenRepository;
 	
-	@PostMapping
-	public ResponseEntity<?> delete(@RequestBody UserForm form) {
+	@DeleteMapping
+	public ResponseEntity<?> delete(@RequestParam Long userId) {
 		
-		User user = fetchUser(form.getEmail());
+		User user = fetchUser(userId);
 		if(user != null) {
 			try {
 				removeUser(user);
 				return ResponseEntity.ok().build();
 			} catch (Exception e) {
-				return ResponseEntity.badRequest().build();
+				throw new RuntimeException(e);
 			}
 		}
 		return ResponseEntity.badRequest().build();
 	}
 
-//	public void androidDelete() throws IOException {
-//		FacesContext facesContext = FacesContext.getCurrentInstance();
-//		User user = fetchUser();
-//		if(user != null) {
-//			removeUser(user);
-//			removedUserMessage(facesContext, user);
-//			setReturnToAppRender(true);
-//			setDeleteAccountButtonRender(false);
-//		} else {
-//			showErrorMessage(facesContext);
-//		}
-//	}
-	
-	private User fetchUser(String email) {
-		
-		return repository.findByEmail(email).orElse(null);
-		
-//		User user = userRepository.findByEmail(email)
-//						.orElse(userRepository.findByUid(userInfo)
-//						.orElse(null);
-//		return user;
+	private User fetchUser(Long userId) {
+		return userRepository.findById(userId).orElse(null);
 	}
 	
 	private void removeUser(User user) {
-		List<PasswordResetToken> passwordResetTokens = passwordTokenRepository.findAllByUserId(user.getId());
+		List<PasswordResetToken> passwordResetTokens = passwordTokenRepository.findAllByTeacherId(user.getId());
 		if(passwordResetTokens != null) {
 			passwordTokenRepository.deleteAll(passwordResetTokens);
 		}
@@ -81,7 +62,7 @@ public class UserDeleteRest {
 			userRegisterTokenRepository.deleteAll(userRegisterTokens);
 		}
 		
-		repository.delete(user);
+		userRepository.delete(user);
 	}
 
 }

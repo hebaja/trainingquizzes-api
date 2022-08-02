@@ -37,11 +37,11 @@ public class UserRepositoryTest {
 
 	@BeforeAll
 	public void init() {
-		this.username = "user";
+		this.username = "student";
 		this.adminUsername = "administrator";
-		this.email = "henrique@hebaja.com";
+		this.email = "student@hebaja.com";
 		this.adminEmail = "hebaja@hebaja.com";
-		this.uid = "845751357545687899";
+		this.uid = "21455666489878466";
 		this.adminUid = "188445677544887521";
 		this.inexistentValue = "null";
 	}

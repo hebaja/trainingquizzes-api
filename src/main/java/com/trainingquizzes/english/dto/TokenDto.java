@@ -6,12 +6,12 @@ public class TokenDto {
 
 	private String token;
 	private String type;
-	private UserDtoNoPassword user;
+	private UserDto user;
 
 	public TokenDto(String token, String type, User user) {
 		this.token = token;
 		this.type = type;
-		this.user = new UserDtoNoPassword(user);
+		this.user = new UserDto(user);
 	}
 
 	public String getToken() {
@@ -22,7 +22,7 @@ public class TokenDto {
 		return type;
 	}
 
-	public UserDtoNoPassword getUser() {
+	public UserDto getUser() {
 		return user;
 	}
 	

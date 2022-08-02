@@ -3,7 +3,6 @@ package com.trainingquizzes.english.api;
 import static com.trainingquizzes.english.util.Constants.EMAIL_SET;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,17 +41,16 @@ public class PasswordResetRest {
 	private PasswordResetTokenRepository passwordTokenRepository;
 	
 	@Autowired
-	private UserRepository userRepository; 
+	private UserRepository teacherRepository; 
 	
 	@Value("${spring-english-training-quizzes-default-domain}")
 	private String defaultDomain;
 	
-	@PostMapping
-	private ResponseEntity<UserDtoNoPassword> resetPassowrd(@RequestBody UserForm form) {
+	@PostMapping("request")
+	public ResponseEntity<UserDtoNoPassword> resetPassword(@RequestBody UserForm form) {
 		if(form != null) {
-			if(userRepository.existsByEmail(form.getEmail())) {
-				Optional<User> userOptional = userRepository.findByEmail(form.getEmail());
-				User user = userOptional.orElse(null);
+			if(teacherRepository.existsByEmail(form.getEmail())) {
+				User user = teacherRepository.findByEmail(form.getEmail()).orElse(null);
 				if(user != null) {
 					PasswordResetToken passwordResetToken = createPasswordResetToken(user);
 					passwordTokenRepository.save(passwordResetToken);
@@ -63,7 +61,7 @@ public class PasswordResetRest {
 							"To complete the password reset process, please click here: "
 									+ defaultDomain
 	//								+ "user/android/reset-password?id=android&token="
-									+ "#/reset_password?reset_token=" 
+									+ "#/reset-password?reset_token=" 
 									+ passwordResetToken.getToken()
 									+ " (This link will expire after 24 hours)");
 					return ResponseEntity.ok(new UserDtoNoPassword(user));
@@ -83,24 +81,22 @@ public class PasswordResetRest {
 			PasswordResetToken passwordToken = passwordTokenRepository.findByToken(form.getToken()).orElse(null);
 			Date date = new Date();
 			if(passwordToken != null && passwordToken.getExpiryDate().after(date)) {
-				User user = userRepository.findById(passwordToken.getUser().getId()).orElse(null);
-				return ResponseEntity.ok(new UserDtoNoPassword(user));
+				User teacher = teacherRepository.findById(passwordToken.getUser().getId()).orElse(null);
+				return ResponseEntity.ok(new UserDtoNoPassword(teacher));
 			}
 		}
 		return ResponseEntity.badRequest().build();
 	}
 	
-	@PostMapping("reset")
+	@PostMapping
 	public ResponseEntity<?> resetPassword(@RequestBody PasswordResetForm form) {
 		if(form != null) {
 			try {
 				PasswordResetToken token = passwordTokenRepository.findByToken(form.getToken()).orElse(null);
-				User user = userRepository.findById(token.getUser().getId()).orElse(null);
-				
+				User user = teacherRepository.findById(token.getUser().getId()).orElse(null);
 				String passwordHashString = BCrypt.withDefaults().hashToString(12, form.getPassword().toCharArray());
-				
 				user.setPassword(passwordHashString);
-				userRepository.save(user);
+				teacherRepository.save(user);
 				return ResponseEntity.ok().build();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -109,9 +105,10 @@ public class PasswordResetRest {
 		}
 		return ResponseEntity.badRequest().build();
 	}
-	
+		
 	private PasswordResetToken createPasswordResetToken(User user) {
 		String token = UUID.randomUUID().toString();
+		@SuppressWarnings("deprecation")
 		PasswordResetToken passwordResetToken = new PasswordResetToken();
 		passwordResetToken.setUser(user);
 		passwordResetToken.setToken(token);

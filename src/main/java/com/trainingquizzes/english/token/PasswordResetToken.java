@@ -9,7 +9,7 @@ import com.trainingquizzes.english.model.User;
 
 @Entity
 public class PasswordResetToken extends Token {
-
+	
 	@OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
@@ -28,6 +28,6 @@ public class PasswordResetToken extends Token {
 
 	public void setUser(User user) {
 		this.user = user;
-	}    
-	
+	}
+
 }

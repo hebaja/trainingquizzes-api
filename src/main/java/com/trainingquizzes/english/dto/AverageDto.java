@@ -1,6 +1,7 @@
 package com.trainingquizzes.english.dto;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.trainingquizzes.english.enums.LevelType;
@@ -8,14 +9,18 @@ import com.trainingquizzes.english.model.Average;
 
 public class AverageDto {
 	
+	private String uid;
 	private String subjectTitle;
+	private UserDto user;
 	private LevelType level;
 	private double average;
 	private double averageForMeter;
 	private String levelCapitalize;
 	
 	public AverageDto(Average average) {
+		this.uid = UUID.randomUUID().toString();
 		this.subjectTitle = average.getSubject().getTitle();
+		this.setUser(new UserDto(average.getUser()));
 		this.level = average.getLevel();
 		this.average = average.getAverage();
 		this.averageForMeter = average.getAverageForMeter();
@@ -46,5 +51,19 @@ public class AverageDto {
 		return levelCapitalize;
 	}
 
-	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uuid) {
+		this.uid = uuid;
+	}
+
+	public UserDto getUser() {
+		return user;
+	}
+
+	public void setUser(UserDto user) {
+		this.user = user;
+	}
 }

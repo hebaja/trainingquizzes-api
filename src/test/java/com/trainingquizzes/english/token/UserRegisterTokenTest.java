@@ -46,20 +46,20 @@ class UserRegisterTokenTest {
 	void init() {
 		String token = UUID.randomUUID().toString();
 		
-		User user = new User();
-		user.setUsername("test");
-		user.setEmail("test@hebaja.com");
-		user.setPassword("123456");
+		User teacher = new User();
+		teacher.setUsername("test");
+		teacher.setEmail("test@hebaja.com");
+		teacher.setPassword("123456");
 		
 		List<UserRole> roles = new ArrayList<>();
-		roles.add(new UserRole(Roles.ROLE_USER));
+		roles.add(new UserRole(Roles.ROLE_TEACHER));
 		
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(new Account(AccountType.EMAIL));
 		
-		String passwordHashString = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+		String passwordHashString = BCrypt.withDefaults().hashToString(12, teacher.getPassword().toCharArray());
 		
-		UserRegisterToken userToRegisterToken = new UserRegisterToken(token, user.getUsername(), user.getEmail(), passwordHashString);
+		UserRegisterToken userToRegisterToken = new UserRegisterToken(token, teacher.getUsername(), teacher.getEmail(), passwordHashString);
 		userToRegisterToken.setExpiryDate();
 		
 		this.generatedToken = tokenRepository.save(userToRegisterToken);
@@ -74,17 +74,17 @@ class UserRegisterTokenTest {
 			List<Account> accounts = new ArrayList<>();
 			accounts.add(new Account(AccountType.EMAIL));
 			
-			Authority authority = new Authority(Roles.ROLE_USER);
+			Authority authority = new Authority(Roles.ROLE_TEACHER);
 			List<Authority> roles = Arrays.asList(authority);
 			
 			String uid = RandomStringUtils.random(18, "0123456789");
 			
-			User newUser = new User(generatedToken.getUsername(), generatedToken.getEmail(),
+			User user = new User(generatedToken.getUsername(), generatedToken.getEmail(),
 					generatedToken.getPasword(), true, roles, accounts);
 			
-			newUser.setUid(uid);
+			user.setUid(uid);
 			
-			User generatedUser = userRepository.save(newUser);;
+			User generatedUser = userRepository.save(user);;
 			tokenRepository.delete(generatedToken);
 			UserRegisterToken removedToken = tokenRepository.findById(generatedToken.getId()).orElse(null);
 			

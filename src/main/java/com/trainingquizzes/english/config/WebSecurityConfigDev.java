@@ -14,20 +14,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.trainingquizzes.english.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity
-@Profile({"dev", "test"})
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@Profile("dev")
 public class WebSecurityConfigDev extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -45,22 +38,25 @@ public class WebSecurityConfigDev extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
 	@Value("${spring-english-training-quizzes-default-domain}")
 	private String defaultDomain;
+	
+	@Value("${spring.security.oauth2.client.registration.google.client-id}")
+	private String googleId;
+	
+	private static final String TEACHER = "TEACHER"; 
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.GET, "/averages").authenticated()
-		.antMatchers(HttpMethod.POST, "/api/averages", "/api/delete-user").authenticated()
-		.antMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
-		.antMatchers(HttpMethod.GET, "/api/subjects").hasRole("ADMIN")
-		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
-		.antMatchers(HttpMethod.POST, "/auth/**", "/api/user-register/**", "/api/reset-password/**").permitAll()
 		.antMatchers(HttpMethod.GET, "/redirect").permitAll()
+		.antMatchers(HttpMethod.POST, "/api/averages", "/api/delete-user").authenticated()
+		.antMatchers(HttpMethod.POST, "/auth/**", "/api/user-register/**", "/api/reset-password/**").permitAll()
+		.antMatchers(HttpMethod.DELETE, "/api/subject/**").hasRole(TEACHER)
+		.antMatchers(HttpMethod.DELETE, "/api/quest").hasRole(TEACHER)
+		.antMatchers(HttpMethod.DELETE, "/api/user").authenticated()
+		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole(TEACHER)
 		.anyRequest().permitAll()
 		.and().csrf().disable().headers().frameOptions().disable()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -1,14 +1,32 @@
-INSERT INTO users(email, enabled, password, uid, username) VALUES('hebaja@hebaja.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '188445677544887521', 'administrator');
-INSERT INTO users(email, enabled, password, uid, username) VALUES('henrique@hebaja.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '845751357545687899', 'user');
-INSERT INTO users(email, enabled, password, uid, username) VALUES('feanor_esc@hotmail.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '787454512169654589', 'feanor');
-INSERT INTO user_roles(user_id, role) values(1, 'ROLE_ADMIN');
-INSERT INTO user_roles(user_id, role) values(2, 'ROLE_USER');
-INSERT INTO user_roles(user_id, role) values(3, 'ROLE_USER');
+INSERT INTO user(email, enabled, password, uid, username) VALUES('hebaja@hebaja.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '188445677544887521', 'administrator');
+INSERT INTO user(email, enabled, password, uid, username, picture_url) VALUES('henrique@hebaja.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '845751357545687899', 'user', 'https://icons.iconarchive.com/icons/mathijssen/tuxlets/48/Baby-Tux-icon.png');
+INSERT INTO user(email, enabled, password, uid, username) VALUES('feanor_esc@hotmail.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '787454512169654589', 'feanor');
+INSERT INTO user(email, enabled, password, uid, username, picture_url) VALUES('student@hebaja.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '21455666489878466', 'student', 'https://icons.iconarchive.com/icons/femfoyou/angry-birds/48/angry-bird-icon.png');
+INSERT INTO user(email, enabled, password, uid, username, picture_url) VALUES('pupil@hebaja.com', true, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', '57896544452157896', 'pupil', 'https://icons.iconarchive.com/icons/femfoyou/angry-birds/48/angry-bird-green-icon.png');
 
-INSERT INTO subject(title, user_id, level) VALUES('Comparative and superlative', 1, 'EASY');
-INSERT INTO subject(title, user_id, level) VALUES('Modals', 1, 'MEDIUM');
-INSERT INTO subject(title, user_id, level) VALUES('Articles and determiners', 1, 'HARD');
-INSERT INTO subject(title, user_id, level) VALUES('Adverbs', 1, 'MEDIUM');
+INSERT INTO user_roles(user_id, role) values(1, 'ROLE_ADMIN');
+INSERT INTO user_roles(user_id, role) values(2, 'ROLE_TEACHER');
+INSERT INTO user_roles(user_id, role) values(3, 'ROLE_TEACHER');
+INSERT INTO user_roles(user_id, role) values(4, 'ROLE_STUDENT');
+INSERT INTO user_roles(user_id, role) values(5, 'ROLE_STUDENT');
+
+--INSERT INTO authority(user_id, role) values(1, 'ROLE_ADMIN');
+--INSERT INTO authority(user_id, role) values(2, 'ROLE_TEACHER');
+--INSERT INTO authority(user_id, role) values(3, 'ROLE_TEACHER');
+--INSERT INTO authority(user_id, role) values(4, 'ROLE_STUDENT');
+--INSERT INTO authority(user_id, role) values(5, 'ROLE_STUDENT');
+
+INSERT INTO user_accounts(user_id, account_type) values(1, 'EMAIL');
+INSERT INTO user_accounts(user_id, account_type) values(2, 'EMAIL');
+INSERT INTO user_accounts(user_id, account_type) values(3, 'EMAIL');
+INSERT INTO user_accounts(user_id, account_type) values(4, 'EMAIL');
+INSERT INTO user_accounts(user_id, account_type) values(5, 'EMAIL');
+
+INSERT INTO subject(title, user_id, level, creation_date) VALUES('Comparative and superlative', 2, 'EASY', '2021-12-29 20:31:34.0000000');
+INSERT INTO subject(title, user_id, level, creation_date) VALUES('Modals', 2, 'MEDIUM', '2022-01-05 20:31:34.0000000');
+INSERT INTO subject(title, user_id, level, creation_date) VALUES('Articles and determiners', 2, 'HARD', '2022-02-01 20:31:34.0000000');
+INSERT INTO subject(title, user_id, level, creation_date) VALUES('Adverbs', 2, 'MEDIUM', '2022-03-29 20:31:34.0000000');
+INSERT INTO subject(title, user_id, level, creation_date) VALUES('Comparative and superlative', 3, 'MEDIUM', '2022-04-19 20:31:34.0000000');
 
 INSERT INTO task (prompt,subject_id,shuffle_options) VALUES
  	('The shops are a lot ___ than usual.',1 ,true),
@@ -86,6 +104,28 @@ INSERT INTO task (prompt,subject_id,shuffle_options) VALUES
 	('Which of these sentences does not contain an adverb?',4, true),
 	('Which of these statements about adverbs is false?',4, true),
 	('Which of these adverbs is an adverb of time?',4, true);
+	
+INSERT INTO task (prompt,subject_id,shuffle_options) VALUES
+ 	('The shops are a lot ___ than usual.',5 ,true),
+ 	('I feel much ___ since I started exercising.',5 ,true),
+	('The girl is ___ than she seemed in her photo.',5 , true),
+	('The town on Sunday is ___.',5 ,true),
+	('I think this sofa is ___ than the other.',5 ,true),
+	('The Eiffel Tower is ___ site in France.',5 ,true),
+	('She is a ___ musician than her friend.',5 ,true),
+	('What is ___ river in the world?',5 ,true),
+	('Which gloves are ___ ?',5 ,true),
+	('My friend is much ___ than I am.',5 ,true),
+	('Who is ___ politician in the Parliment?',5 ,true),
+    ('What is ___ painting in this Gallery?',5 ,true),
+    ('My car is ___ than yours.',5 ,true),
+    ('It was ___ thing.',5 ,true),
+    ('It is not ___  it was yesterday.',5 ,true),
+    ('He was not  ___ I thought he would be.',5 ,true),
+    ('The children were ___ gold.',5 ,true),
+    ('The tickets were twice ___  before.',5 ,true),
+    ('We climbed ___ up the hill.',5 ,true),
+    ('What is the ___ planet from the sun?',5 ,true);	
 
 INSERT INTO task_options (task_id,correct,prompt) VALUES
 	 (1,1,'quieter'),
@@ -307,20 +347,282 @@ INSERT INTO task_options (task_id,prompt,correct) VALUES
 	 (69,'loudly',0),
 	 (69,'upstairs',0),
 	 (69,'warmly',0);
+	
+INSERT INTO task_options (task_id,correct,prompt) VALUES
+	(70, 1,	'quieter'),
+	(70, 0,	'more quiet'),
+	(70, 0,	'more quiet'),
+	(71, 0,	'fiter'),
+	(71, 1,	'fitter'),
+	(71, 0,	'more fit'),
+	(72, 0,	'more pretty'),
+	(72, 0,	'most pretty'),
+	(72, 1,	'prettier'),
+	(73, 1,	'less crowded'),
+	(73, 0,	'least crowded'),
+	(73, 0,	'crowdeder'),
+	(74, 0,	'comfortabler'),
+	(74, 1,	'more comfortable'),
+	(74, 0,	'most comfortable'),
+	(75, 0,	'the more popular'),
+	(75, 0,	'popularest'),
+	(75, 1,	'the most popular'),
+	(76, 1,	'better'),
+	(76, 0,	'gooder'),
+	(76, 0,	'best'),
+	(77, 0,	'the longer'),
+	(77, 1,	'the longest'),
+	(77, 0,	'longer than'),
+	(78, 0,	'the cheap'),
+	(78, 0,	'more cheaper'),
+	(78, 1,	'cheaper'),
+	(79, 1,	'taller'),
+	(79, 0,	'most tall'),
+	(79, 0,	'the tallest'),
+	(80, 0,	'the badest'),
+	(80, 1,	'the worst'),
+	(80, 0,	'worse'),
+	(81, 0,	'the more beautiful'),
+	(81, 0,	'the beautifulest'),
+	(81, 1,	'the most beautiful'),
+	(82, 1,	'less expensive'),
+	(82, 0,	'least expensive'),
+	(82, 0,	'expensiver'),
+	(83, 0,	'the less surprising'),
+	(83, 1,	'the least surprising'),
+	(83, 0,	'the surprisinger'),
+	(84, 0,	'as hot than'),
+	(84, 0,	'as hot so'),
+	(84, 1,	'as hot as'),
+	(85, 1,	'as tall as'),
+	(85, 0,	'as tall like'),
+	(85, 0,	'the tall as'),
+	(86, 0,	'more good than'),
+	(86, 1,	'as good as'),
+	(86, 0,	'less better than'),
+	(87, 0,	'as expensive like'),
+	(87, 0,	'more expensiver than'),
+	(87, 1,	'as expensive as'),
+	(88, 1,	'further'),
+	(88, 0,	'farer'),
+	(88, 0,	'fartest'),
+	(89, 0,	'farest'),
+	(89, 1,	'furthest'),
+	(89, 0,	'fariest');
 	 
 INSERT INTO exercise (`level`,score,user_id,subject_id) VALUES
-	 ('EASY',8.0,2,1),
-	 ('EASY',6.0,2,1),
-	 ('EASY',4.0,2,1),
-	 ('EASY',3.0,2,1),
-	 ('EASY',2.0,2,1),
-	 ('EASY',8.0,2,1),
-	 ('EASY',5.0,2,1),
-	 ('EASY',4.0,2,1),
-	 ('EASY',2.0,2,1),
-	 ('MEDIUM',6.0,2,2),
-	 ('MEDIUM',3.0,2,2),
-	 ('HARD',3.0,2,3),
-	 ('MEDIUM',9.0,2,4);
+	 ('EASY',8.0,4,1),
+	 ('EASY',6.0,4,1),
+	 ('EASY',4.0,4,1),
+	 ('EASY',3.0,4,1),
+	 ('EASY',2.0,4,1),
+	 ('EASY',8.0,4,1),
+	 ('EASY',5.0,4,1),
+	 ('EASY',4.0,4,1),
+	 ('EASY',2.0,4,1),
+	 ('MEDIUM',6.0,4,2),
+	 ('MEDIUM',3.0,4,2),
+	 ('HARD',3.0,4,3),
+	 ('MEDIUM',9.0,4,4);
 	 
-	 
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 1);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 2);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 3);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 4);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 5);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 6);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 7);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 8);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 9);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 10);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 11);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 12);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 13);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 14);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 15);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 16);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 17);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 18);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 19);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(1, 20);
+
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 21);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 22);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 23);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 24);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 25);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 26);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 27);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 28);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 29);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 30);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 31);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 32);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 33);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 34);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 35);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 36);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 37);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 38);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 39);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(2, 40);
+
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 41);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 42);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 43);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 44);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 45);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 46);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 47);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 48);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 49);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 50);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 51);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 52);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 53);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 54);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 55);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 56);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 57);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(3, 58);
+
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 59);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 60);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 61);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 62);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 63);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 64);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 65);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 66);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 67);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 68);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(4, 69);
+
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 70);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 71);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 72);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 73);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 74);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 75);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 76);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 77);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 78);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 79);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 80);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 81);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 82);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 83);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 84);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 85);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 86);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 87);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 88);
+INSERT INTO subject_tasks(subject_id, tasks_id) values(5, 89);
+		 
+-- ##### Ordinary quest ############## --	 
+INSERT INTO quest (user_id, title, subject_id, start_date, finish_date, time_interval, time_unit, finished) values (2, 'test_quest', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 4, 2, 7, false);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (1, 4);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (1, 5);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (1, 4);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (1, 5);
+
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (1, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 1.9999, 1, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (1, 4, CURRENT_TIMESTAMP + 2, CURRENT_TIMESTAMP + 3.9999, 2, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (1, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 1.9999, 1, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (1, 5, CURRENT_TIMESTAMP + 2, CURRENT_TIMESTAMP + 3.9999, 2, false);
+
+--INSERT INTO quest_trials (quest_id, trials_id) values (1, 1);
+--INSERT INTO quest_trials (quest_id, trials_id) values (1, 2);
+--INSERT INTO quest_trials (quest_id, trials_id) values (1, 3);
+--INSERT INTO quest_trials (quest_id, trials_id) values (1, 4);
+
+-- ##### Quest with expired trial ############## --
+INSERT INTO quest (user_id, title, subject_id, start_date, finish_date, time_interval, time_unit, finished) values (2, 'quest_one_expired', 1, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP + 2, 3, 7, false);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (2, 4);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (2, 5);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (2, 4);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (2, 5);
+
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (2, 4, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (2, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 1, 2, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (2, 4, CURRENT_TIMESTAMP + 1, CURRENT_TIMESTAMP + 2, 3, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (2, 5, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, 1, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (2, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 1, 2, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (2, 5, CURRENT_TIMESTAMP + 1, CURRENT_TIMESTAMP + 2, 3, false);
+
+--INSERT INTO quest_trials (quest_id, trials_id) values (2, 5);
+--INSERT INTO quest_trials (quest_id, trials_id) values (2, 6);
+--INSERT INTO quest_trials (quest_id, trials_id) values (2, 7);
+--INSERT INTO quest_trials (quest_id, trials_id) values (2, 8);
+--INSERT INTO quest_trials (quest_id, trials_id) values (2, 9);
+--INSERT INTO quest_trials (quest_id, trials_id) values (2, 10);
+
+---- ##### Quest with low time interval ############## --
+INSERT INTO quest (user_id, title, subject_id, start_date, finish_date, time_interval, time_unit, finished) values (2, 'quest_low_interval', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 0.008333334, 3, 4, false);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (3, 4);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (3, 5);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (3, 4);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (3, 5);
+
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (3, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 0.002777778, 1, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (3, 4, CURRENT_TIMESTAMP + 0.002777778, CURRENT_TIMESTAMP + 0.005555556, 2, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (3, 4, CURRENT_TIMESTAMP + 0.005555556, CURRENT_TIMESTAMP + 0.008333334, 3, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (3, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 0.002777778, 1, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (3, 5, CURRENT_TIMESTAMP + 0.002777778, CURRENT_TIMESTAMP + 0.005555556, 2, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (3, 5, CURRENT_TIMESTAMP + 0.005555556, CURRENT_TIMESTAMP + 0.008333334, 3, false);
+
+--INSERT INTO quest_trials (quest_id, trials_id) values (3, 11);
+--INSERT INTO quest_trials (quest_id, trials_id) values (3, 12);
+--INSERT INTO quest_trials (quest_id, trials_id) values (3, 13);
+--INSERT INTO quest_trials (quest_id, trials_id) values (3, 14);
+--INSERT INTO quest_trials (quest_id, trials_id) values (3, 15);
+--INSERT INTO quest_trials (quest_id, trials_id) values (3, 16);
+
+---- ##### Quest with VERY low time interval ############## --
+INSERT INTO quest (user_id, title, subject_id, start_date, finish_date, time_interval, time_unit, finished) values (2, 'very_short_quest', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 0.002777776, 2, 4, false);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (4, 4);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (4, 5);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (4, 4);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (4, 5);
+
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (4, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 0.001388888, 1, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (4, 4, CURRENT_TIMESTAMP + 0.001388888, CURRENT_TIMESTAMP + 0.002777776, 2, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (4, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + 0.002777778, 1, false);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished) values (4, 5, CURRENT_TIMESTAMP + 0.001388888, CURRENT_TIMESTAMP + 0.002777776, 2, false);
+
+--INSERT INTO quest_trials (quest_id, trials_id) values (4, 17);
+--INSERT INTO quest_trials (quest_id, trials_id) values (4, 18);
+--INSERT INTO quest_trials (quest_id, trials_id) values (4, 19);
+--INSERT INTO quest_trials (quest_id, trials_id) values (4, 20);
+
+---- ##### Quest already finished ############## --
+INSERT INTO quest (user_id, title, subject_id, start_date, finish_date, time_interval, time_unit, finished) values (2, 'already_finished_quest', 1, CURRENT_TIMESTAMP - 2, CURRENT_TIMESTAMP, 2, 7, true);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (5, 4);
+--INSERT INTO quest_subscribed_users (quest_id, subscribed_users_id) values (5, 5);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (5, 4);
+INSERT INTO quest_subscribed_users_ids (quest_id, subscribed_users_ids) values (5, 5);
+
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished, score) values (5, 4, CURRENT_TIMESTAMP - 2, CURRENT_TIMESTAMP - 1, 1, true, 5.0);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished, score) values (5, 4, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, 2, true, 7.0);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished, score) values (5, 5, CURRENT_TIMESTAMP - 2, CURRENT_TIMESTAMP - 1, 1, true, 8.0);
+INSERT INTO trial (quest_id, subscribed_user_id, start_date, finish_date, trial_number, finished, score) values (5, 5, CURRENT_TIMESTAMP - 1, CURRENT_TIMESTAMP, 2, true, 6.0);
+
+--INSERT INTO quest_trials (quest_id, trials_id) values (5, 21);
+--INSERT INTO quest_trials (quest_id, trials_id) values (5, 22);
+--INSERT INTO quest_trials (quest_id, trials_id) values (5, 23);
+--INSERT INTO quest_trials (quest_id, trials_id) values (5, 24);
+
+INSERT INTO quest_result (quest_id, result_key, result) values (5, 'student', 5.5);
+INSERT INTO quest_result (quest_id, result_key, result) values (5, 'pupil', 6.0);
+
+--ADD QUESTS TO SUBSCRIBED QUEST IN USERS
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (4, 1);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (4, 2);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (4, 3);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (4, 4);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (4, 5);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (5, 1);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (5, 2);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (5, 3);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (5, 4);
+--INSERT INTO user_subscribed_quests (user_id, subscribed_quests_id) values (5, 5);

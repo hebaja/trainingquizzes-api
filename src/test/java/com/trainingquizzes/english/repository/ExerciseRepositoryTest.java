@@ -42,14 +42,14 @@ class ExerciseRepositoryTest {
 	
 	@BeforeAll
 	public void init() {
-		this.userEmail = "henrique@hebaja.com";
+		this.userEmail = "student@hebaja.com";
 		this.user = userRepository.findByEmail(userEmail).orElse(null);
 		this.subject = subjectRepository.findById(1L).orElse(null);;
 	}
 	
 	@Test
 	void shouldReturnListOfExercisesFromExistingUser() {
-		List<Exercise> exercises = exerciseRepository.findAllByUser(user.getUsername());
+		List<Exercise> exercises = exerciseRepository.findAllByStudent(user.getUsername());
 		assertNotNull(exercises);
 		assertFalse(exercises.isEmpty());
 	}
@@ -57,7 +57,7 @@ class ExerciseRepositoryTest {
 	@Test
 	void shouldReturnListOfExercisesFromExistingUserWithoutExercises() {
 		User user = userRepository.findByEmail("hebaja@hebaja.com").orElse(null);
-		List<Exercise> exercises = exerciseRepository.findAllByUser(user.getUsername());
+		List<Exercise> exercises = exerciseRepository.findAllByStudent(user.getUsername());
 		assertNotNull(exercises);
 		assertTrue(exercises.isEmpty());
 	}

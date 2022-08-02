@@ -3,9 +3,6 @@ package com.trainingquizzes.english.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.trainingquizzes.english.enums.LevelType;
-import com.trainingquizzes.english.model.Subject;
 import com.trainingquizzes.english.model.Task;
 import com.trainingquizzes.english.model.TaskOption;
 

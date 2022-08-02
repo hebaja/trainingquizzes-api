@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -33,23 +32,20 @@ class PasswordResetTokenTest {
 	@Autowired
 	private UserRepository userRepository;
 	
-	private User existingUser;
+	private User user;
 	
 	private PasswordResetToken generatedToken;
 	
 	@BeforeAll
 	void init() {
-		Optional<User> userOptional = userRepository.findByEmail("henrique@hebaja.com");
-		this.existingUser = userOptional.orElse(null);
-		
+		this.user = userRepository.findByEmail("henrique@hebaja.com").orElse(null);
 		String token = UUID.randomUUID().toString();
+		@SuppressWarnings("deprecation")
 		PasswordResetToken passwordResetToken = new PasswordResetToken();
-		passwordResetToken.setUser(existingUser);
+		passwordResetToken.setUser(user);
 		passwordResetToken.setToken(token);
 		passwordResetToken.setExpiryDate();
-		
 		this.generatedToken = tokenRepository.save(passwordResetToken);;
-		
 	}
 	
 	@Test
@@ -59,16 +55,16 @@ class PasswordResetTokenTest {
 		String passwordHashString = BCrypt.withDefaults().hashToString(12, newPassword.toCharArray());
 
 		if(generatedToken.getExpiryDate().after(date)) {
-			existingUser.setPassword(passwordHashString);
-			userRepository.save(existingUser);
+			user.setPassword(passwordHashString);
+			userRepository.save(user);
 			tokenRepository.delete(generatedToken);
 		}
 		
 		PasswordResetToken deletedToken = tokenRepository.findById(generatedToken.getId()).orElse(null);
 		
-		assertNotNull(existingUser);
+		assertNotNull(user);
 		assertNull(deletedToken);
-		assertEquals(passwordHashString, existingUser.getPassword());
+		assertEquals(passwordHashString, user.getPassword());
 		
 	}
 

@@ -76,10 +76,8 @@ public class NewUserRequest {
 		String passwordHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(new Account(AccountType.EMAIL));
-		Authority authority = new Authority(Roles.ROLE_USER);
+		Authority authority = new Authority(Roles.ROLE_TEACHER);
 		List<Authority> roles = Arrays.asList(authority);
-		User user = new User(username, email, passwordHashString, false, roles, accounts);
-		
-		return user;
+		return new User(username, email, passwordHashString, false, roles, accounts);
 	}
 }

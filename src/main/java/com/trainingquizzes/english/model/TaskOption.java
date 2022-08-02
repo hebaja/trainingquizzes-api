@@ -1,9 +1,6 @@
 package com.trainingquizzes.english.model;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotEmpty;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Embeddable
 public class TaskOption {
