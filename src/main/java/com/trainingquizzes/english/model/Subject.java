@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,9 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.trainingquizzes.english.enums.LevelType;
 
@@ -31,16 +29,13 @@ public class Subject {
 	@ManyToOne
 	private User user;
 	
-	@OneToMany
-//	@Cascade(CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	private Set<Quest> quest;
 	
-	@OneToMany(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Task> tasks;
 	
-	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY, cascade = javax.persistence.CascadeType.REMOVE)
-//	@Cascade(CascadeType.ALL)
+	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Exercise> exercises;
 	
 	@Enumerated(EnumType.STRING)

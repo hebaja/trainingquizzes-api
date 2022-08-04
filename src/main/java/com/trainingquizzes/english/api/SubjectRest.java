@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.hibernate.internal.build.AllowSysOut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,15 +152,6 @@ public class SubjectRest {
 		if(id != null) {
 			List<Subject> subjects = subjectRepository.findAllByUserId(id).orElse(null);
 			if (subjects != null) {
-				subjects.forEach(subject -> {
-					
-					System.out.println(subject.getTitle());
-					
-					subject.getTasks().forEach(task -> System.out.println(task.getPrompt()));
-					
-					System.out.println();
-					
-				});
 				return ResponseEntity.ok(SubjectWithTasksDto.convertList(subjects));
 			}
 			return ResponseEntity.notFound().build();
