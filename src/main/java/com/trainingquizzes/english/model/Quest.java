@@ -38,11 +38,9 @@ public class Quest implements Cloneable {
 	private Map<String, Double> result = new HashMap<>();
 	
 	@OneToMany(mappedBy = "quest", cascade = CascadeType.ALL)
-//	@Cascade(CascadeType.DELETE)
 	private List<Trial> trials = new ArrayList<>();
 	
 	@ElementCollection
-//	@Cascade(CascadeType.DELETE)
 	private List<Long> subscribedUsersIds = new ArrayList<>();
 	
 	public Quest() {}
@@ -56,7 +54,6 @@ public class Quest implements Cloneable {
 		this.setTimeInterval(timeInterval);
 		this.timeUnit = timeUnit;
 		this.subscribedUsersIds = subscribedUsersIds;
-//		fetchTrials(subscribedUsers);
 	}
 	
 	public Quest(String title, User user, Subject subject, LocalDateTime startDate, LocalDateTime finishDate, long timeInterval, ChronoUnit timeUnit) {
@@ -69,17 +66,8 @@ public class Quest implements Cloneable {
 		this.timeUnit = timeUnit;
 	}
 	
-//	private void fetchTrials(Set<User> users) {
-//		users.forEach(this::subscribeUser);
-//	}
-	
-//	public void createTrials(Set<User> users) {
-//		users.forEach(this::subscribeUser);
-//	}
-
 	public void subscribeUser(User subscribedUser) {
 		this.subscribedUsersIds.add(subscribedUser.getId());
-//		subscribedUser.getSubscribedQuests().add(this);
 		generateSubscribedUserTrials(subscribedUser);
 	}
 
@@ -121,10 +109,8 @@ public class Quest implements Cloneable {
 		subscribedUsersIds.forEach(userId -> {
 			double score = 0;
 			for (Trial trial : trials) {
-				if(trial.getSubscribedUser().getId().equals(userId)) {
-					if(trial.getScore() != null) {
-						score += trial.getScore();
-					}
+				if(trial.getSubscribedUser().getId().equals(userId) && trial.getScore() != null) {
+					score += trial.getScore();
 				}
 			}
 			String formatKey = user.getUsername() + " (" + user.getEmail() + ")"; 

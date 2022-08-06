@@ -78,6 +78,7 @@ public class QuestRest {
 				}
 			}
 		}
+		
 		return ResponseEntity.badRequest().build();
 	}
 		
@@ -87,35 +88,20 @@ public class QuestRest {
 		if(userOptional.isPresent()) {
 			Optional<Page<Quest>> questsOptional = questRepository.findByUser(userOptional.get(), pagination);
 			if(questsOptional.isPresent()) {
-				
-				
 				Page<Quest> quests = questsOptional.get();
-				
-//				quests.forEach(quest -> {
-//					System.out.println("quest id -> " + quest.getId());
-//					quest.getSubscribedUsersIds().forEach(id -> {
-//						System.out.println(id);
-//					});
-//					System.out.println("#############################");
-//				});
-				
 				Map<Long, List<User>> subscribedUsersMap = createSubscribedUsersMap(quests);
 				
 				return ResponseEntity.ok(QuestDto.convertToPageable(questsOptional.get(), subscribedUsersMap));
-//				return null;
 			}
 		}
 		
 		return ResponseEntity.badRequest().build();
 	}
-
-	
 	
 	@GetMapping("subscribed-quests")
 	public ResponseEntity<Page<QuestDto>> subscribedQuests(@RequestParam Long userId, Pageable pagination) {
 		Optional<User> userOptional = userRepository.findById(userId);
 		if(userOptional.isPresent()) {
-//			Optional<Page<Quest>> questsOptional = questRepository.findBySubscribedUsersIds(userOptional.get(), pagination);
 			Optional<Page<Quest>> questsOptional = questRepository.findBySubscribedUserId(userId, pagination);
 			if(questsOptional.isPresent()) {
 				
@@ -189,6 +175,20 @@ public class QuestRest {
 		
 		return ResponseEntity.badRequest().build(); 
 	}
+	
+	@GetMapping("finish")
+	public ResponseEntity<QuestDto> finish(@RequestParam("questId") Long questId) {
+		if(questId != null) {
+			Optional<Quest> questOptional = questRepository.findById(questId);
+			if(questOptional.isPresent()) {
+				List<User> subscribedUsers = userRepository.findAllById(questOptional.get().getSubscribedUsersIds());
+
+				return ResponseEntity.ok(new QuestDto(finishQuest(questOptional.get()), subscribedUsers));
+			}
+		}
+		
+		return ResponseEntity.badRequest().build();
+	}
 
 	@PostMapping("subscribe")
 	public ResponseEntity<QuestDto> subscribe(@RequestBody QuestSubscribeForm form) {
@@ -211,13 +211,16 @@ public class QuestRest {
 	
 	private void finishQuestCaseNecessary(Quest quest) {
 		LocalDateTime currentTime = LocalDateTime.now();
-		if(currentTime.isAfter(quest.getFinishDate()) && quest.isFinished() == false) {
-			quest.setFinished(true);
-			temporaryTrialDataStoreRepository.deleteAllByQyestId(quest.getId());
-			quest.finishResult();
-			quest.getResult().forEach((name, score) -> System.out.println("username: " + name + " / score: " + score));
-			questRepository.save(quest);
+		if(currentTime.isAfter(quest.getFinishDate()) && !quest.isFinished()) {
+			finishQuest(quest);
 		}
+	}
+
+	private Quest finishQuest(Quest quest) {
+		quest.setFinished(true);
+		temporaryTrialDataStoreRepository.deleteAllByQyestId(quest.getId());
+		quest.finishResult();
+		return questRepository.save(quest);
 	}
 	
 	private void scheduleQuestFinish(Quest quest) {
@@ -226,10 +229,7 @@ public class QuestRest {
 		threadPool.schedule(new Runnable() {
 			@Override
 			public void run() {
-				quest.setFinished(true);
-				temporaryTrialDataStoreRepository.deleteAllByQyestId(quest.getId());
-				quest.finishResult();
-				questRepository.save(quest);
+				finishQuest(quest);
 			}
 		}, questDurationInMinutes, TimeUnit.MINUTES);
 	}
