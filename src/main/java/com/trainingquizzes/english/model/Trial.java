@@ -35,16 +35,10 @@ public class Trial {
 	@ManyToOne
 	private Quest quest;
 	
-//	@PreRemove
-//	private void remove() {
-//		this.quest.removeTrial(this);
-//	}
-	
 	public Trial() {}
 
 	public Trial(int trialNumber, User subscribedUser, Quest quest, LocalDateTime startDate, LocalDateTime finishDate) {
 		this.trialNumber = trialNumber;
-//		this.subject = subject;
 		this.subscribedUser = subscribedUser;
 		this.quest = quest;
 		this.startDate = startDate;

@@ -102,6 +102,10 @@ public class User implements UserDetails {
 	public void addSubscribedQuestsId(Long questId) {
 		this.subscribedQuestsIds.add(questId);
 	}
+	
+	public void removeSubscribedquestsId(Long questId) {
+		this.subscribedQuestsIds.remove(questId);
+	}
 
 	public Long getId() {
 		return id;

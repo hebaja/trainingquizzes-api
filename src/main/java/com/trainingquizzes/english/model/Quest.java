@@ -117,6 +117,15 @@ public class Quest implements Cloneable {
 			result.put(formatKey, score / timeInterval);
 		});
 	}
+	
+	public void unsubscribeUser(User subscribedUser) {
+		this.subscribedUsersIds.remove(subscribedUser.getId());
+		removeSubscribedUserTrials(subscribedUser);
+	}
+
+	private void removeSubscribedUserTrials(User subscribedUser) {
+		this.getTrials().removeIf(trial -> trial.getSubscribedUser().equals(subscribedUser));
+	}
 
 	public Map<String, Double> getResult() {
 		return result;

@@ -233,5 +233,23 @@ public class QuestRest {
 			}
 		}, questDurationInMinutes, TimeUnit.MINUTES);
 	}
+	
+	@GetMapping("unsubscribe-user")
+	public ResponseEntity<QuestDto> unsubscribeUser(@RequestParam("userId") Long userId, @RequestParam("questId") Long questId) {
+		if(userId != null && questId != null) {
+			Optional<User> userOptional = userRepository.findById(userId);
+			Optional<Quest> questOptional = questRepository.findById(questId);
+			if(userOptional.isPresent() && questOptional.isPresent()) {
+				questOptional.get().unsubscribeUser(userOptional.get());
+				userOptional.get().removeSubscribedquestsId(questOptional.get().getId());
+				userRepository.save(userOptional.get());
+				Quest savedQuest = questRepository.save(questOptional.get());
+				List<User> subscribedUsers = userRepository.findAllById(questOptional.get().getSubscribedUsersIds());
+
+				return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
+			}
+		}
+		return ResponseEntity.badRequest().build();
+	}
 
 }
