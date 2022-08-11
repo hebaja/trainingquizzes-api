@@ -18,5 +18,15 @@ public class RedirectController {
 	public RedirectView redirectAbout() {
 		return new RedirectView("https://trainingquizzes.herokuapp.com/#/about");
 	}
+	
+	@GetMapping("policy")
+	public RedirectView redirectPolicy() {
+		return new RedirectView("https://trainingquizzes.herokuapp.com/#/about");
+	}
+	
+	@GetMapping("profile")
+	public RedirectView redirectProfile() {
+		return new RedirectView("https://trainingquizzes.herokuapp.com/#/profile");
+	}
 
 }
