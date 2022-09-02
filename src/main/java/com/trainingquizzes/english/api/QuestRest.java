@@ -54,7 +54,12 @@ public class QuestRest {
 	@Autowired
 	private TrialRepository trialRepository;
 	
+<<<<<<< HEAD
 	@Autowired TemporaryTrialDataStoreRepository temporaryTrialDataStoreRepository;
+=======
+	@Autowired 
+	private TemporaryTrialDataStoreRepository temporaryTrialDataStoreRepository;
+>>>>>>> d456024 (general fixes)
 	
 	@GetMapping
 	public ResponseEntity<QuestDto> questById(@RequestParam Long questId, @RequestParam(required = false) Long userId) throws CloneNotSupportedException {
@@ -253,6 +258,7 @@ public class QuestRest {
 			if(userOptional.isPresent() && questOptional.isPresent()) {
 				questOptional.get().unsubscribeUser(userOptional.get());
 				userOptional.get().removeSubscribedquestsId(questOptional.get().getId());
+				temporaryTrialDataStoreRepository.deleteAllByUser(userOptional.get());
 				trialRepository.deleteBySubscribedUser(userOptional.get());
 				userRepository.save(userOptional.get());
 				Quest savedQuest = questRepository.save(questOptional.get());

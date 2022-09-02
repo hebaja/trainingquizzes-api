@@ -23,4 +23,6 @@ public interface TemporaryTrialDataStoreRepository extends JpaRepository<Tempora
 	@Modifying
 	@Query("delete from TemporaryTrialDataStore t where t.questId = :questId")
 	void deleteAllByQyestId(@Param("questId") Long questId);
+
+	void deleteAllByUser(User user);
 }
