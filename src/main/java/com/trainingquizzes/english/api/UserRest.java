@@ -118,10 +118,12 @@ public class UserRest {
 	public ResponseEntity<Page<UserWithoutSubjectsDto>> all(@RequestParam(required = false) String query, Pageable pagination) {
 		if(query == null) {
 			Page<User> users = userRepository.findAllTeachers(pagination);
+			System.out.println("size -> " + users.getSize());
 			return ResponseEntity.ok(UserWithoutSubjectsDto.convertToPageable(users));
 		} else {
 			String searchQuery = "%" + query + "%";
 			Page<User> users = userRepository.findAllTeachersByUsernameAndEmailLikeIgnoreCase(searchQuery, pagination);
+			System.out.println("size -> " + users.getSize());
 			return ResponseEntity.ok(UserWithoutSubjectsDto.convertToPageable(users));
 		}
 	}
@@ -133,6 +135,8 @@ public class UserRest {
 		
 		List<Quest> subscribedQuests = questRepository.findAllById(user.getSubscribedQuestsIds());
 		List<Quest> quests = user.getQuests();
+		
+		System.out.println(userId);
 		
 		if(!subscribedQuests.isEmpty()) {
 			Set<Long> ids = subscribedQuests.stream().map(Quest::getId).collect(Collectors.toSet());

@@ -33,6 +33,7 @@ import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.repository.QuestRepository;
 import com.trainingquizzes.english.repository.SubjectRepository;
 import com.trainingquizzes.english.repository.TemporaryTrialDataStoreRepository;
+import com.trainingquizzes.english.repository.TrialRepository;
 import com.trainingquizzes.english.repository.UserRepository;
 import com.trainingquizzes.english.util.ScheduledThreadPool;
 
@@ -49,6 +50,9 @@ public class QuestRest {
 	
 	@Autowired
 	private SubjectRepository subjectRepository;
+	
+	@Autowired
+	private TrialRepository trialRepository;
 	
 	@Autowired TemporaryTrialDataStoreRepository temporaryTrialDataStoreRepository;
 	
@@ -152,6 +156,13 @@ public class QuestRest {
 			
 			Quest savedQuest = questRepository.save(quest);
 			scheduleQuestFinish(savedQuest);
+			
+			System.out.println("saving quest");
+			
+			
+			
+			savedQuest.getTrials().forEach(trial -> System.out.println("Trial -> " + " id: " + trial.getId() + " - " +  trial.getStartDate()));
+			
 			List<User> subscribedUsers = userRepository.findAllById(quest.getSubscribedUsersIds());
 			
 			return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
@@ -242,6 +253,7 @@ public class QuestRest {
 			if(userOptional.isPresent() && questOptional.isPresent()) {
 				questOptional.get().unsubscribeUser(userOptional.get());
 				userOptional.get().removeSubscribedquestsId(questOptional.get().getId());
+				trialRepository.deleteBySubscribedUser(userOptional.get());
 				userRepository.save(userOptional.get());
 				Quest savedQuest = questRepository.save(questOptional.get());
 				List<User> subscribedUsers = userRepository.findAllById(questOptional.get().getSubscribedUsersIds());

@@ -70,8 +70,6 @@ public class AuthenticationRest {
 			String token = tokenService.generateToken(authentication);
 			Optional<User> userOptional = userRepository.findById(tokenService.getUserId(token));
 			if(userOptional.isPresent()) {
-				userOptional.get().getRoles().forEach(role -> System.out.println(role.getRole()));
-				
 				return ResponseEntity.ok(new TokenDto(token, "Bearer", userOptional.get()));	
 			}
 		} catch (Exception e) {

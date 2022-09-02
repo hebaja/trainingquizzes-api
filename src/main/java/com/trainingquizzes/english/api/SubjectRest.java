@@ -147,6 +147,19 @@ public class SubjectRest {
 		}
 	}
 	
+	@GetMapping("pageable-teacher")
+	public ResponseEntity<Page<SubjectDto>> pageableSubjectsByTeacher(@RequestParam Long userId, Pageable pagination) {
+		if(userId != null) {
+			Optional<User> userOptional = userRepository.findById(userId);
+			if(userOptional.isPresent()) {
+				Page<Subject> subjects = subjectRepository.findAllByUser(userOptional.get(), pagination);
+				return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+			}
+		}
+		
+		return ResponseEntity.badRequest().build();
+	}
+	
 	@GetMapping("teacher")
 	public ResponseEntity<List<SubjectWithTasksDto>> subjectsByTeacher(@RequestParam Long id) {
 		if(id != null) {
@@ -198,39 +211,39 @@ public class SubjectRest {
 	@PutMapping
 	@CacheEvict(value = "subjectsList", allEntries = true)
 	public ResponseEntity<List<SubjectWithTasksDto>> update(@RequestBody SubjectForm form) {
-		if(form != null) {
-			Subject subject = null;
-			User user = userRepository.findById(form.getUser().getId()).orElse(null);
-			if(form.getId() != null) {
-				subject = subjectRepository.findById(form.getId()).orElse(null);
-			} else {
-				subject = new Subject();
-				subject.setTasks(new ArrayList<Task>());
-				if(user == null) {
-					return ResponseEntity.badRequest().build();
-				}
-				subject.setUser(user);
+		
+		Subject subject = null;
+		User user = userRepository.findById(form.getUser().getId()).orElse(null);
+		
+		if(form.getId() != null && form.getId() > 0) {
+			subject = subjectRepository.findById(form.getId()).orElse(null);
+		} else {
+			subject = new Subject();
+			subject.setTasks(new ArrayList<Task>());
+			if(user == null) {
+				return ResponseEntity.badRequest().build();
 			}
+			subject.setUser(user);
+		}
+		
+		if(subject != null) {
+			subject.setTitle(form.getTitle());
+			subject.setLevel(form.getLevel());
+			if(form.getId() != null) {
+				List<Task> foundTasksInForm = findTasksInForm(form, subject);
+				List<Task> tasksToBeRemoved = findTasksToBeRemoved(subject, foundTasksInForm);
+				removeTasks(subject, tasksToBeRemoved);
+				updateExistingTasks(form, foundTasksInForm);
+			}
+			createNewTasks(form, subject);
+			subjectRepository.save(subject);
+			Optional<List<Subject>> optionalSubjects = subjectRepository.findAllByUser(user);
 			
-			if(subject != null) {
-				subject.setTitle(form.getTitle());
-				subject.setLevel(form.getLevel());
-				if(form.getId() != null) {
-					List<Task> foundTasksInForm = findTasksInForm(form, subject);
-					List<Task> tasksToBeRemoved = findTasksToBeRemoved(subject, foundTasksInForm);
-					removeTasks(subject, tasksToBeRemoved);
-					updateExistingTasks(form, foundTasksInForm);
-				}
-				createNewTasks(form, subject);
-				subjectRepository.save(subject);
-				Optional<List<Subject>> optionalSubjects = subjectRepository.findAllByUser(user);
+			if(optionalSubjects.isPresent()) {
+				Message message =  prepareFirebaseMessage(user, subject, USER_WITH_SUBJECT_FIREBASE_MESSAGE);
+				sendFirebaseMessage(message, USER_WITH_SUBJECT_FIREBASE_MESSAGE);
 				
-				if(optionalSubjects.isPresent()) {
-					Message message =  prepareFirebaseMessage(user, subject, USER_WITH_SUBJECT_FIREBASE_MESSAGE);
-					sendFirebaseMessage(message, USER_WITH_SUBJECT_FIREBASE_MESSAGE);
-					
-					return ResponseEntity.ok(SubjectWithTasksDto.convertList(optionalSubjects.get()));
-				}
+				return ResponseEntity.ok(SubjectWithTasksDto.convertList(optionalSubjects.get()));
 			}
 		}
 		return ResponseEntity.badRequest().build();

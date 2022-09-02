@@ -35,6 +35,8 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
 	Page<Subject> findByTitleLikeIgnoreCaseAndUser(String string, User user, Pageable pagination);
 
+	Page<Subject> findAllByUser(User user, Pageable pagination);
+
 	
 	
 }
