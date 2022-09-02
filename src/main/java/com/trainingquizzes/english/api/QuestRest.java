@@ -53,13 +53,9 @@ public class QuestRest {
 	
 	@Autowired
 	private TrialRepository trialRepository;
-	
-<<<<<<< HEAD
-	@Autowired TemporaryTrialDataStoreRepository temporaryTrialDataStoreRepository;
-=======
+
 	@Autowired 
 	private TemporaryTrialDataStoreRepository temporaryTrialDataStoreRepository;
->>>>>>> d456024 (general fixes)
 	
 	@GetMapping
 	public ResponseEntity<QuestDto> questById(@RequestParam Long questId, @RequestParam(required = false) Long userId) throws CloneNotSupportedException {
