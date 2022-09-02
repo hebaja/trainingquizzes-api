@@ -255,7 +255,7 @@ public class QuestRest {
 				questOptional.get().unsubscribeUser(userOptional.get());
 				userOptional.get().removeSubscribedquestsId(questOptional.get().getId());
 				temporaryTrialDataStoreRepository.deleteAllByUser(userOptional.get());
-				trialRepository.deleteBySubscribedUser(userOptional.get());
+				trialRepository.deleteAllBySubscribedUserAndQuest(userOptional.get(), questOptional.get());
 				userRepository.save(userOptional.get());
 				Quest savedQuest = questRepository.save(questOptional.get());
 				List<User> subscribedUsers = userRepository.findAllById(questOptional.get().getSubscribedUsersIds());
