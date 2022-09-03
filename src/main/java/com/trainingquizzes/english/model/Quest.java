@@ -3,9 +3,11 @@ package com.trainingquizzes.english.model;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -15,6 +17,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import com.google.common.util.concurrent.AtomicDouble;
 
 @Entity
 public class Quest implements Cloneable {
@@ -217,6 +222,46 @@ public class Quest implements Cloneable {
 
 	public void setSubscribedUsersIds(List<Long> subscribedUsersIds) {
 		this.subscribedUsersIds = subscribedUsersIds;
+	}
+
+	private long getScoresDivisor() {
+		long totalLengthOfQuestMillis = ChronoUnit.MILLIS.between(startDate, finishDate);
+		long totalLengthOfEachTrialMillis = totalLengthOfQuestMillis / timeInterval;
+		long scoresDivider = 0;
+		
+		if(isFinished()) {
+			scoresDivider = timeInterval;
+		} else {
+			while(scoresDivider < timeInterval) {
+				LocalDateTime trialLimitDate = startDate.plus(totalLengthOfEachTrialMillis * (scoresDivider), ChronoUnit.MILLIS);
+				if(trialLimitDate.isBefore(LocalDateTime.now())) {
+					scoresDivider++;
+				} else {
+					break;
+				}
+			}
+		}
+						
+		return scoresDivider;
+	}
+	
+	public List<Score> getScores() {
+		ArrayList<Score> scores = new ArrayList<>();
+		
+		Map<String, List<Trial>> scoresMap = trials.stream().collect(Collectors.groupingBy(trial -> trial.getSubscribedUser().getFormattedUserAndEmail())); 
+		
+		scoresMap.forEach((username, mappedTrials) -> {
+			AtomicDouble score = new AtomicDouble(0.0);
+			
+			mappedTrials.forEach(trial -> {
+				if(trial.isFinished() && trial.getScore() != null) {
+					score.addAndGet(trial.getScore());
+				}
+			});
+			scores.add(new Score(username, mappedTrials.get(0).getSubscribedUser().getPictureUrl(), score.get() / getScoresDivisor()));
+		});
+						
+		return scores.stream().sorted((s1, s2) -> Double.compare(s2.getScore(), s1.getScore())).collect(Collectors.toList());
 	}
 
 }

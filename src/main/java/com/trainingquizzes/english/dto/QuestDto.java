@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.trainingquizzes.english.model.Quest;
+import com.trainingquizzes.english.model.Score;
 import com.trainingquizzes.english.model.User;
 
 public class QuestDto {
@@ -24,7 +25,7 @@ public class QuestDto {
 	private boolean finished;
 	private List<UserDto> subscribedUsers;
 	private List<TrialDto> trials;
-	private Map<String, Double> results;
+	private List<Score> scores;
 	private UserDto user;
 	
 	public QuestDto(Quest quest, List<User> subscribedUsers) {
@@ -38,7 +39,7 @@ public class QuestDto {
 		this.finished = quest.isFinished();
 		this.subscribedUsers = subscribedUsers.stream().map(UserDto::new).collect(Collectors.toList());
 		this.trials = quest.getTrials().stream().map(TrialDto::new).collect(Collectors.toList());
-		this.results = quest.getResult();
+		this.scores = quest.getScores();
 		this.user = new UserDto(quest.getUser());
 	}
 
@@ -90,12 +91,12 @@ public class QuestDto {
 		this.trials = trials;
 	}
 
-	public Map<String, Double> getResults() {
-		return results;
+	public List<Score> getScores() {
+		return scores;
 	}
 
-	public void setResults(Map<String, Double> result) {
-		this.results = result;
+	public void setScores(List<Score> scores) {
+		this.scores = scores;
 	}
 
 	public static Page<QuestDto> convertToPageable(Page<Quest> quests, Map<Long, List<User>> subscribedUsers) {
@@ -127,14 +128,6 @@ public class QuestDto {
 		this.subject = subject;
 	}
 
-//	public Set<UserWithoutSubjectsDto> getEnrolledUsers() {
-//		return enrolledUsers;
-//	}
-//
-//	public void setEnrolledUsers(Set<UserWithoutSubjectsDto> enrolledUsers) {
-//		this.enrolledUsers = enrolledUsers;
-//	}
-
 	public UserDto getUser() {
 		return user;
 	}
@@ -150,13 +143,5 @@ public class QuestDto {
 	public void setFinished(boolean finished) {
 		this.finished = finished;
 	}
-
-//	public UserDto getUser() {
-//		return user;
-//	}
-//
-//	public void setUser(UserDto user) {
-//		this.user = user;
-//	}
 
 }

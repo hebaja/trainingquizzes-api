@@ -106,6 +106,10 @@ public class User implements UserDetails {
 	public void removeSubscribedquestsId(Long questId) {
 		this.subscribedQuestsIds.remove(questId);
 	}
+	
+	public String getFormattedUserAndEmail() {
+		return username + " (" + email + ")";
+	}
 
 	public Long getId() {
 		return id;
