@@ -254,11 +254,11 @@ public class Quest implements Cloneable {
 			AtomicDouble score = new AtomicDouble(0.0);
 			
 			mappedTrials.forEach(trial -> {
-				if(trial.isFinished() && trial.getScore() != null) {
+				if(trial.getScore() != null) {
 					score.addAndGet(trial.getScore());
 				}
 			});
-			scores.add(new Score(username, mappedTrials.get(0).getSubscribedUser().getPictureUrl(), score.get() / getScoresDivisor()));
+			if(score.get() > 0) scores.add(new Score(username, mappedTrials.get(0).getSubscribedUser().getPictureUrl(), score.get() / getScoresDivisor())); 
 		});
 						
 		return scores.stream().sorted((s1, s2) -> Double.compare(s2.getScore(), s1.getScore())).collect(Collectors.toList());

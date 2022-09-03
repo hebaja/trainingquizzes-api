@@ -10,6 +10,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.trainingquizzes.english.config.FirebaseConfig;
 import com.trainingquizzes.english.dto.QuestDto;
 import com.trainingquizzes.english.form.QuestForm;
 import com.trainingquizzes.english.form.QuestSubscribeForm;
@@ -41,6 +44,8 @@ import com.trainingquizzes.english.util.ScheduledThreadPool;
 @CrossOrigin
 @RequestMapping("/api/quest")
 public class QuestRest {
+	
+	Logger logger = LoggerFactory.getLogger(QuestRest.class);
 	
 	@Autowired
 	private QuestRepository questRepository;
