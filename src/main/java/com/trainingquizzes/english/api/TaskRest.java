@@ -62,20 +62,21 @@ public class TaskRest {
 			Optional<User> optionalUser = userRepository.findById(form.getUserId());
 			Optional<Trial> optionalTrial = trialRepository.findById(form.getTrialId());
 			if(optionalTrial.isPresent() && optionalUser.isPresent()) {
-				Optional<TemporaryTrialDataStore> optionalTrialItem = 
+				Optional<TemporaryTrialDataStore> optionalTemporatyTrialData = 
 						temporaryTrialDataStoreRepository.findByTrialUserAndTrialNumber(optionalTrial.get(), optionalUser.get(), form.getTrialNumber());
-				if(optionalTrialItem.isPresent()) {
-					return ResponseEntity.ok(new TrialTasksDto(optionalTrialItem.get())); 
+				if(optionalTemporatyTrialData.isPresent()) {
+					
+					return ResponseEntity.ok(new TrialTasksDto(optionalTemporatyTrialData.get())); 
 				} else {
 					Optional<List<Task>> optionalTasks = taskRepository.findAllBySubjectId(optionalTrial.get().getQuest().getSubject().getId());
 					if(!optionalTasks.isEmpty()) {
 						Collections.shuffle(optionalTasks.get());
 						List<Task> reducedTasksList = optionalTasks.get().stream().limit(10).collect(Collectors.toList());
-						TemporaryTrialDataStore temporaryTrialDataStore = 
+						TemporaryTrialDataStore temporaryTrialData = 
 								new TemporaryTrialDataStore(optionalTrial.get(), optionalUser.get(), form.getTrialNumber(), reducedTasksList);
-						temporaryTrialDataStoreRepository.save(temporaryTrialDataStore);
+						temporaryTrialDataStoreRepository.save(temporaryTrialData);
 						
-						return ResponseEntity.ok(new TrialTasksDto(temporaryTrialDataStore));
+						return ResponseEntity.ok(new TrialTasksDto(temporaryTrialData));
 					}
 				}
 			}

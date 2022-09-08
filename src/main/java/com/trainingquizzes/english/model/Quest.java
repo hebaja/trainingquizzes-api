@@ -27,7 +27,7 @@ public class Quest implements Cloneable {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
-	ChronoUnit timeUnit;
+	private ChronoUnit timeUnit;
 	long timeInterval;
 	private LocalDateTime startDate;
 	private LocalDateTime finishDate;

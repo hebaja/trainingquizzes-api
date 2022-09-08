@@ -64,19 +64,21 @@ public class SubjectRest {
 	
 	Logger logger = LoggerFactory.getLogger(SubjectRest.class);
 	
-	@GetMapping("{subjectId}")
+	@GetMapping
 	@Cacheable(value = "subject")
-	public ResponseEntity<SubjectWithTasksDto> subjectById(@PathVariable("subjectId") Long subjectId) {
+	public ResponseEntity<SubjectWithTasksDto> subjectById(@RequestParam("subjectId") Long subjectId) {
 		Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
 		Subject subject = subjectOptional.orElse(null);
 		if (subject != null) {
 			SubjectWithTasksDto subjectWithTaskDto = SubjectWithTasksDto.convertFromSubject(subject);
+			
 			return ResponseEntity.ok(subjectWithTaskDto);
 		}
+		
 		return ResponseEntity.notFound().build();
 	}
 	
-	@GetMapping
+	@GetMapping("all")
 	@Cacheable(value = "subjectsList")
 	public ResponseEntity<List<SubjectWithTasksDto>> subjects() {
 		List<Subject> subjects = subjectRepository.findAll();
@@ -184,9 +186,9 @@ public class SubjectRest {
 		return ResponseEntity.badRequest().build();
 	}
 
-	@DeleteMapping("{subjectId}")
-	@CacheEvict(value = {"subjectsList", "userWithSubjectsList"}, allEntries = true)
-	public ResponseEntity<List<SubjectWithTasksDto>> delete(@PathVariable("subjectId") Long subjectId) {
+	@DeleteMapping
+	@CacheEvict(value = {"subject", "subjectsList", "userWithSubjectsList"}, allEntries = true)
+	public ResponseEntity<List<SubjectWithTasksDto>> delete(@RequestParam("subjectId") Long subjectId) {
 		Optional<Subject> subjectToBeRemovedOptional = subjectRepository.findById(subjectId);
 		if(subjectToBeRemovedOptional.isPresent()) {
 			
@@ -209,11 +211,13 @@ public class SubjectRest {
 	}
 	
 	@PutMapping
-	@CacheEvict(value = "subjectsList", allEntries = true)
+	@CacheEvict(value = {"subject", "subjectsList"}, allEntries = true)
 	public ResponseEntity<List<SubjectWithTasksDto>> update(@RequestBody SubjectForm form) {
 		
 		Subject subject = null;
 		User user = userRepository.findById(form.getUser().getId()).orElse(null);
+		
+		form.getTasks().forEach(task -> System.out.println(task.isShuffleOptions()));
 		
 		if(form.getId() != null && form.getId() > 0) {
 			subject = subjectRepository.findById(form.getId()).orElse(null);
@@ -251,12 +255,13 @@ public class SubjectRest {
 
 	private void createNewTasks(SubjectForm form, Subject subject) {
 		form.getTasks().forEach(taskForm -> {
-			if(taskForm.getId() == null) {
+			if(taskForm.getId() == null || taskForm.getId() == 0) {
 				Task task = new Task();
 				task.setPrompt(taskForm.getPrompt());
+				task.setShuffleOptions(taskForm.isShuffleOptions());
 				task.setSubject(subject);
 				
-				List<TaskOption> options = new ArrayList<TaskOption>();
+				List<TaskOption> options = new ArrayList<>();
 				
 				taskForm.getOptions().forEach(option -> {
 					options.add(new TaskOption(option.getPrompt(), option.isCorrect())); 
