@@ -28,7 +28,6 @@ public class TaskDto {
 		return prompt;
 	}
 
-//	@JsonProperty("isShuffleOptions")
 	public boolean isShuffleOptions() {
 		return shuffleOptions;
 	}

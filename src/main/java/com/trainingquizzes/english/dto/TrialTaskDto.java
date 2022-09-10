@@ -1,32 +1,22 @@
 package com.trainingquizzes.english.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.trainingquizzes.english.model.TemporaryTrialDataStore;
 
-public class TrialTasksDto {
+public class TrialTaskDto {
 	
 	private Long id;
-	private List<TaskDto> tasks;
+	private TaskDto task;
 	private int tasksIndex;
 	private double score;
 	private boolean finished;
 	
-	public TrialTasksDto(TemporaryTrialDataStore trialItem) {
-		this.id = trialItem.getId();
-		this.tasks = trialItem.getReducedTasksList().stream().map(TaskDto::new).collect(Collectors.toList());
-		this.tasksIndex = trialItem.getTasksIndex();
-		this.score = trialItem.getScore();
-		this.finished = trialItem.isFinished();
-	}
-
-	public List<TaskDto> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(List<TaskDto> tasks) {
-		this.tasks = tasks;
+	public TrialTaskDto(TemporaryTrialDataStore temporaryTrialDataStore) {
+		this.id = temporaryTrialDataStore.getId();
+		if(!temporaryTrialDataStore.isFinished()) this.task = new TaskDto(temporaryTrialDataStore.getReducedTasksList().get(temporaryTrialDataStore.getTasksIndex()));
+		else this.task = null;
+		this.tasksIndex = temporaryTrialDataStore.getTasksIndex();
+		this.score = temporaryTrialDataStore.getScore();
+		this.finished = temporaryTrialDataStore.isFinished();
 	}
 
 	public int getTasksIndex() {
@@ -55,6 +45,14 @@ public class TrialTasksDto {
 
 	public void setFinished(boolean finished) {
 		this.finished = finished;
+	}
+
+	public TaskDto getTask() {
+		return task;
+	}
+
+	public void setTask(TaskDto task) {
+		this.task = task;
 	}
 
 }
