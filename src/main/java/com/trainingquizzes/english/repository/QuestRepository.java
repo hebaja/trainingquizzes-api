@@ -1,5 +1,6 @@
 package com.trainingquizzes.english.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ public interface QuestRepository extends JpaRepository<Quest, Long>{
 	Optional<Page<Quest>> findBySubscribedUserId(@Param("userId")Long userId, Pageable pagination);
 
 	void deleteAllBySubject(Subject subject);
+
+	Optional<List<Quest>> findAllByUser(User user);
 
 //	Optional<Page<Quest>> findBySubscribedUsersIds(User user, Pageable pagination);
 

@@ -52,20 +52,20 @@ public class AuthenticatioViaTokenFilter extends OncePerRequestFilter {
 				
 			} catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
 				
-				RestTemplate restTemplate = new RestTemplate();
-		        		       
-		        HttpHeaders headers = new HttpHeaders();
-		        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		        
-				UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString("https://graph.facebook.com/debug_token")
-		                .queryParam("input_token", token).queryParam("access_token", System.getenv("ENGLISH_TRAINING_QUIZZES_FACEBOOK_ACCESS_TOKEN"));
-				
-				String facebookUnescaped = StringEscapeUtils.unescapeJava(restTemplate.getForObject(uriBuilder.toUriString(), String.class));
-				
-				JSONObject obj = new JSONObject(facebookUnescaped);
-				String userId = obj.getJSONObject("data").getString("user_id");
-				
-				authenticateFacebookClient(userId);
+//				RestTemplate restTemplate = new RestTemplate();
+//		        		       
+//		        HttpHeaders headers = new HttpHeaders();
+//		        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+//		        
+//				UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString("https://graph.facebook.com/debug_token")
+//		                .queryParam("input_token", token).queryParam("access_token", System.getenv("ENGLISH_TRAINING_QUIZZES_FACEBOOK_ACCESS_TOKEN"));
+//				
+//				String facebookUnescaped = StringEscapeUtils.unescapeJava(restTemplate.getForObject(uriBuilder.toUriString(), String.class));
+//				
+//				JSONObject obj = new JSONObject(facebookUnescaped);
+//				String userId = obj.getJSONObject("data").getString("user_id");
+//				
+//				authenticateFacebookClient(userId);
 			}
 		}
 		

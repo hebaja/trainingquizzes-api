@@ -10,6 +10,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -134,7 +137,7 @@ public class QuestRest {
 		return questAndUsersMap;
 	}
 	
-	@PostMapping
+	@PutMapping
 	public ResponseEntity<QuestDto> register(@RequestBody QuestForm form) {
 		if(form != null) {
 			User user = userRepository.findById(form.getUserId()).orElse(null);
@@ -162,13 +165,6 @@ public class QuestRest {
 			
 			Quest savedQuest = questRepository.save(quest);
 			scheduleQuestFinish(savedQuest);
-			
-			System.out.println("saving quest");
-			
-			
-			
-			savedQuest.getTrials().forEach(trial -> System.out.println("Trial -> " + " id: " + trial.getId() + " - " +  trial.getStartDate()));
-			
 			List<User> subscribedUsers = userRepository.findAllById(quest.getSubscribedUsersIds());
 			
 			return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
@@ -178,15 +174,19 @@ public class QuestRest {
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<?> delete(@RequestParam Long questId) {
+	public ResponseEntity<List<QuestDto>> delete(@RequestParam Long questId) {
 		if(questId != null) {
+			Optional<Quest> questOptional = questRepository.findById(questId);
+			Optional<User> userOptional = userRepository.findById(questOptional.get().getUser().getId());
+			Optional<List<Quest>> questsOptional = questRepository.findAllByUser(userOptional.get());
 			try {
 				temporaryTrialDataStoreRepository.deleteAllByQyestId(questId);
-				questRepository.deleteById(questId);
+				questRepository.delete(questOptional.get());
 				
-				return ResponseEntity.ok().build();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+				return ResponseEntity.ok(QuestDto.convertToList(questsOptional.get()));
+			} catch (EntityNotFoundException e) {
+				
+				throw new EntityNotFoundException();
 			}
 		}
 		

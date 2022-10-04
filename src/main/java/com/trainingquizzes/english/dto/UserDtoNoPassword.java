@@ -12,8 +12,7 @@ public class UserDtoNoPassword {
 	private String uid;
 	private String username;
 	private String email;
-//	private Collection<? extends GrantedAuthority> roles;
-	private List<String> roles = new ArrayList<String>();
+	private List<RolesDto> roles = new ArrayList<>();
 	private String pictureUrl;
 
 	public UserDtoNoPassword(User user) {
@@ -21,8 +20,10 @@ public class UserDtoNoPassword {
 		this.uid = user.getUid();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
-		List<RolesDto> list = RolesDto.convertToList(user.getAuthorities());
-		list.forEach(role -> this.roles.add(role.getRole()));
+//		List<RolesDto> list = RolesDto.convertToList(user.getAuthorities());
+//		list.forEach(role -> this.roles.add(role.getRole()));
+		
+		this.roles = RolesDto.convertToList(user.getAuthorities()).stream().collect(Collectors.toList());
 		this.pictureUrl = user.getPictureUrl();
 	}
 
@@ -46,11 +47,7 @@ public class UserDtoNoPassword {
 		return users.stream().map(UserDtoNoPassword::new).collect(Collectors.toList());
 	}
 
-	public static UserDtoNoPassword convert(User user) {
-		return null;
-	}
-
-	public List<String> getRoles() {
+	public List<RolesDto> getRoles() {
 		return roles;
 	}
 

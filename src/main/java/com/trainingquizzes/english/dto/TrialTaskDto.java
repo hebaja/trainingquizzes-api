@@ -5,6 +5,8 @@ import com.trainingquizzes.english.model.TemporaryTrialDataStore;
 public class TrialTaskDto {
 	
 	private Long id;
+	private Long trialId;
+	private Long questId;
 	private TaskDto task;
 	private int tasksIndex;
 	private double score;
@@ -12,6 +14,8 @@ public class TrialTaskDto {
 	
 	public TrialTaskDto(TemporaryTrialDataStore temporaryTrialDataStore) {
 		this.id = temporaryTrialDataStore.getId();
+		this.trialId = temporaryTrialDataStore.getTrial().getId();
+		this.questId = temporaryTrialDataStore.getTrial().getQuest().getId();
 		if(!temporaryTrialDataStore.isFinished()) this.task = new TaskDto(temporaryTrialDataStore.getReducedTasksList().get(temporaryTrialDataStore.getTasksIndex()));
 		else this.task = null;
 		this.tasksIndex = temporaryTrialDataStore.getTasksIndex();
@@ -53,6 +57,22 @@ public class TrialTaskDto {
 
 	public void setTask(TaskDto task) {
 		this.task = task;
+	}
+
+	public Long getTrialId() {
+		return trialId;
+	}
+
+	public void setTrialId(Long trialId) {
+		this.trialId = trialId;
+	}
+
+	public Long getQuestId() {
+		return questId;
+	}
+
+	public void setQuestId(Long questId) {
+		this.questId = questId;
 	}
 
 }

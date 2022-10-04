@@ -24,6 +24,14 @@ public class SubjectDto {
 		this.userDto = new UserWithoutSubjectsDto(subject.getUser());
 	}
 
+	public static Page<SubjectDto> convertToPageable(Page<Subject> subjects) {
+		return subjects.map(SubjectDto::new);
+	}
+	
+	public static List<SubjectDto> convertList(List<Subject> subjects) {
+		return subjects.stream().map(SubjectDto::new).collect(Collectors.toList());
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -36,15 +44,6 @@ public class SubjectDto {
 		return level;
 	}
 
-	public static Page<SubjectDto> convertToPageable(Page<Subject> subjects) {
-		return subjects.map(SubjectDto::new);
-	}
-	
-	public static List<SubjectDto> convertList(List<Subject> subjects) {
-		return subjects.stream().map(SubjectDto::new).collect(Collectors.toList());
-	}
-	
-	
 	public static SubjectDto convertFromSubject(Subject subject) {
 		return new SubjectDto(subject);
 	}

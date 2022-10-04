@@ -22,7 +22,11 @@ public class Constants {
 	public static final String PASSWORD_RESET_SUCCESS_MESSAGE = "Password successfully reset. You can now log in with the new credentials.";
 	public static final String BROKEN_LINK_MESSAGE = "The link has expired, is invalid or broken!";
 	public static final String ERROR_MESSAGE_KEY = "message";
-	public static final String EMAIL_SET = "hebajabackup@gmail.com";
+	
+//	public static final String EMAIL_SET = "hebajabackup@gmail.com";
+	
+	public static final String EMAIL_SET = "admin@trainingquizzes.com";
+	
 	public static final String USER_EXISTS_MESSAGE = "User name already exists, please choose another name.";
 	public static final String USER_EXISTS_KEY = "user_error";
 	public static final String EMAIL_EXISTS_MESSAGE = "This email has already been used, please use another email.";

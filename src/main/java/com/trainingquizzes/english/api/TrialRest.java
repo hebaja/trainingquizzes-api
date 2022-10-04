@@ -75,10 +75,13 @@ public class TrialRest {
 	
 	@PostMapping("update")
 	public ResponseEntity<TrialTaskDto> saveTrial(@RequestBody SaveTemporaryTrialDataStore form) {
+		
 		if(form != null) {
 			Optional<TemporaryTrialDataStore> optionalTrialItem = temporaryTrialDataStoreRepository.findById(form.getId());
+			
 			if(optionalTrialItem.isPresent()) {
 				TemporaryTrialDataStore temporaryTrialDataStore = optionalTrialItem.get();
+								
 				if(!temporaryTrialDataStore.isFinished()) {
 					
 					temporaryTrialDataStore.iterateTasksIndex();
@@ -102,7 +105,6 @@ public class TrialRest {
 				}
 			}
 		}
-		
 		return ResponseEntity.badRequest().build();
 	}
 

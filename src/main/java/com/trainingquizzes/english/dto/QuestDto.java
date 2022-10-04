@@ -42,7 +42,29 @@ public class QuestDto {
 		this.scores = quest.getScores();
 		this.user = new UserDto(quest.getUser());
 	}
+	
+	public QuestDto(Quest quest) {
+		this.id = quest.getId();
+		this.title = quest.getTitle();
+		this.setSubject(new SubjectWithoutUserDto(quest.getSubject()));
+		this.timeUnit = quest.getTimeUnit();
+		this.timeInterval = quest.getTimeInterval();
+		this.startDate = quest.getStartDate();
+		this.finishDate = quest.getFinishDate();
+		this.finished = quest.isFinished();
+		this.trials = quest.getTrials().stream().map(TrialDto::new).collect(Collectors.toList());
+		this.scores = quest.getScores();
+		this.user = new UserDto(quest.getUser());
+	}
 
+	public static Page<QuestDto> convertToPageable(Page<Quest> quests, Map<Long, List<User>> subscribedUsers) {
+		return quests.map(quest -> new QuestDto(quest, subscribedUsers.get(quest.getId())));
+	}
+	
+	public static List<QuestDto> convertToList(List<Quest> quests) {
+		return quests.stream().map(QuestDto::new).collect(Collectors.toList());
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -99,9 +121,6 @@ public class QuestDto {
 		this.scores = scores;
 	}
 
-	public static Page<QuestDto> convertToPageable(Page<Quest> quests, Map<Long, List<User>> subscribedUsers) {
-		return quests.map(quest -> new QuestDto(quest, subscribedUsers.get(quest.getId())));
-	}
 
 	public String getTitle() {
 		return title;

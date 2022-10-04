@@ -63,10 +63,10 @@ public class UserRest {
 	private String emailAdmin;
 	
 	@GetMapping
-	public ResponseEntity<UserDtoNoPassword> userById(@RequestParam("userId") Long userId) {
+	public ResponseEntity<UserDto> userById(@RequestParam("userId") Long userId) {
 		Optional<User> optionalUser = userRepository.findById(userId);
 		if(optionalUser.isPresent()) {
-			return ResponseEntity.ok(new UserDtoNoPassword(optionalUser.get()));
+			return ResponseEntity.ok(new UserDto(optionalUser.get()));
 		}
 		return ResponseEntity.badRequest().build();
 	}
