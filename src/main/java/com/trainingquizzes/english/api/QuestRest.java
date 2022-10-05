@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -173,8 +174,8 @@ public class QuestRest {
 		return ResponseEntity.badRequest().build();
 	}
 	
-	@DeleteMapping
-	public ResponseEntity<List<QuestDto>> delete(@RequestParam Long questId) {
+	@DeleteMapping("{questId}")
+	public ResponseEntity<List<QuestDto>> delete(@PathVariable("questId") Long questId) {
 		if(questId != null) {
 			Optional<Quest> questOptional = questRepository.findById(questId);
 			Optional<User> userOptional = userRepository.findById(questOptional.get().getUser().getId());
