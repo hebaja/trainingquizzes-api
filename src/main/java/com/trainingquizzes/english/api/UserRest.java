@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -27,12 +29,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.trainingquizzes.english.dto.UserDto;
 import com.trainingquizzes.english.dto.UserDtoNoPassword;
 import com.trainingquizzes.english.dto.UserWithoutSubjectsDto;
+import com.trainingquizzes.english.enums.Roles;
 import com.trainingquizzes.english.form.UserForm;
 import com.trainingquizzes.english.model.Authority;
 import com.trainingquizzes.english.model.Quest;
+import com.trainingquizzes.english.model.TemporaryTrialDataStore;
 import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.repository.PasswordResetTokenRepository;
 import com.trainingquizzes.english.repository.QuestRepository;
+import com.trainingquizzes.english.repository.TemporaryTrialDataStoreRepository;
 import com.trainingquizzes.english.repository.TrialRepository;
 import com.trainingquizzes.english.repository.UserRegisterTokenRepository;
 import com.trainingquizzes.english.repository.UserRepository;
@@ -58,6 +63,11 @@ public class UserRest {
 	
 	@Autowired
 	private UserRegisterTokenRepository userRegisterTokenRepository;
+	
+	@Autowired
+	private TemporaryTrialDataStoreRepository temporaryTrialDataStoreRepository;
+	
+	Logger logger = LoggerFactory.getLogger(UserRest.class);
 	
 	@Value("${spring-english-training-quizzes-email-admin}")
 	private String emailAdmin;
@@ -118,46 +128,64 @@ public class UserRest {
 	public ResponseEntity<Page<UserWithoutSubjectsDto>> all(@RequestParam(required = false) String query, Pageable pagination) {
 		if(query == null) {
 			Page<User> users = userRepository.findAllTeachers(pagination);
-			System.out.println("size -> " + users.getSize());
 			return ResponseEntity.ok(UserWithoutSubjectsDto.convertToPageable(users));
 		} else {
 			String searchQuery = "%" + query + "%";
 			Page<User> users = userRepository.findAllTeachersByUsernameAndEmailLikeIgnoreCase(searchQuery, pagination);
-			System.out.println("size -> " + users.getSize());
 			return ResponseEntity.ok(UserWithoutSubjectsDto.convertToPageable(users));
 		}
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<?> delete(@RequestParam Long userId) {
+	public ResponseEntity<Long> delete(@RequestParam Long userId) {
 		
-		User user = fetchUser(userId);
-		
-		List<Quest> subscribedQuests = questRepository.findAllById(user.getSubscribedQuestsIds());
-		List<Quest> quests = user.getQuests();
-		
-		System.out.println(userId);
-		
-		if(!subscribedQuests.isEmpty()) {
-			Set<Long> ids = subscribedQuests.stream().map(Quest::getId).collect(Collectors.toSet());
-			List<Quest> questsFound = questRepository.findAllById(ids); 
-			questsFound.forEach(quest -> quest.getSubscribedUsersIds().remove(user.getId()));
-			questRepository.saveAll(questsFound);
+		Optional<User> userOptional = userRepository.findById(userId);
+		if(userOptional.isPresent()) {
+			User user = userOptional.get();
+			List<Quest> subscribedQuests = questRepository.findAllById(user.getSubscribedQuestsIds());
+			Optional<List<TemporaryTrialDataStore>> temporaryTrialDataStoreListOptional = temporaryTrialDataStoreRepository.findAllByUser(user);
+			boolean isTeacher = user.getRoles().stream().anyMatch(authority -> authority.getRole().equals(Roles.ROLE_TEACHER));
+			
+			if(!subscribedQuests.isEmpty()) {
+				Set<Long> ids = subscribedQuests.stream().map(Quest::getId).collect(Collectors.toSet());
+				List<Quest> questsFound = questRepository.findAllById(ids); 
+				questsFound.forEach(quest -> quest.getSubscribedUsersIds().remove(user.getId()));
+				questRepository.saveAll(questsFound);
+			}
+			
+			if(isTeacher) {
+				Optional<List<Quest>> questsOptional = questRepository.findAllByUser(user);
+				if(!questsOptional.isEmpty()) {
+					List<Quest> userQuests = questsOptional.get();
+										
+					userQuests.forEach(quest -> {
+						quest.getTrials().forEach(trial -> {
+							temporaryTrialDataStoreRepository.deleteByTrial(trial);
+							trialRepositoy.delete(trial);
+						});
+					});
+				}
+			}
+			
+			if(!temporaryTrialDataStoreListOptional.isEmpty()) {
+				List<TemporaryTrialDataStore> temporaryTrialDataStorelist = temporaryTrialDataStoreListOptional.get();
+				temporaryTrialDataStoreRepository.deleteAll(temporaryTrialDataStorelist);
+			}
+			
+			try {
+				removeUser(user);
+				
+				return ResponseEntity.ok(user.getId());
+			} catch (Exception e) {
+				logger.error(e.getLocalizedMessage());
+			}
 		}
-		try {
-			trialRepositoy.deleteBySubscribedUser(user);
-			removeUser(user);
-			return ResponseEntity.ok().build();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		
+		return ResponseEntity.badRequest().build();
 	}
 
-	private User fetchUser(Long userId) {
-		return userRepository.findById(userId).orElse(null);
-	}
-	
 	private void removeUser(User user) {
+		trialRepositoy.deleteBySubscribedUser(user);
 		List<PasswordResetToken> passwordResetTokens = passwordTokenRepository.findAllByTeacherId(user.getId());
 		if(passwordResetTokens != null) {
 			passwordTokenRepository.deleteAll(passwordResetTokens);

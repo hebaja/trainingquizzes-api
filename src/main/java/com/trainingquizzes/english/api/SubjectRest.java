@@ -217,8 +217,6 @@ public class SubjectRest {
 		Subject subject = null;
 		User user = userRepository.findById(form.getUser().getId()).orElse(null);
 		
-		form.getTasks().forEach(task -> System.out.println(task.isShuffleOptions()));
-		
 		if(form.getId() != null && form.getId() > 0) {
 			subject = subjectRepository.findById(form.getId()).orElse(null);
 		} else {

@@ -1,5 +1,7 @@
 package com.trainingquizzes.english.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,5 +17,7 @@ public interface TrialRepository extends JpaRepository<Trial, Long>{
 	void deleteBySubscribedUser(User user);
 
 	void deleteAllBySubscribedUserAndQuest(User user, Quest quest);
+
+	Optional<Trial> findByQuest(Quest quest);
 
 }

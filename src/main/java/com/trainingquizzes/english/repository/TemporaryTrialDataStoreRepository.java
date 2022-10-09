@@ -1,5 +1,6 @@
 package com.trainingquizzes.english.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +26,8 @@ public interface TemporaryTrialDataStoreRepository extends JpaRepository<Tempora
 	void deleteAllByQyestId(@Param("questId") Long questId);
 
 	void deleteAllByUser(User user);
+
+	Optional<List<TemporaryTrialDataStore>> findAllByUser(User user);
+
+	void deleteByTrial(Trial trial);
 }
