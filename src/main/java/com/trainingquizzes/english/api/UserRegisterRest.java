@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,6 @@ import com.trainingquizzes.english.token.Token;
 import com.trainingquizzes.english.token.UserRegisterToken;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/user-register")
 public class UserRegisterRest {
 	
@@ -56,18 +58,16 @@ public class UserRegisterRest {
 	
 	@PostMapping
 	public ResponseEntity<String> userRegister(@RequestBody UserForm userForm) {
-		if (userForm != null) {
-			if(!userRepository.existsByEmail(userForm.getEmail())) {
-				String token = UUID.randomUUID().toString();
-				User user = buildUser(userForm);
-				UserRegisterToken userToRegisterToken = buildToken(token, user);
-				buildEmail(user, userToRegisterToken, "#/signin?register_token=");
-				return ResponseEntity.ok(user.getEmail());
-			} else {
-				return ResponseEntity.status(HttpStatus.CONFLICT).build();
-			}
+		if (userForm != null && !userRepository.existsByEmail(userForm.getEmail())) {
+			String token = UUID.randomUUID().toString();
+			User user = buildUser(userForm);
+			UserRegisterToken userToRegisterToken = buildToken(token, user);
+			buildEmail(user, userToRegisterToken, "/#/signin?register_token=");
+			
+			return ResponseEntity.ok(user.getEmail());
 		}
-		return ResponseEntity.badRequest().build();
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).build();
 	}
 	
 	@PostMapping("android")
@@ -77,12 +77,15 @@ public class UserRegisterRest {
 				String token = UUID.randomUUID().toString();
 				User user = buildUser(userForm);
 				UserRegisterToken userToRegisterToken = buildToken(token, user);
-				buildEmail(user, userToRegisterToken, "#/android/confirm_register?register_token=");
+				buildEmail(user, userToRegisterToken, "/#/android/confirm_register?register_token=");
+				
 				return ResponseEntity.ok(new UserDto(user));
 			} else {
+				
 				return ResponseEntity.status(HttpStatus.CONFLICT).build();
 			}
 		}
+		
 		return ResponseEntity.badRequest().build();
 	}
 	
@@ -98,44 +101,47 @@ public class UserRegisterRest {
 				User newUser = createUser(userRegisterToken);
 				try {
 					User savedUser = saveUser(userRegisterToken, newUser);
+					
 					return ResponseEntity.ok(new UserDtoNoPassword(savedUser));
 				} catch (Exception e) {
 					e.printStackTrace();
+					
 					return ResponseEntity.badRequest().build();
 				}
 			} 
 		}
+		
 		return ResponseEntity.badRequest().build();
 	}
 	
 	private User createUser(UserRegisterToken userRegisterToken) throws IOException {
-		List<Account> accounts = new ArrayList<>();
+		Set<Account> accounts = new HashSet<>();
 		accounts.add(new Account(AccountType.EMAIL));
-		
-		Authority authority = new Authority(Roles.ROLE_TEACHER);
-		List<Authority> roles = Arrays.asList(authority);
-		
 		String uid = RandomStringUtils.random(18, "0123456789");
-		
-		User teacher = new User(
+		Set<Authority> roles = new HashSet<>();
+		roles.add(new Authority(userRegisterToken.getRole()));
+						
+		User user = new User(
 				userRegisterToken.getUsername(), 
 				userRegisterToken.getEmail(),
 				userRegisterToken.getPasword(), 
-				true, roles, accounts);
+				true, 
+				roles,
+				accounts);
+		user.setUid(uid);
 		
-		teacher.setUid(uid);
-		return teacher;
+		return user;
 	}
 	
 	private User saveUser(UserRegisterToken userRegisterToken, User user) {
-		User savedTeacher = userRepository.save(user);
+		User savedUser = userRepository.save(user);
 		registerTokenRepository.delete(userRegisterToken);
-		return savedTeacher;
+		
+		return savedUser;
 	}
 	
 	private void buildEmail(User user, UserRegisterToken userToRegisterToken, String url) {
-		sendMail(userToRegisterToken, 
-				user.getEmail(), 
+		sendMail(user.getEmail(), 
 				"Complete user registration", 
 				"To complete user registration, please click here: "
 						+ defaultDomain
@@ -145,23 +151,30 @@ public class UserRegisterRest {
 	}
 
 	private UserRegisterToken buildToken(String token, User user) {
-		UserRegisterToken userToRegisterToken = new UserRegisterToken(token, user.getUsername(), user.getEmail(), user.getPassword());
+		UserRegisterToken userToRegisterToken = 
+				new UserRegisterToken(
+						token, 
+						user.getUsername(), 
+						user.getEmail(), 
+						user.getPassword(), 
+						user.getRoles().stream().findFirst().orElse(new Authority(Roles.ROLE_STUDENT)).getRole());
 		userToRegisterToken.setExpiryDate();
 		registerTokenRepository.save(userToRegisterToken);
+		
 		return userToRegisterToken;
 	}
 
 	private User buildUser(UserForm userForm) {
 		User user = userForm.convert();
-		List<UserRole> roles = new ArrayList<>();
-		userForm.getRoles().forEach(role -> roles.add(new UserRole(role)));
-		List<Account> accounts = new ArrayList<>();
+		Set<Account> accounts = new HashSet<>();
 		accounts.add(new Account(AccountType.EMAIL));
 		user.setAccounts(accounts);
+		user.getRoles().addAll(userForm.getRoles().stream().map(role -> new Authority(role)).collect(Collectors.toList()));
+		
 		return user;
 	}
 	
-	private void sendMail(Token userToken, String emailAddress, String subject, String text) {
+	private void sendMail(String emailAddress, String subject, String text) {
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(emailAddress);
 		mailMessage.setSubject(subject);

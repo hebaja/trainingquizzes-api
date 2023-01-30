@@ -49,10 +49,14 @@ public class WebSecurityConfigTest extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.GET, "/averages").authenticated()
 		.antMatchers(HttpMethod.GET, "/redirect").permitAll()
-		.antMatchers(HttpMethod.POST, "/api/averages", "/api/delete-user").permitAll()
+		.antMatchers(HttpMethod.POST, "/api/delete-user").permitAll()
+		.antMatchers(HttpMethod.GET, "/api/averages").hasRole("STUDENT")
+		.antMatchers(HttpMethod.DELETE, "/api/quest").permitAll()
 		.antMatchers(HttpMethod.POST, "/auth/**", "/api/user-register/**", "/api/reset-password/**").permitAll()
-		.antMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
-		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
+		.antMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("TEACHER")
+		
+		
+		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole("TEACHER")
 		.anyRequest().permitAll()
 		.and().csrf().disable().headers().frameOptions().disable()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -71,21 +75,5 @@ public class WebSecurityConfigTest extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/resources/json/**", "/resources/css/**", "/resources/images/**", "/resources/js/**", "/files/json/**");
 	}
-	
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/api/english/**").allowedOrigins(defaultDomain).allowedMethods("GET", "POST");
-//				registry.addMapping("/api/auth/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-//				registry.addMapping("/api/averages").allowedOrigins(defaultDomain).allowedMethods("POST");
-//				registry.addMapping("/api/reset-password/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-//				registry.addMapping("/api/subjects/**").allowedOrigins(defaultDomain).allowedMethods("GET", "DELETE", "PUT");
-//				registry.addMapping("/api/delete-user").allowedOrigins(defaultDomain).allowedMethods("POST");
-//				registry.addMapping("/api/user-register/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-//			}
-//		};
-//	}
 	
 }

@@ -2,6 +2,8 @@ package com.trainingquizzes.english.token;
 
 import javax.persistence.Entity;
 
+import com.trainingquizzes.english.enums.Roles;
+
 @Entity
 public class UserRegisterToken extends Token {
 	 
@@ -10,11 +12,12 @@ public class UserRegisterToken extends Token {
 	@Deprecated
 	public UserRegisterToken() {}
 
-	public UserRegisterToken(String token, String username, String email, String password) {
+	public UserRegisterToken(String token, String username, String email, String password, Roles role) {
 		this.token = token;
 		this.username = username;
 		this.email = email;
-		this.pasword = password;
+		this.password = password;
+		this.role = role;
 	}
 
 	public String getUsername() {

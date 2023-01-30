@@ -8,20 +8,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import com.trainingquizzes.english.enums.Roles;
+
 @MappedSuperclass
 public abstract class Token {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
 	protected String token;
-
 	protected String email;
-
-	protected String pasword;
-
+	protected String password;
 	protected Date expiryDate;
+	protected Roles role;
 	
 	public Long getId() {
 		return id;
@@ -44,11 +43,11 @@ public abstract class Token {
 	}
 
 	public String getPasword() {
-		return pasword;
+		return password;
 	}
 
 	public void setPasword(String pasword) {
-		this.pasword = pasword;
+		this.password = pasword;
 	}
 
 	public void setExpiryDate() {
@@ -62,6 +61,14 @@ public abstract class Token {
 	
 	public Date getExpiryDate() {
 		return this.expiryDate;
+	}
+
+	public Roles getRole() {
+		return role;
+	}
+
+	public void setRole(Roles role) {
+		this.role = role;
 	}
 
 }

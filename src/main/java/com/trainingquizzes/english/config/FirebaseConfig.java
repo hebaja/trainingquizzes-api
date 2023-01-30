@@ -39,6 +39,7 @@ public class FirebaseConfig {
 		        hasBeenInitialized = true;
 		    }
 		}
+		
 		return hasBeenInitialized;
 	}
 

@@ -46,4 +46,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("select u from User u inner join u.roles ur on ur.role = 'ROLE_TEACHER'")
 	Page<User> findAllTeachers(Pageable pagination);
 
+	@Query("select new com.trainingquizzes.english.model.Average(e.user.id, e.subject, e.level, round(avg(e.score), 1)) "
+			+ "from Exercise e where e.user.id= :id group by e.user.id, e.level, e.subject")	
+	Optional<Page<Average>> findPageableAveragesByUserId(@Param("id") Long id, Pageable pagination);
+
 }

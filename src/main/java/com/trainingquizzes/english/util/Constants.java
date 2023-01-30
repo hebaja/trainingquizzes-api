@@ -23,8 +23,6 @@ public class Constants {
 	public static final String BROKEN_LINK_MESSAGE = "The link has expired, is invalid or broken!";
 	public static final String ERROR_MESSAGE_KEY = "message";
 	
-//	public static final String EMAIL_SET = "hebajabackup@gmail.com";
-	
 	public static final String EMAIL_SET = "admin@trainingquizzes.com";
 	
 	public static final String USER_EXISTS_MESSAGE = "User name already exists, please choose another name.";

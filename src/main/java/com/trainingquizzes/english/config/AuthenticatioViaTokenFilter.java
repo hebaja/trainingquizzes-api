@@ -3,9 +3,11 @@ package com.trainingquizzes.english.config;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,42 +43,20 @@ public class AuthenticatioViaTokenFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		String token = recoverToken(request);
+		GoogleIdTokenVerifier verifier = GoogleAuthenticationUtil.retrieveIdTokenVerifier();
 		
-		if(tokenService.isTokenValid(token)) {
-			authenticateClient(token);
-		} else if(token != null) {
-			GoogleIdTokenVerifier verifier = GoogleAuthenticationUtil.retrieveIdTokenVerifier();
+		if(token != null) {
 			try {
 				GoogleIdToken googleIdToken = verifier.verify(token);
-				authenticateGoogleClient(googleIdToken.getPayload().getEmail());
-				
-			} catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
-				
-//				RestTemplate restTemplate = new RestTemplate();
-//		        		       
-//		        HttpHeaders headers = new HttpHeaders();
-//		        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//		        
-//				UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString("https://graph.facebook.com/debug_token")
-//		                .queryParam("input_token", token).queryParam("access_token", System.getenv("ENGLISH_TRAINING_QUIZZES_FACEBOOK_ACCESS_TOKEN"));
-//				
-//				String facebookUnescaped = StringEscapeUtils.unescapeJava(restTemplate.getForObject(uriBuilder.toUriString(), String.class));
-//				
-//				JSONObject obj = new JSONObject(facebookUnescaped);
-//				String userId = obj.getJSONObject("data").getString("user_id");
-//				
-//				authenticateFacebookClient(userId);
+				if(googleIdToken != null) authenticateGoogleClient(googleIdToken.getPayload().getEmail());
+				else if(tokenService.isTokenValid(token)) authenticateClient(token);
+				else response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			} catch (GeneralSecurityException | IOException e) {
+				e.printStackTrace();
 			}
 		}
 		
 		filterChain.doFilter(request, response);
-	}
-
-	private void authenticateFacebookClient(String userId) {
-		User user = repository.findByUid(userId).orElse(null);
-		if(user != null) {
-			authenticate(user);
-		}
 	}
 
 	private void authenticateGoogleClient(String email) {
@@ -88,8 +68,8 @@ public class AuthenticatioViaTokenFilter extends OncePerRequestFilter {
 
 	private void authenticateClient(String token) {
 		Long idUser = tokenService.getUserId(token);
-		User user = repository.findById(idUser).get();
-		authenticate(user);
+		Optional<User> userOptional = repository.findById(idUser);
+		if(userOptional.isPresent()) authenticate(userOptional.get());
 	}
 
 	private void authenticate(User user) {

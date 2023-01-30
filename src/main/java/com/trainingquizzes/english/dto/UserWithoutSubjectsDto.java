@@ -16,7 +16,7 @@ public class UserWithoutSubjectsDto {
 	private String email;
 	private String pictureUrl;
 	private List<String> roles = new ArrayList<>();
-	
+
 	public UserWithoutSubjectsDto(User user) {
 		this.id = user.getId();
 		this.uid = user.getUid();
@@ -26,16 +26,19 @@ public class UserWithoutSubjectsDto {
 		List<RolesDto> list = RolesDto.convertToList(user.getAuthorities());
 		list.forEach(role -> this.roles.add(role.getRole()));
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
+
 	public String getUid() {
 		return uid;
 	}
+
 	public String getUsername() {
 		return username;
 	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -47,8 +50,8 @@ public class UserWithoutSubjectsDto {
 	public static Page<UserWithoutSubjectsDto> convertToPageable(Page<User> users) {
 		return users.map(UserWithoutSubjectsDto::new);
 	}
-	
-	public static UserWithoutSubjectsDto convert(User user) {	
+
+	public static UserWithoutSubjectsDto convert(User user) {
 		return null;
 	}
 
@@ -67,6 +70,5 @@ public class UserWithoutSubjectsDto {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-
 
 }

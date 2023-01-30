@@ -41,7 +41,6 @@ public class SubjectWithoutUserDto {
 		return subjects.stream().map(SubjectWithoutUserDto::new).collect(Collectors.toList());
 	}
 	
-	
 	public static SubjectWithoutUserDto convertFromSubject(Subject subject) {
 		return new SubjectWithoutUserDto(subject);
 	}

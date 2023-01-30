@@ -27,7 +27,6 @@ public class EmailSenderTest {
 	
 	@BeforeEach
 	void init() {
-//		MockitoAnnotations.initMocks(this);
 		MockitoAnnotations.openMocks(this);
 	}
 	
@@ -43,7 +42,7 @@ public class EmailSenderTest {
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(new Account(AccountType.EMAIL));
 		
-		UserRegisterToken userToRegisterToken = new UserRegisterToken(token, user.getUsername(), user.getEmail(), user.getPassword());
+		UserRegisterToken userToRegisterToken = new UserRegisterToken(token, user.getUsername(), user.getEmail(), user.getPassword(), Roles.ROLE_TEACHER);
 		userToRegisterToken.setExpiryDate();
 		
 		SimpleMailMessage mailMessage = new SimpleMailMessage();

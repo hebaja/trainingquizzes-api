@@ -27,10 +27,6 @@ public interface QuestRepository extends JpaRepository<Quest, Long>{
 
 	Optional<List<Quest>> findAllByUser(User user);
 
-//	Optional<Page<Quest>> findBySubscribedUsersIds(User user, Pageable pagination);
-
-//	void findAllByUserId(Long userId, Pageable pagination);
-
-//	List<Quest> findByUser(User user);
+	Optional<Quest> findByPin(String pin);
 
 }

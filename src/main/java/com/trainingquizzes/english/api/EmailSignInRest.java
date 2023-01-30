@@ -15,7 +15,6 @@ import com.trainingquizzes.english.model.User;
 import com.trainingquizzes.english.repository.UserRepository;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/user/email")
 public class EmailSignInRest {
 	

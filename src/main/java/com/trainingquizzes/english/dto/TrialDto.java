@@ -1,6 +1,5 @@
 package com.trainingquizzes.english.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,8 +12,8 @@ public class TrialDto {
 	private UserDto user;
 	private int trialNumber;
 	private Double score;
-	private LocalDateTime startDate;
-	private LocalDateTime finishDate;
+	private String startDate;
+	private String finishDate;
 	private boolean finished;
 	
 	public TrialDto(Trial trial) {
@@ -23,8 +22,8 @@ public class TrialDto {
 		this.user = new UserDto(trial.getSubscribedUser());
 		this.trialNumber = trial.getTrialNumber();
 		this.score = trial.getScore();
-		this.startDate = trial.getStartDate();
-		this.finishDate = trial.getFinishDate();
+		this.startDate = trial.getStartDate().toOffsetDateTime().toString();
+		this.finishDate = trial.getFinishDate().toOffsetDateTime().toString();
 		this.finished = trial.isFinished();
 	}
 	
@@ -56,19 +55,19 @@ public class TrialDto {
 		this.score = score;
 	}
 
-	public LocalDateTime getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDateTime getFinishDate() {
+	public String getFinishDate() {
 		return finishDate;
 	}
 
-	public void setFinishDate(LocalDateTime finishDate) {
+	public void setFinishDate(String finishDate) {
 		this.finishDate = finishDate;
 	}
 

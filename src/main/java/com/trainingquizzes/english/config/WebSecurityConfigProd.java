@@ -41,17 +41,22 @@ public class WebSecurityConfigProd extends WebSecurityConfigurerAdapter {
 	
 	@Value("${spring-english-training-quizzes-default-domain}")
 	private String defaultDomain;
+	
+	private static final String TEACHER = "TEACHER";
+	private static final String STUDENT = "STUDENT"; 
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.csrf().disable().authorizeRequests()
-		.antMatchers(HttpMethod.GET, "/averages").authenticated()
-		.antMatchers(HttpMethod.GET, "/redirect").permitAll()
-		.antMatchers(HttpMethod.POST, "/api/averages", "/api/delete-user").authenticated()
-		.antMatchers(HttpMethod.POST, "/auth/**", "/api/user-register/**", "/api/reset-password/**").permitAll()
-		.antMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
-		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
+		.antMatchers(HttpMethod.GET, "/api/schedule/**").permitAll()
+		.antMatchers(HttpMethod.POST, "/auth/**", "/api/user-register/**", "/api/reset-password/**", "/api/schedule/**").permitAll()
+		.antMatchers(HttpMethod.POST, "/api/delete-user").authenticated()
+		.antMatchers(HttpMethod.DELETE, "/api/user").authenticated()
+		.antMatchers(HttpMethod.GET, "/api/averages").hasRole(STUDENT)
+		.antMatchers(HttpMethod.DELETE, "/api/subject/**").hasRole(TEACHER)
+		.antMatchers(HttpMethod.DELETE, "/api/quest").hasRole(TEACHER)
+		.antMatchers(HttpMethod.PUT, "/api/subjects").hasRole(TEACHER)
 		.anyRequest().permitAll()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and().addFilterBefore(new AuthenticatioViaTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class)
@@ -69,21 +74,5 @@ public class WebSecurityConfigProd extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/resources/json/**", "/resources/css/**", "/resources/images/**", "/resources/js/**", "/files/json/**");
 	}
-	
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/api/english/**").allowedOrigins(defaultDomain).allowedMethods("GET", "POST");
-//				registry.addMapping("/api/auth/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-//				registry.addMapping("/api/averages").allowedOrigins(defaultDomain).allowedMethods("POST");
-//				registry.addMapping("/api/reset-password/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-//				registry.addMapping("/api/subjects/**").allowedOrigins(defaultDomain).allowedMethods("GET", "DELETE", "PUT");
-//				registry.addMapping("/api/delete-user").allowedOrigins(defaultDomain).allowedMethods("POST");
-//				registry.addMapping("/api/user-register/**").allowedOrigins(defaultDomain).allowedMethods("POST");
-//			}
-//		};
-//	}
 	
 }

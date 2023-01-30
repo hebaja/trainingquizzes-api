@@ -25,6 +25,5 @@ public class RolesDto {
 	public static List<RolesDto> convertToList(Collection<? extends GrantedAuthority> authorities) {
 		return authorities.stream().map(RolesDto::new).collect(Collectors.toList());
 	}
-	
 
 }

@@ -6,18 +6,18 @@ import com.trainingquizzes.english.enums.LevelType;
 
 public class SubjectForm {
 
-	private Long Id;
+	private Long id;
 	private String title;
 	private LevelType level;
 	private List<TaskForm> tasks;
 	private UserForm user;
 
 	public Long getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(Long id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getTitle() {

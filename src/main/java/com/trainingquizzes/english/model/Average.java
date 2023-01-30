@@ -10,7 +10,6 @@ public class Average {
 	private User user;
 	private LevelType level;
 	private double average;
-	private double averageForMeter;
 	
 	private String bootstrapColor;
 	
@@ -51,8 +50,7 @@ public class Average {
 	}
 
 	public double getAverageForMeter() {
-		averageForMeter = average * 10;
-		return averageForMeter;
+		return getAverage() * 10;
 	}
 	
 	public void setBootstrapColor(String bootstrapColor) {
@@ -74,5 +72,5 @@ public class Average {
 	public User getUser() {
 		return user;
 	}
-	
+
 }

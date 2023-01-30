@@ -2,7 +2,9 @@ package com.trainingquizzes.english.dto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -74,10 +76,10 @@ public class NewUserRequest {
 	
 	public User toUser() {
 		String passwordHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-		List<Account> accounts = new ArrayList<>();
+		Set<Account> accounts = new HashSet<>();
 		accounts.add(new Account(AccountType.EMAIL));
-		Authority authority = new Authority(Roles.ROLE_TEACHER);
-		List<Authority> roles = Arrays.asList(authority);
+		Set<Authority> roles = new HashSet<>();
+		roles.add(new Authority(Roles.ROLE_TEACHER));
 		return new User(username, email, passwordHashString, false, roles, accounts);
 	}
 }

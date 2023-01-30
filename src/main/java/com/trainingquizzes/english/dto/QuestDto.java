@@ -1,6 +1,5 @@
 package com.trainingquizzes.english.dto;
 
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +19,15 @@ public class QuestDto {
 	private SubjectWithoutUserDto subject;
 	private ChronoUnit timeUnit;
 	private long timeInterval;
-	private LocalDateTime startDate;
-	private LocalDateTime finishDate;
+	private String startDate;
+	private String finishDate;
+	private String timeZone;
 	private boolean finished;
 	private List<UserDto> subscribedUsers;
 	private List<TrialDto> trials;
 	private List<Score> scores;
 	private UserDto user;
+	private String pin;
 	
 	public QuestDto(Quest quest, List<User> subscribedUsers) {
 		this.id = quest.getId();
@@ -34,13 +35,15 @@ public class QuestDto {
 		this.setSubject(new SubjectWithoutUserDto(quest.getSubject()));
 		this.timeUnit = quest.getTimeUnit();
 		this.timeInterval = quest.getTimeInterval();
-		this.startDate = quest.getStartDate();
-		this.finishDate = quest.getFinishDate();
+		this.startDate = quest.getStartDate().toOffsetDateTime().toString();
+		this.finishDate = quest.getFinishDate().toOffsetDateTime().toString();
+		this.timeZone = quest.getTimeZone();
 		this.finished = quest.isFinished();
 		this.subscribedUsers = subscribedUsers.stream().map(UserDto::new).collect(Collectors.toList());
 		this.trials = quest.getTrials().stream().map(TrialDto::new).collect(Collectors.toList());
 		this.scores = quest.getScores();
 		this.user = new UserDto(quest.getUser());
+		this.pin = quest.getPin();
 	}
 	
 	public QuestDto(Quest quest) {
@@ -49,12 +52,14 @@ public class QuestDto {
 		this.setSubject(new SubjectWithoutUserDto(quest.getSubject()));
 		this.timeUnit = quest.getTimeUnit();
 		this.timeInterval = quest.getTimeInterval();
-		this.startDate = quest.getStartDate();
-		this.finishDate = quest.getFinishDate();
+		this.startDate = quest.getStartDate().toLocalDateTime().toString();
+		this.finishDate = quest.getFinishDate().toLocalDateTime().toString();
+		this.timeZone = quest.getTimeZone();
 		this.finished = quest.isFinished();
 		this.trials = quest.getTrials().stream().map(TrialDto::new).collect(Collectors.toList());
 		this.scores = quest.getScores();
 		this.user = new UserDto(quest.getUser());
+		this.pin = quest.getPin();
 	}
 
 	public static Page<QuestDto> convertToPageable(Page<Quest> quests, Map<Long, List<User>> subscribedUsers) {
@@ -89,19 +94,19 @@ public class QuestDto {
 		this.timeInterval = timeInterval;
 	}
 
-	public LocalDateTime getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDateTime getFinishDate() {
+	public String getFinishDate() {
 		return finishDate;
 	}
 
-	public void setFinishDate(LocalDateTime finishDate) {
+	public void setFinishDate(String finishDate) {
 		this.finishDate = finishDate;
 	}
 
@@ -161,6 +166,14 @@ public class QuestDto {
 
 	public void setFinished(boolean finished) {
 		this.finished = finished;
+	}
+
+	public String getPin() {
+		return pin;
+	}
+
+	public String getTimeZone() {
+		return timeZone;
 	}
 
 }

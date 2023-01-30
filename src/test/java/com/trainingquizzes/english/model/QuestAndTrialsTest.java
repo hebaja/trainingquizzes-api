@@ -1,11 +1,14 @@
-package com.trainingquizzes.english.quest;
-
+package com.trainingquizzes.english.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,9 +28,10 @@ import com.trainingquizzes.english.model.Quest;
 import com.trainingquizzes.english.model.Subject;
 import com.trainingquizzes.english.model.Task;
 import com.trainingquizzes.english.model.TemporaryTrialDataStore;
+import com.trainingquizzes.english.model.Trial;
 import com.trainingquizzes.english.model.User;
 
-class QuestTest {
+class QuestAndTrialsTest {
 	
 	static private Quest quest;
 	static private Set<User> students = new HashSet<User>();
@@ -38,20 +42,23 @@ class QuestTest {
 	static void init() {
 		fetchStudents();
 		List<Task> tasks = new ArrayList<Task>();
-		List<Authority> roles = new ArrayList<Authority>();
+		Set<Authority> roles = new HashSet<Authority>();
 		roles.add(new Authority(Roles.ROLE_TEACHER));
-		List<Account> accounts = new ArrayList<Account>();
+		Set<Account> accounts = new HashSet<Account>();
 		accounts.add(new Account(AccountType.EMAIL));
 		User owner = createUser("owner", "owner@hebaja.com", roles, accounts);
 		
 		LocalDateTime now = LocalDateTime.now();
+		ZoneId zoneId = ZoneId.systemDefault();
+		ZonedDateTime currentZonedDateTime = ZonedDateTime.of(now, zoneId);
 		
 		quest = new Quest(
 				"test_quest",
 				owner,
 				new Subject("test_subject", tasks, owner, LevelType.EASY),
-				now,
-				now.plusDays(5), 
+				currentZonedDateTime,
+				currentZonedDateTime.plusDays(5),
+				zoneId.toString(),
 				5,
 				ChronoUnit.DAYS
 				);
@@ -61,20 +68,14 @@ class QuestTest {
 		quest.getTrials().forEach(trial -> {
 			temporaryTrialDataStoreList.add(new TemporaryTrialDataStore(trial, trial.getSubscribedUser(), trial.getTrialNumber(), null));
 		});
-		
 		generateScores();
-		
 		setTrialsScore();
-		
-		
-		
 	}
 
-
 	private static void fetchStudents() {
-		List<Authority> roles = new ArrayList<Authority>();
+		Set<Authority> roles = new HashSet<Authority>();
 		roles.add(new Authority(Roles.ROLE_STUDENT));
-		List<Account> accounts = new ArrayList<Account>();
+		Set<Account> accounts = new HashSet<Account>();
 		accounts.add(new Account(AccountType.EMAIL));
 		User user1 = createUser("user1", "student1@hebaja.com", roles, accounts);
 		User user2 = createUser("user2", "student2@hebaja.com", roles, accounts);
@@ -82,7 +83,7 @@ class QuestTest {
 		students.add(user2);
 	}
 
-	private static User createUser(String name, String email, List<Authority> roles, List<Account> accounts) {
+	private static User createUser(String name, String email, Set<Authority> roles, Set<Account> accounts) {
 		return new User(name, email, "123456", true, roles, accounts);
 	}
 	
@@ -108,6 +109,16 @@ class QuestTest {
 	}
 	
 	@Test
+	void shouldGenerateSubscriptionPin() {
+		assertNotNull(quest.getPin());
+	}
+	
+	@Test
+	void questShouldStartAsNotFinished() {
+		assertFalse(quest.isFinished());
+	}
+	
+	@Test
 	void shouldSubscribeStudents() {
 		assertEquals(2, quest.getSubscribedUsersIds().size());
 	}
@@ -115,6 +126,11 @@ class QuestTest {
 	@Test
 	void shouldCreateTrials() {
 		assertEquals(10, quest.getTrials().size());
+	}
+	
+	@Test
+	void trialsShouldStartAsNotFinished() {
+		quest.getTrials().forEach(trial -> assertFalse(trial.isFinished()));
 	}
 	
 	@Test
@@ -141,12 +157,32 @@ class QuestTest {
 		assertEquals(10, temporaryTrialDataStoreList.size());
 	}
 	
-	//FINISH TRIAL AND TEMPORARY
-	//REMOVE TEMPORARY TRIAL DATA
+	@Test
+	void shouldFinishQuest() {
+		quest.setFinished(true);
+		quest.setPin(null);
+		assertTrue(quest.isFinished());
+		assertNull(quest.getPin());
+	}
 	
 	@Test
-	void shouldFinishTrials() {
-		
+	void trialsUpdateFlowShouldWork() {
+		for(int i = 0; i < 10; i++) {
+			TemporaryTrialDataStore temporaryTrialDataStore = temporaryTrialDataStoreList.get(0);
+			Trial trial = quest.getTrials().get(0);
+			if(i < 10) {
+				temporaryTrialDataStore.setScore(i);
+				trial.setScore(Double.valueOf(i));
+				assertFalse(temporaryTrialDataStore.isFinished());
+				assertFalse(trial.isFinished());
+				assertNotNull(temporaryTrialDataStore.getScore());
+				assertNotNull(trial.getScore());
+			} else {
+				temporaryTrialDataStore.setFinished(true);
+				trial.setFinished(true);
+				assertTrue(temporaryTrialDataStore.isFinished());
+				assertTrue(trial.isFinished());
+			}
+		}
 	}
-		
 }

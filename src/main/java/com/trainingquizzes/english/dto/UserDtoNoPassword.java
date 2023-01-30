@@ -20,9 +20,6 @@ public class UserDtoNoPassword {
 		this.uid = user.getUid();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
-//		List<RolesDto> list = RolesDto.convertToList(user.getAuthorities());
-//		list.forEach(role -> this.roles.add(role.getRole()));
-		
 		this.roles = RolesDto.convertToList(user.getAuthorities()).stream().collect(Collectors.toList());
 		this.pictureUrl = user.getPictureUrl();
 	}

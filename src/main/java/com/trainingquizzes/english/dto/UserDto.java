@@ -17,27 +17,30 @@ public class UserDto {
 	private String pictureUrl;
 	private List<SubjectDto> subjects = new ArrayList<>();
 	private List<String> roles = new ArrayList<>();
-	
+
 	public UserDto(User user) {
 		this.id = user.getId();
 		this.uid = user.getUid();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
 		this.pictureUrl = user.getPictureUrl();
-		this.subjects = user.getSubjects().stream().map(SubjectDto::new).collect(Collectors.toList());
+		this.subjects = user.getSubjects().stream().sorted((arg0, arg1) -> arg1.getCreationDate().compareTo(arg0.getCreationDate())).map(SubjectDto::new).collect(Collectors.toList());
 		List<RolesDto> list = RolesDto.convertToList(user.getAuthorities());
 		list.forEach(role -> this.roles.add(role.getRole()));
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
+
 	public String getUid() {
 		return uid;
 	}
+
 	public String getUsername() {
 		return username;
 	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -45,12 +48,12 @@ public class UserDto {
 	public static List<UserDto> convertList(List<User> users) {
 		return users.stream().map(UserDto::new).collect(Collectors.toList());
 	}
-	
+
 	public static Page<UserDto> convertToPageable(Page<User> users) {
 		return users.map(UserDto::new);
 	}
 
-	public static UserDto convert(User user) {	
+	public static UserDto convert(User user) {
 		return null;
 	}
 

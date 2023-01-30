@@ -5,12 +5,7 @@ public class Option {
         private String prompt;
         private boolean isCorrect;
         
-        private Option() {}
-
-        private Option(String prompt, boolean isCorrect) {
-            this.prompt = prompt;
-            this.isCorrect = isCorrect;
-        }
+        public Option() {}
 
         public String getPrompt() { return prompt; }
 

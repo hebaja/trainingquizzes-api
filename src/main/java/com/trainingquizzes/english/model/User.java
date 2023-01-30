@@ -43,10 +43,10 @@ public class User implements UserDetails {
 	private String pictureUrl;
     
     @ElementCollection(fetch = FetchType.LAZY)
-    private List<Account> accounts;
+    private Set<Account> accounts;
     
     @ElementCollection(fetch = FetchType.EAGER)
-	private List<Authority> roles;
+	private Set<Authority> roles;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Exercise> exercises;
@@ -68,7 +68,7 @@ public class User implements UserDetails {
 	
 	public User() {}
 	
-	public User(String username, String email, String password, List<Authority> roles) {
+	public User(String username, String email, String password, Set<Authority> roles) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -81,7 +81,7 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
-	public User(String username, @Email @NotBlank String email, String password, boolean enabled, List<Authority> roles, List<Account> accounts) {
+	public User(String username, @Email @NotBlank String email, String password, boolean enabled, Set<Authority> roles, Set<Account> accounts) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -90,14 +90,13 @@ public class User implements UserDetails {
 		this.accounts = accounts;
 	}
 	
-	public User(String username, @Email @NotBlank String email, String password, boolean enabled, List<Authority> roles, List<Account> accounts, Roles role) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.enabled = enabled;
-		this.roles = roles;
-		this.accounts = accounts;
-	}
+//	public User(String username, @Email @NotBlank String email, String password, boolean enabled, Set<Account> accounts, Set<Authority> roles) {
+//		this.username = username;
+//		this.email = email;
+//		this.password = password;
+//		this.enabled = enabled;
+//		this.accounts = accounts;
+//	}
 	
 	public void addSubscribedQuestsId(Long questId) {
 		this.subscribedQuestsIds.add(questId);
@@ -147,11 +146,11 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 	
-	public List<Authority> getRoles() {
+	public Set<Authority> getRoles() {
 		return roles;
 	}
 	
-	public void setRoles(List<Authority> roles) {
+	public void setRoles(Set<Authority> roles) {
 		this.roles = roles;
 	}
 	
@@ -163,11 +162,11 @@ public class User implements UserDetails {
 		this.enabled = enabled;
 	}
 	
-	public void setAccounts(List<Account> accounts) {
+	public void setAccounts(Set<Account> accounts) {
 		this.accounts = accounts;
 	}
 	
-	public List<Account> getAccounts() {
+	public Set<Account> getAccounts() {
 		return accounts;
 	}
 	

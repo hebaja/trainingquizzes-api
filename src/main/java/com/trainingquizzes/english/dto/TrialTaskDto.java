@@ -1,5 +1,6 @@
 package com.trainingquizzes.english.dto;
 
+import com.trainingquizzes.english.model.Task;
 import com.trainingquizzes.english.model.TemporaryTrialDataStore;
 
 public class TrialTaskDto {
@@ -12,11 +13,11 @@ public class TrialTaskDto {
 	private double score;
 	private boolean finished;
 	
-	public TrialTaskDto(TemporaryTrialDataStore temporaryTrialDataStore) {
+	public TrialTaskDto(TemporaryTrialDataStore temporaryTrialDataStore, Task receivedTask) {
 		this.id = temporaryTrialDataStore.getId();
 		this.trialId = temporaryTrialDataStore.getTrial().getId();
 		this.questId = temporaryTrialDataStore.getTrial().getQuest().getId();
-		if(!temporaryTrialDataStore.isFinished()) this.task = new TaskDto(temporaryTrialDataStore.getReducedTasksList().get(temporaryTrialDataStore.getTasksIndex()));
+		if(!temporaryTrialDataStore.isFinished()) this.task = new TaskDto(receivedTask);
 		else this.task = null;
 		this.tasksIndex = temporaryTrialDataStore.getTasksIndex();
 		this.score = temporaryTrialDataStore.getScore();

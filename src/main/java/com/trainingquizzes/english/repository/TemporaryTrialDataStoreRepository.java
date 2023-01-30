@@ -30,4 +30,8 @@ public interface TemporaryTrialDataStoreRepository extends JpaRepository<Tempora
 	Optional<List<TemporaryTrialDataStore>> findAllByUser(User user);
 
 	void deleteByTrial(Trial trial);
+
+	Optional<List<TemporaryTrialDataStore>> findAllByQuestId(long questId);
+
+	
 }

@@ -1,20 +1,23 @@
 package com.trainingquizzes.english.api;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.quartz.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.trainingquizzes.english.config.FirebaseConfig;
 import com.trainingquizzes.english.dto.QuestDto;
 import com.trainingquizzes.english.form.QuestForm;
 import com.trainingquizzes.english.form.QuestSubscribeForm;
@@ -37,15 +38,17 @@ import com.trainingquizzes.english.model.Quest;
 import com.trainingquizzes.english.model.Subject;
 import com.trainingquizzes.english.model.Trial;
 import com.trainingquizzes.english.model.User;
+import com.trainingquizzes.english.quartz.EmailScheduler;
+import com.trainingquizzes.english.quartz.FirebaseTrialMessageScheduler;
+import com.trainingquizzes.english.quartz.QuestFinishScheduler;
+import com.trainingquizzes.english.quartz.ScheduledEmail;
 import com.trainingquizzes.english.repository.QuestRepository;
 import com.trainingquizzes.english.repository.SubjectRepository;
 import com.trainingquizzes.english.repository.TemporaryTrialDataStoreRepository;
 import com.trainingquizzes.english.repository.TrialRepository;
 import com.trainingquizzes.english.repository.UserRepository;
-import com.trainingquizzes.english.util.ScheduledThreadPool;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/quest")
 public class QuestRest {
 	
@@ -65,6 +68,15 @@ public class QuestRest {
 
 	@Autowired 
 	private TemporaryTrialDataStoreRepository temporaryTrialDataStoreRepository;
+	
+	@Autowired
+	private Scheduler scheduler;
+	
+	@Value("${spring-english-training-quizzes-default-domain}")
+	private String defaultDomain;
+	
+	@Value("${spring.mail.username}")
+	private String senderEmail;
 	
 	@GetMapping
 	public ResponseEntity<QuestDto> questById(@RequestParam Long questId, @RequestParam(required = false) Long userId) throws CloneNotSupportedException {
@@ -95,6 +107,20 @@ public class QuestRest {
 		
 		return ResponseEntity.badRequest().build();
 	}
+	
+	@GetMapping("pin")
+	public ResponseEntity<QuestDto> questByPin(@RequestParam String pin) {
+		if(pin != null) {
+			Optional<Quest> questOptional = questRepository.findByPin(pin);
+			if(questOptional.isPresent()) {
+				List<User> subscribedUsers = userRepository.findAllById(questOptional.get().getSubscribedUsersIds());
+				
+				return ResponseEntity.ok(new QuestDto(questOptional.get(), subscribedUsers));
+			}
+		}
+		
+		return ResponseEntity.badRequest().build();
+	}
 		
 	@GetMapping("created-quests")
 	public ResponseEntity<Page<QuestDto>> createdQuests(@RequestParam Long userId, Pageable pagination) {
@@ -118,7 +144,6 @@ public class QuestRest {
 		if(userOptional.isPresent()) {
 			Optional<Page<Quest>> questsOptional = questRepository.findBySubscribedUserId(userId, pagination);
 			if(questsOptional.isPresent()) {
-				
 				Map<Long,List<User>> subscribedUsersMap = createSubscribedUsersMap(questsOptional.get());
 				
 				return ResponseEntity.ok(QuestDto.convertToPageable(questsOptional.get(), subscribedUsersMap));
@@ -131,9 +156,7 @@ public class QuestRest {
 	private Map<Long, List<User>> createSubscribedUsersMap(Page<Quest> quests) {
 		Map<Long, List<Long>> idsMap = quests.stream().collect(Collectors.toMap(Quest::getId, Quest::getSubscribedUsersIds));
 		Map<Long, List<User>> questAndUsersMap = new HashMap<>();
-		idsMap.forEach((a, b) -> {
-			questAndUsersMap.put(a, userRepository.findAllById(b));
-		});
+		idsMap.forEach((a, b) -> questAndUsersMap.put(a, userRepository.findAllById(b)));
 
 		return questAndUsersMap;
 	}
@@ -141,34 +164,40 @@ public class QuestRest {
 	@PutMapping
 	public ResponseEntity<QuestDto> register(@RequestBody QuestForm form) {
 		if(form != null) {
-			User user = userRepository.findById(form.getUserId()).orElse(null);
-			Subject subject = subjectRepository.findById(form.getSubjectId()).orElse(null);
-			
-			if(form.getId() != null) {
-				Optional<Quest> optionalQuest = questRepository.findById(form.getId());
-				if(optionalQuest.isPresent()) {
-					Quest quest = optionalQuest.get();
-					quest.setTitle(form.getTitle());
-					Quest savedQuest = questRepository.save(quest);
-					List<User> subscribedUsers = userRepository.findAllById(quest.getSubscribedUsersIds());
-					
-					return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
+			Optional<User> userOptional = userRepository.findById(form.getUserId());
+			Optional<Subject> subjectOptional = subjectRepository.findById(form.getSubjectId());
+			if(userOptional.isPresent() && subjectOptional.isPresent()) {
+				if(form.getId() != null) {
+					Optional<Quest> optionalQuest = questRepository.findById(form.getId());
+					if(optionalQuest.isPresent()) {
+						Quest quest = optionalQuest.get();
+						quest.setTitle(form.getTitle());
+						Quest savedQuest = questRepository.save(quest);
+						List<User> subscribedUsers = userRepository.findAllById(quest.getSubscribedUsersIds());
+						
+						return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
+					}
 				}
+				
+				ZonedDateTime startDate = ZonedDateTime.of(form.getStartDate(), ZoneId.of(form.getTimeZone()));
+				ZonedDateTime finishDate = ZonedDateTime.of(form.getFinishDate(), ZoneId.of(form.getTimeZone()));
+				
+				Quest quest = new Quest(
+						form.getTitle(), 
+						userOptional.get(), 
+						subjectOptional.get(), 
+						startDate,
+						finishDate,
+						form.getTimeZone(),
+						form.getTimeInterval(),
+						ChronoUnit.DAYS);
+				
+				Quest savedQuest = questRepository.save(quest);
+				QuestFinishScheduler.schedule(savedQuest.getId(), savedQuest.getFinishDate(), scheduler);
+				List<User> subscribedUsers = userRepository.findAllById(quest.getSubscribedUsersIds());
+				
+				return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
 			}
-			Quest quest = new Quest(
-					form.getTitle(), 
-					user, 
-					subject, 
-					form.getStartDate(), 
-					form.getFinishDate(), 
-					form.getTimeInterval(),
-					ChronoUnit.DAYS);
-			
-			Quest savedQuest = questRepository.save(quest);
-			scheduleQuestFinish(savedQuest);
-			List<User> subscribedUsers = userRepository.findAllById(quest.getSubscribedUsersIds());
-			
-			return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
 		}
 		
 		return ResponseEntity.badRequest().build();
@@ -185,9 +214,9 @@ public class QuestRest {
 				questRepository.delete(questOptional.get());
 				
 				return ResponseEntity.ok(QuestDto.convertToList(questsOptional.get()));
-			} catch (EntityNotFoundException e) {
-				
-				throw new EntityNotFoundException();
+			} catch (NoSuchElementException e) {
+				e.printStackTrace();
+				return ResponseEntity.notFound().build();
 			}
 		}
 		
@@ -200,8 +229,9 @@ public class QuestRest {
 			Optional<Quest> questOptional = questRepository.findById(questId);
 			if(questOptional.isPresent()) {
 				List<User> subscribedUsers = userRepository.findAllById(questOptional.get().getSubscribedUsersIds());
+				Quest savedQuest = finishQuest(questOptional.get());
 
-				return ResponseEntity.ok(new QuestDto(finishQuest(questOptional.get()), subscribedUsers));
+				return ResponseEntity.ok(new QuestDto(finishQuest(savedQuest), subscribedUsers));
 			}
 		}
 		
@@ -211,15 +241,36 @@ public class QuestRest {
 	@PostMapping("subscribe")
 	public ResponseEntity<QuestDto> subscribe(@RequestBody QuestSubscribeForm form) {
 		if(form != null) {
-			Quest quest = questRepository.findById(form.getQuestId()).orElse(null);
-			User user = userRepository.findById(form.getUserId()).orElse(null);
-			if(quest != null && user != null) {
+			Optional<Quest> questOptional = questRepository.findById(form.getQuestId());
+			Optional<User> userOptional = userRepository.findById(form.getUserId());
+			if(questOptional.isPresent() && userOptional.isPresent()) {
+				User user = userOptional.get();
+				Quest quest = questOptional.get();
 				user.addSubscribedQuestsId(quest.getId());
 				quest.subscribeUser(user);
 				userRepository.save(user);
 				Quest savedQuest = questRepository.save(quest);
 				List<User> subscribedUsers = userRepository.findAllById(quest.getSubscribedUsersIds());
-
+				
+				List<Trial> userTrialsInQuest = quest.getTrials().stream().filter(trial -> trial.getSubscribedUser().getId().equals(user.getId())).collect(Collectors.toList());
+				
+				userTrialsInQuest.forEach(trial -> {
+					if(trial.getTrialNumber() > 1) {
+						ScheduledEmail scheduledEmail = 
+								new ScheduledEmail(
+										senderEmail,
+										user.getEmail(), 
+										"Training Quizzes - Trial #" + trial.getTrialNumber() + " is available", 
+										String.format("There is a new trial on %s quest available for you. Access the following link to take it: %s/#/trial-quiz?userId=%d&trialId=%d&trialNumber=%d", 
+												quest.getTitle(), defaultDomain, user.getId(), trial.getId(), trial.getTrialNumber()),
+										trial.getStartDate());
+						
+						EmailScheduler.schedule(scheduler, scheduledEmail);
+						String firebaseMessageTopic = String.format("%d-%s", quest.getId(), quest.getUser().getUsername());  																		
+						FirebaseTrialMessageScheduler.schedule(scheduler, firebaseMessageTopic, quest.getId(), user.getId(), trial.getId(), trial.getStartDate(), trial.getTrialNumber());
+					}
+				});
+				
 				return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
 			}
 		}
@@ -229,27 +280,19 @@ public class QuestRest {
 	
 	private void finishQuestCaseNecessary(Quest quest) {
 		LocalDateTime currentTime = LocalDateTime.now();
-		if(currentTime.isAfter(quest.getFinishDate()) && !quest.isFinished()) {
+		ZonedDateTime zonedCurrenttime = ZonedDateTime.of(currentTime, ZoneId.of(quest.getTimeZone()));
+		ZonedDateTime convertedFinishZonedDateTime = ZonedDateTime.of(quest.getFinishDate().toLocalDateTime(), ZoneId.of(quest.getTimeZone()));
+		if(zonedCurrenttime.isAfter(convertedFinishZonedDateTime) && !quest.isFinished()) {
 			finishQuest(quest);
 		}
 	}
 
 	private Quest finishQuest(Quest quest) {
 		quest.setFinished(true);
+		quest.setPin(null);
 		temporaryTrialDataStoreRepository.deleteAllByQyestId(quest.getId());
-		quest.finishResult();
+		
 		return questRepository.save(quest);
-	}
-	
-	private void scheduleQuestFinish(Quest quest) {
-		long questDurationInMinutes = ChronoUnit.MINUTES.between(quest.getStartDate(), quest.getFinishDate());
-		ScheduledExecutorService threadPool = ScheduledThreadPool.getScheduledThreadPool();
-		threadPool.schedule(new Runnable() {
-			@Override
-			public void run() {
-				finishQuest(quest);
-			}
-		}, questDurationInMinutes, TimeUnit.MINUTES);
 	}
 	
 	@GetMapping("unsubscribe-user")
@@ -265,10 +308,11 @@ public class QuestRest {
 				userRepository.save(userOptional.get());
 				Quest savedQuest = questRepository.save(questOptional.get());
 				List<User> subscribedUsers = userRepository.findAllById(questOptional.get().getSubscribedUsersIds());
-
+				
 				return ResponseEntity.ok(new QuestDto(savedQuest, subscribedUsers));
 			}
 		}
+		
 		return ResponseEntity.badRequest().build();
 	}
 

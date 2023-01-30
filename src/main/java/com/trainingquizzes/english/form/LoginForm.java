@@ -1,6 +1,7 @@
 package com.trainingquizzes.english.form;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -10,7 +11,7 @@ public class LoginForm {
 
 	private String email;
 	private String password;
-	private List<Roles> roles;
+	private Set<Roles> roles;
 
 	public void setEmail(String email) {
 		this.email = email;
@@ -32,11 +33,11 @@ public class LoginForm {
 		return new UsernamePasswordAuthenticationToken(email, password);
 	}
 
-	public List<Roles> getRoles() {
+	public Set<Roles> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Roles> roles) {
+	public void setRoles(Set<Roles> roles) {
 		this.roles = roles;
 	}
 

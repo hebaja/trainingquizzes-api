@@ -3,8 +3,10 @@ package com.trainingquizzes.english.api;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -40,7 +42,6 @@ import com.trainingquizzes.english.repository.UserRepository;
 import com.trainingquizzes.english.util.GoogleAuthenticationUtil;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/auth")
 public class AuthenticationRest {
 	
@@ -134,7 +135,7 @@ public class AuthenticationRest {
 			user.setUsername(userInfo.getFirst_name());
 			user.setUid(userInfo.getId());
 			user.setPictureUrl(userInfo.getPictureUrl());
-			user.setSubjects(new ArrayList<Subject>());
+			user.setSubjects(new ArrayList<>());
 			userInfo.getRoles().forEach(role -> user.getRoles().add(new Authority(role)));
 			if(!user.getAccounts().contains(account)) {
 				user.getAccounts().add(account);
@@ -146,8 +147,8 @@ public class AuthenticationRest {
 	
 	private User createNewUser(OAuth2UserInfo userInfo, Account account) {
 		User user = new User();
-		List<Account> accounts = new ArrayList<>();
-		List<Authority> roles = new ArrayList<>();
+		Set<Account> accounts = new HashSet<>();
+		Set<Authority> roles = new HashSet<>();
 		user.setUid(userInfo.getId());
 		user.setUsername(userInfo.getFirst_name());
 		user.setEmail(userInfo.getEmail());

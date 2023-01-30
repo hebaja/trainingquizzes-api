@@ -43,7 +43,6 @@ import com.trainingquizzes.english.repository.TaskRepository;
 import com.trainingquizzes.english.repository.UserRepository;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/subject")
 public class SubjectRest {
 
@@ -99,29 +98,33 @@ public class SubjectRest {
 	}
 	
 	@GetMapping("user")
-	public Page<SubjectDto> subjectsUser(@RequestParam("userId") Long userId, @RequestParam(name = "level", required = false) String level, Pageable pageable) {
-		if(level != null) {
-			LevelType levelType = null;
-			switch(level) {
-				case "easy":
-					levelType = LevelType.EASY;
-					break;
-				case "medium":
-					levelType = LevelType.MEDIUM;
-					break;
-				case "hard":
-					levelType = LevelType.HARD;
-					break;
-				default:
-					levelType = LevelType.EASY;
+	public ResponseEntity<Page<SubjectDto>> subjectsUser(@RequestParam("userId") Long userId, @RequestParam(name = "level", required = false) String level, Pageable pageable) {
+		if(userId != null) {
+			if(level != null) {
+				LevelType levelType = null;
+				switch(level) {
+					case "easy":
+						levelType = LevelType.EASY;
+						break;
+					case "medium":
+						levelType = LevelType.MEDIUM;
+						break;
+					case "hard":
+						levelType = LevelType.HARD;
+						break;
+					default:
+						levelType = LevelType.EASY;
+				}
+				Page<Subject> subjects = subjectRepository.findPageableByUserIdAndLevel(userId, levelType, pageable);
+				
+				return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
 			}
-			Page<Subject> subjects = subjectRepository.findPageableByUserIdAndLevel(userId, levelType, pageable);
+			Page<Subject> subjects = subjectRepository.findPageableByuserId(userId, pageable);
 			
-			return SubjectDto.convertToPageable(subjects);
+			return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
 		}
-		Page<Subject> subjects = subjectRepository.findPageableByuserId(userId, pageable);
 		
-		return SubjectDto.convertToPageable(subjects);
+		return ResponseEntity.badRequest().build();
 	}
 	
 	@GetMapping("reduced-list")
@@ -165,11 +168,12 @@ public class SubjectRest {
 	@GetMapping("teacher")
 	public ResponseEntity<List<SubjectWithTasksDto>> subjectsByTeacher(@RequestParam Long id) {
 		if(id != null) {
-			List<Subject> subjects = subjectRepository.findAllByUserId(id).orElse(null);
-			if (subjects != null) {
-				return ResponseEntity.ok(SubjectWithTasksDto.convertList(subjects));
+			Optional<List<Subject>> subjectsOptional = subjectRepository.findAllByUserId(id);
+			
+			if(subjectsOptional.isPresent() && !subjectsOptional.get().isEmpty()) {
+				return ResponseEntity.ok(SubjectWithTasksDto.convertList(subjectsOptional.get()));
 			}
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.badRequest().build();
 	}
@@ -177,11 +181,12 @@ public class SubjectRest {
 	@GetMapping("teacher/reduced-list")
 	public ResponseEntity<List<SubjectDto>> subjectsByTeacherReducedList(@RequestParam Long id) {
 		if(id != null) {
-			List<Subject> subjects = subjectRepository.findAllByUserId(id).orElse(null);
-			if (subjects != null) {
-				return ResponseEntity.ok(SubjectDto.convertList(subjects));
+			Optional<List<Subject>> subjectsOptional = subjectRepository.findAllByUserId(id);
+			
+			if(subjectsOptional.isPresent() && !subjectsOptional.get().isEmpty()) {
+				return ResponseEntity.ok(SubjectDto.convertList(subjectsOptional.get()));
 			}
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.badRequest().build();
 	}
@@ -191,18 +196,9 @@ public class SubjectRest {
 	public ResponseEntity<List<SubjectWithTasksDto>> delete(@RequestParam("subjectId") Long subjectId) {
 		Optional<Subject> subjectToBeRemovedOptional = subjectRepository.findById(subjectId);
 		if(subjectToBeRemovedOptional.isPresent()) {
-			
 			questRepository.deleteAllBySubject(subjectToBeRemovedOptional.get());
-			
 			subjectRepository.delete(subjectToBeRemovedOptional.get());
-			
 			List<Subject> subjects = subjectRepository.findAllByUser(subjectToBeRemovedOptional.get().getUser()).orElse(null);
-			Message message = 
-					prepareFirebaseMessage(
-							subjectToBeRemovedOptional.get().getUser(), 
-							subjectToBeRemovedOptional.get(), 
-							SUBJECT_REMOVED_FIREBASE_MESSAGE);
-			sendFirebaseMessage(message, SUBJECT_REMOVED_FIREBASE_MESSAGE);
 			
 			return ResponseEntity.ok(SubjectWithTasksDto.convertList(subjects));
 		}
@@ -225,6 +221,7 @@ public class SubjectRest {
 			if(user == null) {
 				return ResponseEntity.badRequest().build();
 			}
+			
 			subject.setUser(user);
 		}
 		
@@ -242,8 +239,6 @@ public class SubjectRest {
 			Optional<List<Subject>> optionalSubjects = subjectRepository.findAllByUser(user);
 			
 			if(optionalSubjects.isPresent()) {
-				Message message =  prepareFirebaseMessage(user, subject, USER_WITH_SUBJECT_FIREBASE_MESSAGE);
-				sendFirebaseMessage(message, USER_WITH_SUBJECT_FIREBASE_MESSAGE);
 				
 				return ResponseEntity.ok(SubjectWithTasksDto.convertList(optionalSubjects.get()));
 			}
@@ -302,34 +297,6 @@ public class SubjectRest {
 			    .filter(task -> form.getTasks().stream()
 			    .anyMatch(taskForm -> taskForm.getId() != null && taskForm.getId() == task.getId()))
 		    	.collect(Collectors.toList());
-	}
-	
-	private Message prepareFirebaseMessage(User user, Subject subject, String firebaseMessageTopic) {
-		UserWithSubjectDto userWithSubjectDto = UserWithSubjectDto.convert(user, subject);;
-		ObjectMapper objectMapper = new ObjectMapper();
-		
-		String subjectDtoJsonString = null;
-		try {
-			subjectDtoJsonString = objectMapper.writeValueAsString(userWithSubjectDto);
-		} catch (JsonProcessingException e) {
-			logger.error("There was a problem trying to parse Subject to json: {} ", e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return Message.builder()
-				.putData(firebaseMessageTopic, subjectDtoJsonString)
-				.setTopic("trainingquizzes_topic")
-				.build();
-	}
-			
-	private void sendFirebaseMessage(Message message, String firebaseMessageTopic) {
-		try {
-			String response = FirebaseMessaging.getInstance().send(message);
-			logger.info("Message successfully sent: {} with topic: {} ",response, firebaseMessageTopic);
-		} catch (FirebaseMessagingException e) {
-			e.printStackTrace();
-			logger.error("There was a problem trying to send Firebase message: {}", e.getMessage());
-		}
 	}
 	
 }

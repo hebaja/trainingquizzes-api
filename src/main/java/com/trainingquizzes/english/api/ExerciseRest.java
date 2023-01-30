@@ -28,7 +28,6 @@ import com.trainingquizzes.english.repository.SubjectRepository;
 import com.trainingquizzes.english.repository.UserRepository;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/exercise")
 public class ExerciseRest {
 	
@@ -63,7 +62,7 @@ public class ExerciseRest {
 		if(form != null) {
 			User user = userRepository.findById(form.get(0).getUserId()).orElse(null);
 			if(user != null) {
-				List<Exercise> savedExercises = new ArrayList<Exercise>();
+				List<Exercise> savedExercises = new ArrayList<>();
 				form.forEach(exerciseForm -> {
 					Subject subject = subjectRepository.findById(exerciseForm.getSubjectId()).orElse(null);
 					Exercise exercise = buildAndSaveExercises(user, subject, exerciseForm.getScore());
@@ -82,24 +81,15 @@ public class ExerciseRest {
 		Long userId = exerciseFormList.get(0).getUserId();
 		if(userId != null) {
 			User user = userRepository.findById(userId).orElse(null);
-
 			if(user != null) {
 				exerciseFormList.forEach(exerciseForm -> {
-					
 					LevelType level = exerciseForm.getLevel();
 					Long subjectId = exerciseForm.getSubjectId();
-					
 					Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
 					Subject subject = subjectOptional.orElse(null);
-					
 					Optional<ExercisesQuantity> exerciseQuantityOptional = exerciseRepository.getQuantityOfTheSameExercise(user, level, subject);
-					
 					exercisesQuantity = exerciseQuantityOptional.orElse(null);
-					
-					if(exercisesQuantity == null) {
-						exercisesQuantity = new ExercisesQuantity(user, level, subject, 0);
-					}
-					
+					if(exercisesQuantity == null) exercisesQuantity = new ExercisesQuantity(user, level, subject, 0);
 					if(exercisesQuantity.getQuantity() >= 10) {
 						List<Exercise> exercisesList = exerciseRepository.getExercisesByUserLevelAndSubject(user, level, subject);
 						Exercise exerciseToBeRemoved = exercisesList.get(0);
@@ -120,11 +110,11 @@ public class ExerciseRest {
 	
 	private Exercise buildAndSaveExercises(User user, Subject subject, double score) {
 		Exercise exercise = new Exercise(user, subject, subject.getLevel(), score);
-		ExercisesQuantity exercisesQuantity = exerciseRepository.getQuantityOfTheSameExercise(user, exercise.getLevel(), exercise.getSubject()).orElse(null);
-		if (exercisesQuantity == null) {
-			exercisesQuantity = new ExercisesQuantity(user, exercise.getLevel(), exercise.getSubject(), 0);
+		ExercisesQuantity exercisesQuantityCreated = exerciseRepository.getQuantityOfTheSameExercise(user, exercise.getLevel(), exercise.getSubject()).orElse(null);
+		if (exercisesQuantityCreated == null) {
+			exercisesQuantityCreated = new ExercisesQuantity(user, exercise.getLevel(), exercise.getSubject(), 0);
 		}
-		removeOlderExercise(exercisesQuantity, user, exercise);
+		removeOlderExercise(exercisesQuantityCreated, user, exercise);
 		
 		return exerciseRepository.save(exercise);
 	}
@@ -136,6 +126,4 @@ public class ExerciseRest {
 			exerciseRepository.delete(exerciseToBeDeleted);
 		}
 	}
-	
-	
 }

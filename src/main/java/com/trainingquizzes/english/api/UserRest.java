@@ -45,7 +45,6 @@ import com.trainingquizzes.english.token.PasswordResetToken;
 import com.trainingquizzes.english.token.UserRegisterToken;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/user")
 public class UserRest {
 
@@ -74,28 +73,31 @@ public class UserRest {
 	
 	@GetMapping
 	public ResponseEntity<UserDto> userById(@RequestParam("userId") Long userId) {
-		Optional<User> optionalUser = userRepository.findById(userId);
-		if(optionalUser.isPresent()) {
-			return ResponseEntity.ok(new UserDto(optionalUser.get()));
+		if(userId != null) {
+			Optional<User> optionalUser = userRepository.findById(userId);
+			if(optionalUser.isPresent()) return ResponseEntity.ok(new UserDto(optionalUser.get()));
+			else return ResponseEntity.noContent().build();
 		}
+		
 		return ResponseEntity.badRequest().build();
 	}
 	
 	@GetMapping("by-email{email}")
 	public ResponseEntity<UserDtoNoPassword> byEmail(@RequestParam("email") String email) {
-		User user = userRepository.findByEmail(email).orElse(null);
-		if(user != null) {
-			return ResponseEntity.ok(new UserDtoNoPassword(user));
+		if(email != null) {
+			User user = userRepository.findByEmail(email).orElse(null);
+			if(user != null) return ResponseEntity.ok(new UserDtoNoPassword(user));
+			else return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.badRequest().build();
-				
 	}
 	
 	@GetMapping("uid{uid}")
 	public ResponseEntity<UserDto> user(@RequestParam("uid") String uid) {
-		User user = userRepository.findByUid(uid).orElse(null);
-		if(user != null) {
-			return ResponseEntity.ok(new UserDto(user));
+		if(uid != null) {
+			User user = userRepository.findByUid(uid).orElse(null);
+			if(user != null) return ResponseEntity.ok(new UserDto(user));
+			else return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -105,6 +107,7 @@ public class UserRest {
 		return userRepository.existsByEmail(email);
 	}
 	
+	//NEED TO CHECK IF THIS ENDPOINT IS BEING USED
 	@PostMapping
 	public ResponseEntity<UserDto> register(@Valid @RequestBody UserForm userForm, UriComponentsBuilder uriBuilder) {
 		User user = userForm.convert();
@@ -115,12 +118,15 @@ public class UserRest {
 	
 	@PostMapping("update-roles")
 	public ResponseEntity<UserDto> updateRoles(@Valid @RequestBody UserForm userForm) {
-		User user = userRepository.findById(userForm.getId()).orElse(null); 
-		if(user != null && !userForm.getRoles().isEmpty()) {
-			List<Authority> roles = userForm.getRoles().stream().map(Authority::new).collect(Collectors.toList());
-			user.setRoles(roles);
-			return ResponseEntity.ok(new UserDto(userRepository.save(user)));
+		if(userForm != null) {
+			Optional<User> userOptional = userRepository.findById(userForm.getId()); 
+			if(userOptional.isPresent() && !userForm.getRoles().isEmpty()) {
+				Set<Authority> roles = userForm.getRoles().stream().map(Authority::new).collect(Collectors.toSet());
+				userOptional.get().setRoles(roles);
+				return ResponseEntity.ok(new UserDto(userRepository.save(userOptional.get())));
+			}
 		}
+		
 		return ResponseEntity.badRequest().build();
 	}
 	
@@ -186,7 +192,7 @@ public class UserRest {
 
 	private void removeUser(User user) {
 		trialRepositoy.deleteBySubscribedUser(user);
-		List<PasswordResetToken> passwordResetTokens = passwordTokenRepository.findAllByTeacherId(user.getId());
+		List<PasswordResetToken> passwordResetTokens = passwordTokenRepository.findAllByUserId(user.getId());
 		if(passwordResetTokens != null) {
 			passwordTokenRepository.deleteAll(passwordResetTokens);
 		}

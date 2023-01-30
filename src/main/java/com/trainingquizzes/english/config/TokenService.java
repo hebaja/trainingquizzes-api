@@ -18,7 +18,14 @@ public class TokenService {
 	@Value("${spring-english-training-quizzes-jwt-token-password}")
 	private String tokenPassword;
 	
-	private static final Long TOKEN_EXPIRATION = 86400000L;
+	//24HRS VALID TOKEN
+	//private static final Long TOKEN_EXPIRATION = 86400000L;
+	
+	//3 MINUTES VALID TOKEN
+	//	private static final Long TOKEN_EXPIRATION = 180000L;
+	
+	//	30 DAYS VALID TOKEN
+	private static final Long TOKEN_EXPIRATION = 2592000000L;
 
 	public String generateToken(Authentication authentication) {
 		

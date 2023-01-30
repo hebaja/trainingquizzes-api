@@ -1,5 +1,7 @@
 package com.trainingquizzes.english.form;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.trainingquizzes.english.enums.Roles;
@@ -44,15 +46,14 @@ public class UserForm {
 	}
 	
 	public User convert() {
-		User teacher = new User();
-		
+		User user = new User();
 		String passwordHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+		user.setUsername(username);
+		user.setEmail(email);
+		user.setPassword(passwordHashString);
+		user.setRoles(new HashSet<>());
 		
-		teacher.setUsername(username);
-		teacher.setEmail(email);
-		teacher.setPassword(passwordHashString);
-		
-		return teacher;
+		return user;
 	}
 
 	public List<Roles> getRoles() {

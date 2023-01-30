@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -24,6 +25,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 @DataJpaTest
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
+@AutoConfigureTestDatabase
 class PasswordResetTokenTest {
 
 	@Autowired
@@ -42,7 +44,7 @@ class PasswordResetTokenTest {
 		String token = UUID.randomUUID().toString();
 		@SuppressWarnings("deprecation")
 		PasswordResetToken passwordResetToken = new PasswordResetToken();
-		passwordResetToken.setUser(user);
+		passwordResetToken.setUserId(user.getId());
 		passwordResetToken.setToken(token);
 		passwordResetToken.setExpiryDate();
 		this.generatedToken = tokenRepository.save(passwordResetToken);;

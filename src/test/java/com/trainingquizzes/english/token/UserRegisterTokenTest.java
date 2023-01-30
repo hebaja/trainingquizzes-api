@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -32,6 +35,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 @DataJpaTest
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
+@AutoConfigureTestDatabase
 class UserRegisterTokenTest {
 
 	@Autowired
@@ -46,10 +50,10 @@ class UserRegisterTokenTest {
 	void init() {
 		String token = UUID.randomUUID().toString();
 		
-		User teacher = new User();
-		teacher.setUsername("test");
-		teacher.setEmail("test@hebaja.com");
-		teacher.setPassword("123456");
+		User user = new User();
+		user.setUsername("test");
+		user.setEmail("test@hebaja.com");
+		user.setPassword("123456");
 		
 		List<UserRole> roles = new ArrayList<>();
 		roles.add(new UserRole(Roles.ROLE_TEACHER));
@@ -57,9 +61,9 @@ class UserRegisterTokenTest {
 		List<Account> accounts = new ArrayList<>();
 		accounts.add(new Account(AccountType.EMAIL));
 		
-		String passwordHashString = BCrypt.withDefaults().hashToString(12, teacher.getPassword().toCharArray());
+		String passwordHashString = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
 		
-		UserRegisterToken userToRegisterToken = new UserRegisterToken(token, teacher.getUsername(), teacher.getEmail(), passwordHashString);
+		UserRegisterToken userToRegisterToken = new UserRegisterToken(token, user.getUsername(), user.getEmail(), user.getPassword(), Roles.ROLE_TEACHER);
 		userToRegisterToken.setExpiryDate();
 		
 		this.generatedToken = tokenRepository.save(userToRegisterToken);
@@ -71,11 +75,11 @@ class UserRegisterTokenTest {
 		Date date = new Date();
 		
 		if(generatedToken.getExpiryDate().after(date)) {
-			List<Account> accounts = new ArrayList<>();
+			Set<Account> accounts = new HashSet<>();
 			accounts.add(new Account(AccountType.EMAIL));
 			
-			Authority authority = new Authority(Roles.ROLE_TEACHER);
-			List<Authority> roles = Arrays.asList(authority);
+			Set<Authority> roles = new HashSet<>();
+			roles.add(new Authority(Roles.ROLE_TEACHER));
 			
 			String uid = RandomStringUtils.random(18, "0123456789");
 			

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+
 import com.trainingquizzes.english.enums.LevelType;
 import com.trainingquizzes.english.model.Average;
 
@@ -65,5 +67,9 @@ public class AverageDto {
 
 	public void setUser(UserDto user) {
 		this.user = user;
+	}
+
+	public static Page<AverageDto> convertToPageable(Page<Average> averages) {
+		return averages.map(AverageDto::new);
 	}
 }

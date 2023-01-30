@@ -1,6 +1,7 @@
 package com.trainingquizzes.english.model;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,8 +21,8 @@ public class Trial {
 	private Long id;
 	private int trialNumber;
 	private Double score;
-	private LocalDateTime startDate;
-	private LocalDateTime finishDate;
+	private ZonedDateTime startDate;
+	private ZonedDateTime finishDate;
 	private boolean finished;
 	
 	@OneToOne
@@ -37,7 +38,7 @@ public class Trial {
 	
 	public Trial() {}
 
-	public Trial(int trialNumber, User subscribedUser, Quest quest, LocalDateTime startDate, LocalDateTime finishDate) {
+	public Trial(int trialNumber, User subscribedUser, Quest quest, ZonedDateTime startDate, ZonedDateTime finishDate) {
 		this.trialNumber = trialNumber;
 		this.subscribedUser = subscribedUser;
 		this.quest = quest;
@@ -54,7 +55,7 @@ public class Trial {
 		this.subscribedUser = subscribedUser;
 	}
 
-	public void setFinishDate(LocalDateTime finishDate) {
+	public void setFinishDate(ZonedDateTime finishDate) {
 		this.finishDate = finishDate;
 	}
 
@@ -71,36 +72,28 @@ public class Trial {
 	}
 
 	public boolean setScore(Double score) {
-		if(LocalDateTime.now().isBefore(finishDate)) {
+		if(ZonedDateTime.now().isBefore(finishDate)) {
 			this.score = score;
 			return true;
 		}
 		return false;
 	}
 
-	public LocalDateTime getStartDate() {
+	public ZonedDateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(ZonedDateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDateTime getFinishDate() {
+	public ZonedDateTime getFinishDate() {
 		return finishDate;
 	}
 
 	public Long getId() {
 		return id;
 	}
-
-//	public Subject getSubject() {
-//		return subject;
-//	}
-//
-//	public void setSubject(Subject subject) {
-//		this.subject = subject;
-//	}
 
 	public boolean isFinished() {
 		return finished;

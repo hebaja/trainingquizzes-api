@@ -1,15 +1,19 @@
 package com.trainingquizzes.english.model;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +21,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import com.google.common.util.concurrent.AtomicDouble;
 
@@ -29,18 +32,19 @@ public class Quest implements Cloneable {
 	private String title;
 	private ChronoUnit timeUnit;
 	long timeInterval;
-	private LocalDateTime startDate;
-	private LocalDateTime finishDate;
+	private ZonedDateTime startDate;
+	private ZonedDateTime finishDate;
 	private boolean finished = false;
+	private String timeZone;
+	
+	@Column(unique = true)
+	private String pin;
 	
 	@ManyToOne
 	private User user;
 	
 	@ManyToOne
 	private Subject subject;
-	
-	@ElementCollection
-	private Map<String, Double> result = new HashMap<>();
 	
 	@OneToMany(mappedBy = "quest", cascade = CascadeType.ALL)
 	private List<Trial> trials = new ArrayList<>();
@@ -50,94 +54,29 @@ public class Quest implements Cloneable {
 	
 	public Quest() {}
 
-	public Quest(String title, User user, Subject subject, LocalDateTime startDate, LocalDateTime finishDate, long timeInterval, ChronoUnit timeUnit, List<Long> subscribedUsersIds) {
+	public Quest(String title, User user, Subject subject, ZonedDateTime startDate, ZonedDateTime finishDate, String timeZone, long timeInterval, ChronoUnit timeUnit, List<Long> subscribedUsersIds) {
 		this.title = title;
 		this.user = user;
 		this.subject = subject;
-		this.setStartDate(startDate);
-		this.setFinishDate(finishDate);
-		this.setTimeInterval(timeInterval);
+		this.startDate = startDate;
+		this.finishDate = finishDate;
+		this.timeZone = timeZone;
+		this.timeInterval = timeInterval;
 		this.timeUnit = timeUnit;
 		this.subscribedUsersIds = subscribedUsersIds;
+		generatePin();
 	}
 	
-	public Quest(String title, User user, Subject subject, LocalDateTime startDate, LocalDateTime finishDate, long timeInterval, ChronoUnit timeUnit) {
+	public Quest(String title, User user, Subject subject, ZonedDateTime startDate, ZonedDateTime finishDate, String timeZone, long timeInterval, ChronoUnit timeUnit) {
 		this.title = title;
 		this.user = user;
 		this.subject = subject;
-		this.setStartDate(startDate);
-		this.setFinishDate(finishDate);
-		this.setTimeInterval(timeInterval);
+		this.startDate = startDate;
+		this.finishDate = finishDate;
+		this.timeZone = timeZone;
+		this.timeInterval = timeInterval;
 		this.timeUnit = timeUnit;
-	}
-	
-	public void subscribeUser(User subscribedUser) {
-		this.subscribedUsersIds.add(subscribedUser.getId());
-		generateSubscribedUserTrials(subscribedUser);
-	}
-
-	private void generateSubscribedUserTrials(User subscribedUser) {
-		int trialNumber = 1;
-		
-		long trialDurationInMilliseconds = (ChronoUnit.MILLIS.between(startDate, finishDate)) / timeInterval;
-		
-		LocalDateTime trialStartDate = this.startDate;
-		LocalDateTime trialFinishDate = incrementTrialDuration(trialStartDate, trialDurationInMilliseconds);
-		
-		while(trialStartDate.isBefore(finishDate)) {
-			Trial trial = generateTrial(trialNumber, subscribedUser, trialStartDate, trialFinishDate);
-			this.getTrials().add(trial);
-			trialStartDate = incrementTrialDuration(trialStartDate, trialDurationInMilliseconds);
-			trialFinishDate = incrementTrialDuration(trialFinishDate, trialDurationInMilliseconds);
-			trialNumber++;
-		}
-	}
-
-	private LocalDateTime incrementTrialDuration(LocalDateTime localDateTime, long trialDurationInMilliseconds) {
-		return localDateTime.plus(trialDurationInMilliseconds, ChronoUnit.MILLIS);
-	}
-
-	private Trial generateTrial(int trialNumber, User subscribedUser, LocalDateTime trialStartDate, LocalDateTime trialFinishDate) {
-		return new Trial(
-				trialNumber,
-				subscribedUser,
-				this,
-				trialStartDate, 
-				subtractSomeMillisFrom(trialFinishDate));
-	}
-
-	private LocalDateTime subtractSomeMillisFrom(LocalDateTime localDateTime) {
-		return localDateTime.minus(50, ChronoUnit.MILLIS);
-	}
-	
-	public void finishResult() {
-		subscribedUsersIds.forEach(userId -> {
-			double score = 0;
-			for (Trial trial : trials) {
-				if(trial.getSubscribedUser().getId().equals(userId) && trial.getScore() != null) {
-					score += trial.getScore();
-				}
-			}
-			String formatKey = user.getUsername() + " (" + user.getEmail() + ")"; 
-			result.put(formatKey, score / timeInterval);
-		});
-	}
-	
-	public void unsubscribeUser(User subscribedUser) {
-		this.subscribedUsersIds.remove(subscribedUser.getId());
-		removeSubscribedUserTrials(subscribedUser);
-	}
-
-	private void removeSubscribedUserTrials(User subscribedUser) {
-		this.getTrials().removeIf(trial -> trial.getSubscribedUser().equals(subscribedUser));
-	}
-
-	public Map<String, Double> getResult() {
-		return result;
-	}
-
-	public void setResult(Map<String, Double> result) {
-		this.result = result;
+		generatePin();
 	}
 
 	public List<Trial> getTrials() {
@@ -152,11 +91,11 @@ public class Quest implements Cloneable {
 		return id;
 	}
 
-	public LocalDateTime getStartDate() {
+	public ZonedDateTime getStartDate() {
 		return startDate;
 	}
 
-	public LocalDateTime getFinishDate() {
+	public ZonedDateTime getFinishDate() {
 		return finishDate;
 	}
 
@@ -191,10 +130,6 @@ public class Quest implements Cloneable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
 
 	public boolean isFinished() {
 		return finished;
@@ -204,16 +139,24 @@ public class Quest implements Cloneable {
 		this.finished = finished;
 	}
 
-	public void setFinishDate(LocalDateTime finishDate) {
+	public void setFinishDate(ZonedDateTime finishDate) {
 		this.finishDate = finishDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(ZonedDateTime startDate) {
 		this.startDate = startDate;
 	}
 
 	public void setTimeInterval(long timeInterval) {
 		this.timeInterval = timeInterval;
+	}
+	
+	public String getPin() {
+		return pin;
+	}
+	
+	public void setPin(String pin) {
+		this.pin = pin;
 	}
 
 	public List<Long> getSubscribedUsersIds() {
@@ -223,25 +166,80 @@ public class Quest implements Cloneable {
 	public void setSubscribedUsersIds(List<Long> subscribedUsersIds) {
 		this.subscribedUsersIds = subscribedUsersIds;
 	}
+	
+	public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+	
+	public long getTrialsLength() {
+		return ChronoUnit.MILLIS.between(startDate, finishDate) / timeInterval;
+	}
+	
+	public void subscribeUser(User subscribedUser) {
+		this.subscribedUsersIds.add(subscribedUser.getId());
+		generateSubscribedUserTrials(subscribedUser);
+	}
+
+	private void generateSubscribedUserTrials(User subscribedUser) {
+		int trialNumber = 1;
+		
+		ZonedDateTime trialStartDate = this.startDate;
+		ZonedDateTime trialFinishDate = incrementTrialDuration(trialStartDate, getTrialsLength());
+		
+		while(trialStartDate.isBefore(finishDate)) {
+			Trial trial = generateTrial(trialNumber, subscribedUser, trialStartDate, trialFinishDate);
+			this.getTrials().add(trial);
+			trialStartDate = incrementTrialDuration(trialStartDate, getTrialsLength());
+			trialFinishDate = incrementTrialDuration(trialFinishDate, getTrialsLength());
+			trialNumber++;
+		}
+	}
+
+	private ZonedDateTime incrementTrialDuration(ZonedDateTime localDateTime, long trialDurationInMilliseconds) {
+		return localDateTime.plus(trialDurationInMilliseconds, ChronoUnit.MILLIS);
+	}
+
+	private Trial generateTrial(int trialNumber, User subscribedUser, ZonedDateTime trialStartDate, ZonedDateTime trialFinishDate) {
+		return new Trial(
+				trialNumber,
+				subscribedUser,
+				this,
+				trialStartDate, 
+				subtractSomeMillisFrom(trialFinishDate));
+	}
+
+	private ZonedDateTime subtractSomeMillisFrom(ZonedDateTime localDateTime) {
+		return localDateTime.minus(50, ChronoUnit.MILLIS);
+	}
+	
+	public void unsubscribeUser(User subscribedUser) {
+		this.subscribedUsersIds.remove(subscribedUser.getId());
+		removeSubscribedUserTrials(subscribedUser);
+	}
+
+	private void removeSubscribedUserTrials(User subscribedUser) {
+		this.getTrials().removeIf(trial -> trial.getSubscribedUser().equals(subscribedUser));
+	}
 
 	private long getScoresDivisor() {
-		long totalLengthOfQuestMillis = ChronoUnit.MILLIS.between(startDate, finishDate);
-		long totalLengthOfEachTrialMillis = totalLengthOfQuestMillis / timeInterval;
 		long scoresDivider = 0;
 		
 		if(isFinished()) {
 			scoresDivider = timeInterval;
 		} else {
 			while(scoresDivider < timeInterval) {
-				LocalDateTime trialLimitDate = startDate.plus(totalLengthOfEachTrialMillis * (scoresDivider), ChronoUnit.MILLIS);
-				if(trialLimitDate.isBefore(LocalDateTime.now())) {
+				LocalDateTime localDateTime = startDate.toLocalDateTime().plus(getTrialsLength() * (scoresDivider), ChronoUnit.MILLIS);
+				ZonedDateTime trialLimitDate = ZonedDateTime.of(localDateTime, ZoneId.of("UTC"));
+				ZonedDateTime currentZonedDateTime = ZonedDateTime.of(LocalDateTime.ofInstant(ZonedDateTime.now().toInstant(), ZoneOffset.UTC), ZoneId.of("UTC"));
+				
+				if(trialLimitDate.isBefore(currentZonedDateTime)) {
 					scoresDivider++;
 				} else {
 					break;
 				}
 			}
 		}
-						
+		
 		return scoresDivider;
 	}
 	
@@ -260,8 +258,18 @@ public class Quest implements Cloneable {
 			});
 			if(score.get() > 0) scores.add(new Score(username, mappedTrials.get(0).getSubscribedUser().getPictureUrl(), score.get() / getScoresDivisor())); 
 		});
-						
+				
 		return scores.stream().sorted((s1, s2) -> Double.compare(s2.getScore(), s1.getScore())).collect(Collectors.toList());
 	}
 
+	private void generatePin() {
+		SecureRandom random = new SecureRandom();
+		int num = random.nextInt(100000);
+		this.pin = String.format("%05d", num);
+	}
+
+	public String getTimeZone() {
+		return timeZone;
+	}
+	
 }

@@ -28,8 +28,8 @@ public class Task {
     @Cascade(CascadeType.ALL)
     private List<TaskOption> options;
     
-    @Transient
-    private int rightOption;
+//    @Transient
+//    private int rightOption;
     
     private boolean shuffleOptions;
     
@@ -70,12 +70,12 @@ public class Task {
 		this.shuffleOptions = shuffleOptions;
 	}
     
-    public int getRightOption() {
-		return rightOption;
-	}
-
-	public void setRightOption(int rightOption) {
-		this.rightOption = rightOption;
-	}
+//    public int getRightOption() {
+//		return rightOption;
+//	}
+//
+//	public void setRightOption(int rightOption) {
+//		this.rightOption = rightOption;
+//	}
 	
 }
