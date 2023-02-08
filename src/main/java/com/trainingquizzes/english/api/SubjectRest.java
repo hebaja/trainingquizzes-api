@@ -153,12 +153,24 @@ public class SubjectRest {
 	}
 	
 	@GetMapping("pageable-teacher")
-	public ResponseEntity<Page<SubjectDto>> pageableSubjectsByTeacher(@RequestParam Long userId, Pageable pagination) {
-		if(userId != null) {
-			Optional<User> userOptional = userRepository.findById(userId);
-			if(userOptional.isPresent()) {
-				Page<Subject> subjects = subjectRepository.findAllByUser(userOptional.get(), pagination);
-				return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+	public ResponseEntity<Page<SubjectDto>> pageableSubjectsByTeacher(@RequestParam(name = "query", required = false) String query, @RequestParam Long userId, Pageable pagination) {
+		if(query != null) {
+			if(userId != null) {
+				Optional<User> userOptional = userRepository.findById(userId);
+				if(userOptional.isPresent()) {
+					String searchQuery = "%" + query + "%";
+					Page<Subject> subjects = subjectRepository.findByTitleLikeIgnoreCaseAndUser(searchQuery, userOptional.get(), pagination);
+					
+					return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+				}
+			}
+		} else {
+			if(userId != null) {
+				Optional<User> userOptional = userRepository.findById(userId);
+				if(userOptional.isPresent()) {
+					Page<Subject> subjects = subjectRepository.findAllByUser(userOptional.get(), pagination);
+					return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+				}
 			}
 		}
 		

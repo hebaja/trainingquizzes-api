@@ -123,30 +123,61 @@ public class QuestRest {
 	}
 		
 	@GetMapping("created-quests")
-	public ResponseEntity<Page<QuestDto>> createdQuests(@RequestParam Long userId, Pageable pagination) {
-		Optional<User> userOptional = userRepository.findById(userId);
-		if(userOptional.isPresent()) {
-			Optional<Page<Quest>> questsOptional = questRepository.findByUser(userOptional.get(), pagination);
-			if(questsOptional.isPresent()) {
-				Page<Quest> quests = questsOptional.get();
-				Map<Long, List<User>> subscribedUsersMap = createSubscribedUsersMap(quests);
-				
-				return ResponseEntity.ok(QuestDto.convertToPageable(questsOptional.get(), subscribedUsersMap));
+	public ResponseEntity<Page<QuestDto>> createdQuests(@RequestParam(name = "query", required = false) String query , @RequestParam Long userId, Pageable pagination) {
+		if(query != null) {
+			Optional<User> userOptional = userRepository.findById(userId);
+			if(userOptional.isPresent()) {
+				String searchQuery = "%" + query + "%";
+				Optional<Page<Quest>> questsOptional = questRepository.findByTitleLikeIgnoreCaseAndUser(searchQuery, userOptional.get(), pagination);
+				if(questsOptional.isPresent()) {
+					Page<Quest> quests = questsOptional.get();
+					Map<Long, List<User>> subscribedUsersMap = createSubscribedUsersMap(quests);
+					
+					return ResponseEntity.ok(QuestDto.convertToPageable(questsOptional.get(), subscribedUsersMap));
+				}
 			}
+		} else {
+			Optional<User> userOptional = userRepository.findById(userId);
+			if(userOptional.isPresent()) {
+				Optional<Page<Quest>> questsOptional = questRepository.findByUser(userOptional.get(), pagination);
+				if(questsOptional.isPresent()) {
+					Page<Quest> quests = questsOptional.get();
+					Map<Long, List<User>> subscribedUsersMap = createSubscribedUsersMap(quests);
+					
+					return ResponseEntity.ok(QuestDto.convertToPageable(questsOptional.get(), subscribedUsersMap));
+				}
+			}			
 		}
 		
 		return ResponseEntity.badRequest().build();
 	}
 	
 	@GetMapping("subscribed-quests")
-	public ResponseEntity<Page<QuestDto>> subscribedQuests(@RequestParam Long userId, Pageable pagination) {
-		Optional<User> userOptional = userRepository.findById(userId);
-		if(userOptional.isPresent()) {
-			Optional<Page<Quest>> questsOptional = questRepository.findBySubscribedUserId(userId, pagination);
-			if(questsOptional.isPresent()) {
-				Map<Long,List<User>> subscribedUsersMap = createSubscribedUsersMap(questsOptional.get());
-				
-				return ResponseEntity.ok(QuestDto.convertToPageable(questsOptional.get(), subscribedUsersMap));
+	public ResponseEntity<Page<QuestDto>> subscribedQuests(@RequestParam(name = "query", required = false) String query, @RequestParam Long userId, Pageable pagination) {
+		if(query != null) {
+			System.out.println(query);
+			Optional<User> userOptional = userRepository.findById(userId);
+			if(userOptional.isPresent()) {
+				Optional<Page<Quest>> questsOptional = questRepository.findByTitleLikeIgnoreCaseAndSubscribedUserId(query, userId, pagination);
+				if(questsOptional.isPresent()) {
+					System.out.println(query);
+					
+					questsOptional.get().forEach(quest -> System.out.println(quest.getTitle()));
+					
+					Map<Long,List<User>> subscribedUsersMap = createSubscribedUsersMap(questsOptional.get());
+					
+					return ResponseEntity.ok(QuestDto.convertToPageable(questsOptional.get(), subscribedUsersMap));
+				}
+			}
+		} else {
+			Optional<User> userOptional = userRepository.findById(userId);
+			if(userOptional.isPresent()) {
+				Optional<Page<Quest>> questsOptional = questRepository.findBySubscribedUserId(userId, pagination);
+				if(questsOptional.isPresent()) {
+					Map<Long,List<User>> subscribedUsersMap = createSubscribedUsersMap(questsOptional.get());
+					
+					return ResponseEntity.ok(QuestDto.convertToPageable(questsOptional.get(), subscribedUsersMap));
+				}
 			}
 		}
 		

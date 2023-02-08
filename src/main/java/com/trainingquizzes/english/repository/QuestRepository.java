@@ -22,11 +22,18 @@ public interface QuestRepository extends JpaRepository<Quest, Long>{
 
 	@Query("select q from Quest q join q.subscribedUsersIds i on i = :userId")
 	Optional<Page<Quest>> findBySubscribedUserId(@Param("userId")Long userId, Pageable pagination);
+	
+	@Query("select q from Quest q join q.subscribedUsersIds i on i = :userId and q.title like concat('%', lower(:query), '%')")
+	Optional<Page<Quest>> findByTitleLikeIgnoreCaseAndSubscribedUserId(@Param("query") String searchQuery, @Param("userId")Long userId, Pageable pagination);
 
 	void deleteAllBySubject(Subject subject);
 
 	Optional<List<Quest>> findAllByUser(User user);
 
 	Optional<Quest> findByPin(String pin);
+
+	Optional<Page<Quest>> findByTitleLikeIgnoreCaseAndUser(String searchQuery, User user, Pageable pagination);
+	
+	
 
 }
