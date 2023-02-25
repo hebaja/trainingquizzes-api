@@ -3,6 +3,7 @@ package com.trainingquizzes.english.api;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,6 +160,22 @@ class SubjectRestTest {
 		deleteRequest(uri, 400);
 	}
 	
+	@Test
+	void shouldFavoriteOrUnfavoriteASubjectAndReturn200() throws Exception {
+		URI uri = new URI("/api/subject/favorite");
+		String json = "{\n"
+				+ "        \"userId\":\"3\",\n"
+				+ "        \"subjectId\":\"1\"\n"
+				+ "    }\n";
+		postRequest(uri, json, 200);
+	}
+	
+	@Test
+	void shouldReturn200AndListOfFavoriteSubjects() throws Exception {
+		URI uri = new URI("/api/subject/get-favorites?userId=2&page=0&size=1&sort=creationDate,desc");
+		getRequest(uri, 200);
+	}
+	
 	// TODO NEED TO CHECK HOW TO HANDLE THE WAY USERFORM RECEIVES LIST OF AUTHORITIES
 //	@Test 
 //	void shouldRegisterNewSubject() throws Exception {
@@ -230,6 +247,17 @@ class SubjectRestTest {
 				.status()
 				.is(code))
 		.andExpect(result -> assertNotNull(result.getResponse()));
+	}
+	
+	private void postRequest(URI uri, String json, int code) throws Exception{
+		mockMvc
+		.perform(MockMvcRequestBuilders
+				.post(uri)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+		.andExpect(MockMvcResultMatchers
+				.status()
+				.is(code));
 	}
 	
 }

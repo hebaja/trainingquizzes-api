@@ -60,6 +60,9 @@ public class User implements UserDetails {
 	@ElementCollection
 	private Set<Long> subscribedQuestsIds = new HashSet<>();
 	
+	@ElementCollection
+	private Set<Long> favoriteSubjectsIds = new HashSet<>();
+	
 	public User(String uid, String password, String username, String email) {
 		this.uid = uid;
 		this.username = username;
@@ -97,6 +100,9 @@ public class User implements UserDetails {
 //		this.enabled = enabled;
 //		this.accounts = accounts;
 //	}
+	public boolean isTeacher() {
+		return this.roles.stream().anyMatch(a -> a.getRole().equals(Roles.ROLE_TEACHER));
+	}
 	
 	public void addSubscribedQuestsId(Long questId) {
 		this.subscribedQuestsIds.add(questId);
@@ -236,6 +242,10 @@ public class User implements UserDetails {
 
 	public void setSubscribedQuestsIds(Set<Long> subscribedQuestsIds) {
 		this.subscribedQuestsIds = subscribedQuestsIds;
+	}
+
+	public Set<Long> getFavoriteSubjectsIds() {
+		return favoriteSubjectsIds;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.trainingquizzes.english.model.Subject;
 
 public class SubjectWithoutUserDto {
@@ -12,12 +13,14 @@ public class SubjectWithoutUserDto {
 	private Long id;
 	private String title;
 	private String level;
+	private boolean publicSubject;
 	private String creationDate;
 	
 	public SubjectWithoutUserDto(Subject subject) {
 		this.id = subject.getId();
 		this.title = subject.getTitle();
 		this.level = subject.getLevelCapitalize();
+		this.publicSubject = subject.isPublicSubject();
 		this.creationDate = subject.getCreationDate().toString();
 	}
 
@@ -51,5 +54,10 @@ public class SubjectWithoutUserDto {
 
 	public void setCreationDate(String creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	@JsonProperty("public")
+	public boolean isPublicSubject() {
+		return publicSubject;
 	}
 }

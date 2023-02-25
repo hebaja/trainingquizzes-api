@@ -2,6 +2,7 @@ package com.trainingquizzes.english.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ public class UserDto {
 	private String username;
 	private String email;
 	private String pictureUrl;
+	private Set<Long> favoriteSubjectsIds;
 	private List<SubjectDto> subjects = new ArrayList<>();
 	private List<String> roles = new ArrayList<>();
 
@@ -24,6 +26,7 @@ public class UserDto {
 		this.username = user.getUsername();
 		this.email = user.getEmail();
 		this.pictureUrl = user.getPictureUrl();
+		this.favoriteSubjectsIds = user.getFavoriteSubjectsIds();
 		this.subjects = user.getSubjects().stream().sorted((arg0, arg1) -> arg1.getCreationDate().compareTo(arg0.getCreationDate())).map(SubjectDto::new).collect(Collectors.toList());
 		List<RolesDto> list = RolesDto.convertToList(user.getAuthorities());
 		list.forEach(role -> this.roles.add(role.getRole()));
@@ -79,6 +82,14 @@ public class UserDto {
 
 	public void setSubjects(List<SubjectDto> subjects) {
 		this.subjects = subjects;
+	}
+
+	public Set<Long> getFavoriteSubjectsIds() {
+		return favoriteSubjectsIds;
+	}
+
+	public void setFavoriteSubjectsIds(Set<Long> favoriteSubjectsIds) {
+		this.favoriteSubjectsIds = favoriteSubjectsIds;
 	}
 
 }

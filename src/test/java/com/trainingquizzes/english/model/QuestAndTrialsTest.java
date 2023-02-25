@@ -55,7 +55,7 @@ class QuestAndTrialsTest {
 		quest = new Quest(
 				"test_quest",
 				owner,
-				new Subject("test_subject", tasks, owner, LevelType.EASY),
+				new Subject("test_subject", tasks, owner, LevelType.EASY, true),
 				currentZonedDateTime,
 				currentZonedDateTime.plusDays(5),
 				zoneId.toString(),

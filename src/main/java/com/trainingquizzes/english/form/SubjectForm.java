@@ -2,6 +2,7 @@ package com.trainingquizzes.english.form;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.trainingquizzes.english.enums.LevelType;
 
 public class SubjectForm {
@@ -11,6 +12,8 @@ public class SubjectForm {
 	private LevelType level;
 	private List<TaskForm> tasks;
 	private UserForm user;
+	private boolean publicSubject;
+	private boolean userOwner;
 
 	public Long getId() {
 		return id;
@@ -50,6 +53,22 @@ public class SubjectForm {
 
 	public void setUser(UserForm user) {
 		this.user = user;
+	}
+
+	public boolean isUserOwner() {
+		return userOwner;
+	}
+
+	public void setUserOwner(boolean userOwner) {
+		this.userOwner = userOwner;
+	}
+
+	public boolean isPublicSubject() {
+		return publicSubject;
+	}
+
+	public void setPublicSubject(boolean publicSubject) {
+		this.publicSubject = publicSubject;
 	}
 
 }

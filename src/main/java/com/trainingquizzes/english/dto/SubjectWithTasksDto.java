@@ -12,14 +12,18 @@ public class SubjectWithTasksDto {
 	private Long id;
 	private String title;
 	private LevelType level;
-	private SubjectWithUserDto userDto;
+	private String creationDate;
+	private boolean publicSubject;
+	private ReducedUserDto userDto;
 	private List<TaskDto> tasksDto;
 	
 	public SubjectWithTasksDto(Subject subject) {
 		this.id = subject.getId();
 		this.title = subject.getTitle();
 		this.level = subject.getLevel();
-		this.userDto = new SubjectWithUserDto(subject.getUser());
+		this.creationDate = subject.getCreationDate().toString();
+		this.publicSubject = subject.isPublicSubject();
+		this.userDto = new ReducedUserDto(subject.getUser());
 		this.tasksDto = subject.getTasks().stream().map(TaskDto::new).collect(Collectors.toList());
 	}
 
@@ -36,7 +40,7 @@ public class SubjectWithTasksDto {
 	}
 	
 	@JsonProperty("user")
-	public SubjectWithUserDto getUserDto() {
+	public ReducedUserDto getUserDto() {
 		return userDto;
 	}
 
@@ -51,6 +55,18 @@ public class SubjectWithTasksDto {
 
 	public static SubjectWithTasksDto convertFromSubject(Subject subject) {
 		return new SubjectWithTasksDto(subject);
+	}
+
+	public boolean isPublicSubject() {
+		return publicSubject;
+	}
+
+	public String getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
 	}
 	
 }

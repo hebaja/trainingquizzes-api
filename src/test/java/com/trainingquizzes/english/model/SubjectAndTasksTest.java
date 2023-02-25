@@ -41,7 +41,7 @@ class SubjectAndTasksTest {
 			tasks.add(task);
 		}
 		
-		subject = new Subject("test_subject", tasks, user, LevelType.EASY);
+		subject = new Subject("test_subject", tasks, user, LevelType.EASY, true);
 	}
 	
 	private static User createUser(String name, String email, Set<Authority> roles, Set<Account> accounts) {

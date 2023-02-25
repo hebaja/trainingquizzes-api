@@ -13,6 +13,7 @@ public class SubjectDto {
 	private Long id;
 	private String title;
 	private String level;
+	private boolean publicSubject;
 	private String creationDate;
 	private UserWithoutSubjectsDto userDto;
 	
@@ -20,6 +21,7 @@ public class SubjectDto {
 		this.id = subject.getId();
 		this.title = subject.getTitle();
 		this.level = subject.getLevelCapitalize();
+		this.publicSubject = subject.isPublicSubject();
 		this.creationDate = subject.getCreationDate().toString();
 		this.userDto = new UserWithoutSubjectsDto(subject.getUser());
 	}
@@ -63,5 +65,10 @@ public class SubjectDto {
 
 	public void setCreationDate(String creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	@JsonProperty("public")
+	public boolean isPublicSubject() {
+		return publicSubject;
 	}
 }

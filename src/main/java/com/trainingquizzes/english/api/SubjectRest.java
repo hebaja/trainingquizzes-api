@@ -3,6 +3,7 @@ package com.trainingquizzes.english.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -12,25 +13,20 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
 import com.trainingquizzes.english.dto.SubjectDto;
 import com.trainingquizzes.english.dto.SubjectWithTasksDto;
-import com.trainingquizzes.english.dto.UserWithSubjectDto;
+import com.trainingquizzes.english.dto.UserDto;
 import com.trainingquizzes.english.enums.LevelType;
 import com.trainingquizzes.english.form.SubjectForm;
 import com.trainingquizzes.english.model.Subject;
@@ -115,9 +111,16 @@ public class SubjectRest {
 					default:
 						levelType = LevelType.EASY;
 				}
-				Page<Subject> subjects = subjectRepository.findPageableByUserIdAndLevel(userId, levelType, pageable);
+//				Page<Subject> subjects = subjectRepository.findPageableByUserIdAndLevel(userId, levelType, pageable);
 				
-				return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+				Optional<User> userOptional = userRepository.findById(userId);
+				
+				if(userOptional.isPresent()) {
+					User user = userOptional.get();
+					Page<Subject> subjects = subjectRepository.findByUserAndLevelAndPublicSubject(user, levelType, true, pageable);
+
+					return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+				}
 			}
 			Page<Subject> subjects = subjectRepository.findPageableByuserId(userId, pageable);
 			
@@ -134,42 +137,57 @@ public class SubjectRest {
 				Optional<User> userOptional = userRepository.findById(userId);
 				if(userOptional.isPresent()) {
 					String searchQuery = "%" + query + "%"; 
-					Page<Subject> subjects = subjectRepository.findByTitleLikeIgnoreCaseAndUser(searchQuery, userOptional.get(), pagination);
+					Page<Subject> subjects = subjectRepository.findByTitleLikeIgnoreCaseAndUserAndPublicSubject(searchQuery, userOptional.get(), true, pagination);
+										
 					return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
 				}
 				
 				return ResponseEntity.badRequest().build();
 			} else {
 				String searchQuery = "%" + query + "%"; 
-				Page<Subject> subjects = subjectRepository.findByTitleLikeIgnoreCase(searchQuery, pagination);
-				
+				Page<Subject> subjects = subjectRepository.findByTitleLikeIgnoreCaseAndPublicSubject(searchQuery, true, pagination);
+							
 				return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
 			}
 		} else {
-			Page<Subject> subjects = subjectRepository.findAll(pagination);
+			Page<Subject> subjects = subjectRepository.findAllByPublicSubject(true, pagination);
 			
 			return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
 		}
 	}
 	
 	@GetMapping("pageable-teacher")
-	public ResponseEntity<Page<SubjectDto>> pageableSubjectsByTeacher(@RequestParam(name = "query", required = false) String query, @RequestParam Long userId, Pageable pagination) {
-		if(query != null) {
-			if(userId != null) {
-				Optional<User> userOptional = userRepository.findById(userId);
-				if(userOptional.isPresent()) {
+	public ResponseEntity<Page<SubjectDto>> pageableSubjectsByTeacher(@RequestParam(name = "query", required = false) String query, @RequestParam Long userId, Pageable pagination, boolean isPublicFiltered) {
+		if(userId != null) {
+			Optional<User> userOptional = userRepository.findById(userId);
+			if(userOptional.isPresent()) {
+				User user = userOptional.get();
+				Set<Long> favoriteSubjectsIds = user.getFavoriteSubjectsIds();
+				Page<Subject> subjects = null;
+				
+				if(query != null) {
 					String searchQuery = "%" + query + "%";
-					Page<Subject> subjects = subjectRepository.findByTitleLikeIgnoreCaseAndUser(searchQuery, userOptional.get(), pagination);
 					
-					return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
-				}
-			}
-		} else {
-			if(userId != null) {
-				Optional<User> userOptional = userRepository.findById(userId);
-				if(userOptional.isPresent()) {
-					Page<Subject> subjects = subjectRepository.findAllByUser(userOptional.get(), pagination);
-					return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+					if(favoriteSubjectsIds.isEmpty()) {
+						if(isPublicFiltered) subjects = subjectRepository.findByTitleLikeIgnoreCaseAndUserAndPublicSubject(searchQuery, user, isPublicFiltered, pagination);
+						else subjects = subjectRepository.findByTitleLikeIgnoreCaseAndUser(searchQuery, user, pagination);
+						
+						return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+					} else {
+						subjects = subjectRepository.findByTitleLikeIgnoreCaseAndFavoritesByUser(query, user.getId(), favoriteSubjectsIds, pagination);
+						
+						return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+					}
+				} else {
+					if(favoriteSubjectsIds.isEmpty()) {
+						subjects = subjectRepository.findAllByUser(user, pagination);
+						
+						return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+					} else {
+						subjects = subjectRepository.findAllAndFavoritesByUser(user.getId(), favoriteSubjectsIds, pagination);
+						
+						return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+					}
 				}
 			}
 		}
@@ -221,41 +239,107 @@ public class SubjectRest {
 	@PutMapping
 	@CacheEvict(value = {"subject", "subjectsList"}, allEntries = true)
 	public ResponseEntity<List<SubjectWithTasksDto>> update(@RequestBody SubjectForm form) {
-		
-		Subject subject = null;
-		User user = userRepository.findById(form.getUser().getId()).orElse(null);
-		
-		if(form.getId() != null && form.getId() > 0) {
-			subject = subjectRepository.findById(form.getId()).orElse(null);
-		} else {
-			subject = new Subject();
-			subject.setTasks(new ArrayList<Task>());
-			if(user == null) {
-				return ResponseEntity.badRequest().build();
+		if(form != null) {
+			if(form.isUserOwner()) {
+				Subject subject = null;
+				User user = userRepository.findById(form.getUser().getId()).orElse(null);
+				if(form.getId() != null && form.getId() > 0) {
+					subject = subjectRepository.findById(form.getId()).orElse(null);
+				} else {
+					subject = new Subject();
+					subject.setTasks(new ArrayList<Task>());
+					if(user == null) {
+						return ResponseEntity.badRequest().build();
+					}
+					subject.setUser(user);
+				}
+				if(subject != null) {
+					subject.setTitle(form.getTitle());
+					subject.setLevel(form.getLevel());
+					subject.setPublicSubject(form.isPublicSubject());
+					if(form.getId() != null) {
+						List<Task> foundTasksInForm = findTasksInForm(form, subject);
+						List<Task> tasksToBeRemoved = findTasksToBeRemoved(subject, foundTasksInForm);
+						removeTasks(subject, tasksToBeRemoved);
+						updateExistingTasks(form, foundTasksInForm);
+					}
+					createNewTasks(form, subject);
+					subjectRepository.save(subject);
+					Optional<List<Subject>> optionalSubjects = subjectRepository.findAllByUser(user);
+					
+					if(optionalSubjects.isPresent()) {
+						
+						return ResponseEntity.ok(SubjectWithTasksDto.convertList(optionalSubjects.get()));
+					}
+				}
 			}
-			
-			subject.setUser(user);
 		}
 		
-		if(subject != null) {
-			subject.setTitle(form.getTitle());
-			subject.setLevel(form.getLevel());
-			if(form.getId() != null) {
-				List<Task> foundTasksInForm = findTasksInForm(form, subject);
-				List<Task> tasksToBeRemoved = findTasksToBeRemoved(subject, foundTasksInForm);
-				removeTasks(subject, tasksToBeRemoved);
-				updateExistingTasks(form, foundTasksInForm);
-			}
-			createNewTasks(form, subject);
-			subjectRepository.save(subject);
-			Optional<List<Subject>> optionalSubjects = subjectRepository.findAllByUser(user);
-			
-			if(optionalSubjects.isPresent()) {
-				
-				return ResponseEntity.ok(SubjectWithTasksDto.convertList(optionalSubjects.get()));
-			}
-		}
 		return ResponseEntity.badRequest().build();
+	}
+	
+	@PostMapping("favorite")
+	public ResponseEntity<UserDto> favorite(@RequestBody FavoriteSubjectForm form) {
+		if(form != null) {
+			Optional<User> userOptional = userRepository.findById(form.getUserId());
+			if(userOptional.isPresent()) {
+				User user = userOptional.get();
+				if(user.isTeacher()) {
+					List<Subject> subjects = user.getSubjects();
+					Set<Long> userSubjectsIds = subjects.stream().map(Subject::getId).collect(Collectors.toSet());
+					if(!userSubjectsIds.contains(form.getSubjectId())) {
+						User savedUser = manageFavoriteSubject(form.subjectId, user);
+						
+						return ResponseEntity.ok(new UserDto(savedUser));
+					} else {
+
+						return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+					}
+				} else {
+					User savedUser = manageFavoriteSubject(form.subjectId, user);
+					
+					return ResponseEntity.ok(new UserDto(savedUser));
+				}
+			}
+		}
+				
+		return ResponseEntity.badRequest().build();
+	}
+	
+	@GetMapping("get-favorites")
+	public ResponseEntity<Page<SubjectDto>> getFavorites(@RequestParam(name = "query", required = false) String query, @RequestParam Long userId, Pageable pagination) {
+		if(query != null) {
+			if(userId != null) {
+				Optional<User> userOptional = userRepository.findById(userId);
+				if(userOptional.isPresent()) {
+					String searchQuery = "%" + query + "%";
+					Set<Long> favoriteSubjectsIds = userOptional.get().getFavoriteSubjectsIds();
+					Page<Subject> subjects = subjectRepository.findByTitleLikeIgnoreCaseAndIdIn(searchQuery, favoriteSubjectsIds, pagination);
+					
+					return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+				}
+			}
+		} else {
+			if(userId != null) {
+				Optional<User> userOptional = userRepository.findById(userId);
+				if(userOptional.isPresent()) {
+					Set<Long> favoriteSubjectsIds = userOptional.get().getFavoriteSubjectsIds();
+					Page<Subject> subjects = subjectRepository.findPageableAllByIdIn(favoriteSubjectsIds, pagination);
+					return ResponseEntity.ok(SubjectDto.convertToPageable(subjects));
+				}
+			}
+		}
+		
+		return ResponseEntity.badRequest().build();
+	}
+
+	private User manageFavoriteSubject(Long subjectId, User user) {
+		if(user.getFavoriteSubjectsIds().contains(subjectId)) 
+			user.getFavoriteSubjectsIds().remove(subjectId);
+		else  
+			user.getFavoriteSubjectsIds().add(subjectId);
+								
+		return userRepository.save(user);
 	}
 
 	private void createNewTasks(SubjectForm form, Subject subject) {
@@ -309,6 +393,28 @@ public class SubjectRest {
 			    .filter(task -> form.getTasks().stream()
 			    .anyMatch(taskForm -> taskForm.getId() != null && taskForm.getId() == task.getId()))
 		    	.collect(Collectors.toList());
+	}
+	
+	private static class FavoriteSubjectForm {
+		private Long userId;
+		private Long subjectId;
+		
+		public Long getUserId() {
+			return userId;
+		}
+		
+		public void setUserId(Long userId) {
+			this.userId = userId;
+		}
+		
+		public Long getSubjectId() {
+			return subjectId;
+		}
+		
+		public void setSubjectId(Long subjectId) {
+			this.subjectId = subjectId;
+		}
+		
 	}
 	
 }

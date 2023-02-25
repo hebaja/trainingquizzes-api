@@ -18,11 +18,11 @@ INSERT INTO "user_accounts"("user_id", "account_type") values(5, 'EMAIL');
 
 INSERT INTO "user_register_token"("email", "expiry_date", "password", "role", "token", "username") values ('test@test.com', CURRENT_TIMESTAMP + 1, '$2y$12$gHbpvmLsjanixDzV7JWYaeiJWM.okY2f91daohaVyvKxhUsSwK9fa', 2, '114858fc-70b9-497d-b0d7-dccfd7981e8d', 'test');
 
-INSERT INTO "subject"("title", "user_id", "level", "creation_date") VALUES('Comparative and superlative', 2, 'EASY', '2021-12-29 20:31:34.0000000');
-INSERT INTO "subject"("title", "user_id", "level", "creation_date") VALUES('Modals', 2, 'MEDIUM', '2022-01-05 20:31:34.0000000');
-INSERT INTO "subject"("title", "user_id", "level", "creation_date") VALUES('Articles and determiners', 2, 'HARD', '2022-02-01 20:31:34.0000000');
-INSERT INTO "subject"("title", "user_id", "level", "creation_date") VALUES('Adverbs', 2, 'MEDIUM', '2022-03-29 20:31:34.0000000');
-INSERT INTO "subject"("title", "user_id", "level", "creation_date") VALUES('Comparative and superlative', 3, 'MEDIUM', '2022-04-19 20:31:34.0000000');
+INSERT INTO "subject"("title", "user_id", "level", "creation_date", "public") VALUES('Comparative and superlative', 2, 'EASY', '2021-12-29 20:31:34.0000000', true);
+INSERT INTO "subject"("title", "user_id", "level", "creation_date", "public") VALUES('Modals', 2, 'MEDIUM', '2022-01-05 20:31:34.0000000', true);
+INSERT INTO "subject"("title", "user_id", "level", "creation_date", "public") VALUES('Articles and determiners', 2, 'HARD', '2022-02-01 20:31:34.0000000', true);
+INSERT INTO "subject"("title", "user_id", "level", "creation_date", "public") VALUES('Adverbs', 2, 'MEDIUM', '2022-03-29 20:31:34.0000000', true);
+INSERT INTO "subject"("title", "user_id", "level", "creation_date", "public") VALUES('Comparative and superlative', 3, 'MEDIUM', '2022-04-19 20:31:34.0000000', true);
 
 INSERT INTO "password_reset_token"("token", "user_id", "expiry_date") VALUES('3046b21e-1509-4bc1-b643-c81ce9ea0e6c', 2, CURRENT_TIMESTAMP + 1);
 

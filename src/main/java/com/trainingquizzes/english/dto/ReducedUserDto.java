@@ -2,14 +2,14 @@ package com.trainingquizzes.english.dto;
 
 import com.trainingquizzes.english.model.User;
 
-public class SubjectWithUserDto {
+public class ReducedUserDto {
 
 	private Long id;
 	private String uid;
 	private String username;
 	private String email;
 
-	public SubjectWithUserDto(User user) {
+	public ReducedUserDto(User user) {
 		this.id = user.getId();
 		this.uid = user.getUid();
 		this.username = user.getUsername();

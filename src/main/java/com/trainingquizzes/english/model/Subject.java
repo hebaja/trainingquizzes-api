@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,6 +26,9 @@ public class Subject {
 	private long id;
 	
 	private String title;
+	
+	@Column(name = "public")
+	private boolean publicSubject;
     
 	@ManyToOne
 	private User user;
@@ -45,11 +49,12 @@ public class Subject {
 	
 	public Subject() {}
 	
-	public Subject(String title, List<Task> tasks, User user, LevelType level) {
+	public Subject(String title, List<Task> tasks, User user, LevelType level, boolean isPublic) {
 		this.title = title;
 		this.tasks = tasks;
 		this.user = user;
 		this.level = level;
+		this.setPublicSubject(isPublic);
 	}
 	
 	public long getId() {
@@ -107,6 +112,14 @@ public class Subject {
 
 	public LocalDateTime getCreationDate() {
 		return creationDate;
+	}
+
+	public boolean isPublicSubject() {
+		return publicSubject;
+	}
+
+	public void setPublicSubject(boolean publicSubject) {
+		this.publicSubject = publicSubject;
 	}
 	
 }
